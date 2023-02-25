@@ -51,3 +51,29 @@ export function delItemInfo(params) {
     data: params
   })
 }
+
+/**
+ * 添加变体从无变体到有变体
+ * @param {data} params
+ * @returns object
+ */
+export function addColorVariations(params) {
+  return fetch({
+    url: '/mkd/addColorVariations',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 添加变体从无变体到有变体
+ * @param {data} params
+ * @returns object
+ */
+export function getAllApplication(params) {
+  return fetch({
+    url: '/mkd/application/getAllApplication',
+    method: 'get',
+    data: params
+  })
+}

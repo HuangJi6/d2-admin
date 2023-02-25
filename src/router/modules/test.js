@@ -12,6 +12,7 @@ export default {
   redirect: { name: 'demo-components-index' },
   component: layoutHeaderAside,
   children: [
-    { path: 'test1', name: 'test-test1', component: _import('test/test1.vue'), meta: { ...meta, title: '测试页面1' } }
+    { path: 'test1', name: 'test-test1', component: _import('test/test1.vue'), meta: { ...meta, title: '测试页面1' } },
+    { path: 'variation', name: 'test-variation', component: _import('test/variation.vue'), meta: { ...meta, title: '变体添加' } }
   ]
 }

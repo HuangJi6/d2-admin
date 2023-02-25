@@ -4,7 +4,6 @@ import router from '@/router/index'
 import { Message } from 'element-ui'
 import util from '@/libs/util'
 import loading from '@/libs/loading'
-import message from '@/libs/message'
 // import permission from '@/libs/permission'
 
 // axios.defaults.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept,tokenid,appguid'
@@ -68,18 +67,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     loading.hide(response.config)
-    const res = response.data
-    if (res.statusCode !== 200) {
-      Message({
-        message: res.message,
-        type: 'error',
-        duration: 3 * 1000
-      })
-      return Promise.reject(res.message)
-    } else {
-      message(response.config)
-      return res.data
-    }
+    return response.data
   },
   error => {
     console.log(error)
