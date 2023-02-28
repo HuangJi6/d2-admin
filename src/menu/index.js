@@ -8,13 +8,15 @@ import demoComponents from './modules/demo-components'
 import demoPlayground from './modules/demo-playground'
 // 测试
 import demoTest from './modules/demo-test'
+// 用户权限管理
+import demoAuth from './modules/demo-auth'
 
 /**
  * @description 给菜单数据补充上 path 字段
  * @description https://github.com/d2-projects/d2-admin/issues/209
  * @param {Array} menu 原始的菜单数据
  */
-function supplementPath (menu) {
+function supplementPath(menu) {
   return menu.map(e => ({
     ...e,
     path: e.path || uniqueId('d2-menu-empty-'),
@@ -29,7 +31,8 @@ export const menuAside = supplementPath([
   demoComponents,
   demoPlugins,
   demoPlayground,
-  demoTest
+  demoTest,
+  demoAuth
 ])
 
 // 菜单 顶栏
@@ -42,5 +45,6 @@ export const menuHeader = supplementPath([
   demoPlayground,
   demoComponents,
   demoPlugins,
-  demoTest
+  demoTest,
+  demoAuth
 ])

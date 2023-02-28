@@ -54,6 +54,45 @@ export default {
           resolve(false)
         })
       })
+    },
+
+    /**
+     *
+     * @param {条件名称} conditionName
+     * @param {条件类型} conditionType条件类型 #1:=;2:<;3:>;4:模糊like;5:<=;6:>=;7:between;8:模糊:notlike;9:!=;10:in;11:likeright;12:likeleft
+     * @param {数据} data
+     * @param {是否移除数据钟的属性} removeFlag
+     * @returns 高级查询对象
+     */
+    buildCondition(conditionName, conditionType, data, removeFlag) {
+      if (data[conditionName]) {
+        const condition = {
+          conditionName: conditionName,
+          conditionType: conditionType,
+          conditionValue: data[conditionName]
+        }
+        if (removeFlag) {
+          this.$delete(data, conditionName)
+        }
+        return condition
+      }
+    },
+
+    /**
+     *
+     * @param {条件名称} conditionName
+     * @param {条件类型} conditionType条件类型 #1:=;2:<;3:>;4:模糊like;5:<=;6:>=;7:between;8:模糊:notlike;9:!=;10:in;11:likeright;12:likeleft
+     * @param {数据} data
+     * @param {是否移除数据钟的属性} removeFlag
+     * @returns 高级查询对象
+     */
+    buildConditionData(conditionName, conditionType, data, removeFlag) {
+      const condition = this.buildCondition(conditionName, conditionType, data, removeFlag)
+      if (condition) {
+        const conditionList = []
+        conditionList.push()
+        data.conditionList = conditionList
+      }
     }
   }
 }

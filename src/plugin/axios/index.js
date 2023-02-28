@@ -31,7 +31,8 @@ function errorLog(err) {
 
 // 创建一个 axios 实例
 const service = axios.create({
-  baseURL: 'http://localhost:9980',
+  // 网关地址
+  baseURL: 'http://localhost:9991',
   timeout: 20000 // 请求超时时间
 })
 
@@ -97,7 +98,7 @@ service.interceptors.response.use(
     } else if (error.type === '403') {
       errorLog(new Error(`没有请求权限!: ${error.config.url}`))
     } else {
-      errorLog(new Error(`网络错误!: ${error.config.url}`))
+      // errorLog(new Error(`网络错误!: ${error.config.url}`))
     }
     return Promise.reject(error)
   }
