@@ -16,6 +16,12 @@ import { frameInRoutes } from '@/router/routes'
 import 'vxe-table/lib/style.css'
 import VXETableConfig from '@/vxe-table-config.js'
 
+// 引入e-charts
+
+import 'echarts'
+import ECharts from 'vue-echarts'
+Vue.component('VueEcharts', ECharts)
+
 Vue.use(VXETableConfig)
 
 // 核心插件

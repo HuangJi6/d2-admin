@@ -13,6 +13,7 @@ export default {
   component: layoutHeaderAside,
   children: [
     { path: 'test1', name: 'test-test1', component: _import('test/test1.vue'), meta: { ...meta, title: '测试页面1' } },
-    { path: 'variation', name: 'test-variation', component: _import('test/variation.vue'), meta: { ...meta, title: '变体添加' } }
+    { path: 'variation', name: 'test-variation', component: _import('test/variation.vue'), meta: { ...meta, title: '变体添加' } },
+    { path: 'echarts', name: 'test-echarts', component: _import('test/echarts.vue'), meta: { ...meta, title: 'echarts测试菜单' } }
   ]
 }
