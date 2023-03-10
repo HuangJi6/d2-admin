@@ -131,17 +131,46 @@
           </vxe-form-item>
         </vxe-form>
         <vxe-button @click="submit3" status="primary">手动校验</vxe-button>
+        <div class="form-group">
+          <vxe-form :data="formData3">
+            <vxe-form-item align="center" span="24" :item-render="{}">
+              <vxe-input ref="uploadInput" style="float:left;width:400px" v-model="formData3.name" placeholder="自定义插槽模板"></vxe-input>
+              <vxe-button ref="uploadButton" style="float:right;width:100px" type="text" status="primary" icon="vxe-icon-cloud-download" @click="handleUpload(formData3)">上传图片</vxe-button>
+              <vxe-button ref="uploadButton1" status="primary" icon="vxe-icon-cloud-download" @click="saveUpload(formData3)">保存</vxe-button>
+            </vxe-form-item>
+          </vxe-form>
+        </div>
+        <div class="form-group">
+          <el-upload
+            class="upload-demo"
+            action="http://localhost:9991/api/mkd/business/sysFile/uploadFiles"
+            :on-preview="handlePreview"
+            :before-upload="handleBeforeUpload"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :on-success="handleUploadSuccess"
+            multiple
+            :limit="3"
+            :on-exceed="handleExceed"
+            :file-list="fileList">
+            <vxe-button type="text" status="primary" icon="vxe-icon-cloud-download">上传图片</vxe-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </div>
   </d2-container>
 </template>
 
 <script>
 import VXETable from 'vxe-table'
 import { getItemInfo, postItemInfo, putItemInfo, delItemInfo } from '@/api/variations/index'
+import { removeFilesApi } from '@/api/common/commonApi.js'
+
 import requestHandler from '@/plugin/axios/requestHandler.js'
 export default {
   mixins: [requestHandler],
   data() {
     return {
+      fileList: [],
       loading2: false,
       shopOptions: [{ label: 'A店', value: 'a', key: 'a' }, { label: 'B店', value: 'b', key: 'b' }],
       formLogin: {
@@ -173,6 +202,10 @@ export default {
         { id: 10003, name: 'Test3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
         { id: 10004, name: 'Test4', role: 'Designer', sex: 'Women', age: 24, address: 'Shanghai' }
       ],
+      formData3: {
+        name: '',
+        file: {}
+      },
       formData4: {
         name: '',
         nickname: '',
@@ -260,6 +293,44 @@ export default {
     }
   },
   methods: {
+    handleBeforeUpload(file) {
+      debugger
+      this.fileList.forEach(item => {
+        if (item.name === file.name) {
+          this.$message.warning('存在同名文件已上传')
+          return false
+        }
+      })
+      console.log(file)
+    },
+    handlePreview() {
+
+    },
+    handleUploadSuccess(response, file, fileList) {
+      const fileItem = { name: file.name }
+      fileList.push(fileItem)
+      this.fileList = fileList
+      console.log(response)
+    },
+    handleRemove() {
+      this.handleHttpMethod(removeFilesApi())
+    },
+    // 上传附件
+    async handleUpload(row) {
+    // 读取附件
+      try {
+        const { file } = await VXETable.readFile({
+          types: ['png', 'jpg', 'xlsx', 'html']
+        })
+        VXETable.modal.alert(`文件名：${file.name}，文件大小：${file.size}`)
+        row.file = file
+        row.name = file.name
+      } catch (e) {}
+    },
+    saveUpload() {
+      console.log(this.formData3)
+      this.handleHttpMethod(postItemInfo(this.formData3), true, '请求中...', true, '请求成功')
+    },
     itemSexChange(params) {
       this.$refs.xForm.updateStatus(params)
       console.log(params)

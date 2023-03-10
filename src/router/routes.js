@@ -3,6 +3,7 @@ import plugins from './modules/plugins'
 import components from './modules/components'
 import test from './modules/test'
 import auth from './modules/auth'
+import store from './modules/store'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -58,7 +59,8 @@ const frameIn = [
   plugins,
   components,
   test,
-  auth
+  auth,
+  store
 ]
 
 /**

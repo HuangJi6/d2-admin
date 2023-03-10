@@ -7,7 +7,7 @@ import fetch from '@/plugin/axios'
  */
 export function getItemInfo(query) {
   return fetch({
-    url: '/mkd/getTestInfo',
+    url: '/api/mkd/business/test/getTestInfo',
     method: 'get',
     params: query
   })
@@ -20,7 +20,7 @@ export function getItemInfo(query) {
  */
 export function postItemInfo(params) {
   return fetch({
-    url: '/mkd/postTestInfo',
+    url: '/api/mkd/business/test/postTestInfo',
     method: 'post',
     data: params
   })
@@ -33,7 +33,7 @@ export function postItemInfo(params) {
  */
 export function putItemInfo(params) {
   return fetch({
-    url: '/mkd/putTestInfo',
+    url: '/api/mkd/business/test/putTestInfo',
     method: 'put',
     data: params
   })
@@ -46,7 +46,7 @@ export function putItemInfo(params) {
  */
 export function delItemInfo(params) {
   return fetch({
-    url: '/mkd/delTestInfo',
+    url: '/api/mkd/business/test/delTestInfo',
     method: 'delete',
     data: params
   })

@@ -10,6 +10,8 @@ import demoPlayground from './modules/demo-playground'
 import demoTest from './modules/demo-test'
 // 用户权限管理
 import demoAuth from './modules/demo-auth'
+// 库存管理
+import demoStore from './modules/demo-store'
 
 /**
  * @description 给菜单数据补充上 path 字段
@@ -32,7 +34,8 @@ export const menuAside = supplementPath([
   demoPlugins,
   demoPlayground,
   demoTest,
-  demoAuth
+  demoAuth,
+  demoStore
 ])
 
 // 菜单 顶栏
@@ -46,5 +49,6 @@ export const menuHeader = supplementPath([
   demoComponents,
   demoPlugins,
   demoTest,
-  demoAuth
+  demoAuth,
+  demoStore
 ])
