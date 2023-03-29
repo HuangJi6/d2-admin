@@ -10,7 +10,7 @@ import demoPlayground from './modules/demo-playground'
 import demoTest from './modules/demo-test'
 // 用户权限管理
 import demoAuth from './modules/demo-auth'
-// 库存管理
+// 业务管理
 import demoStore from './modules/demo-store'
 
 /**

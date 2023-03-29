@@ -6,12 +6,13 @@ const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
 const meta = { auth: true }
 
 export default {
-  path: '/store',
-  name: 'demo-store',
+  path: '/business',
+  name: 'demo-business',
   meta,
   redirect: { name: 'demo-components-index' },
   component: layoutHeaderAside,
   children: [
-    { path: 'containerManage', name: 'store-containerManage', component: _import('store/container/containerManage.vue'), meta: { ...meta, title: '待出库存装箱单' } }
+    { path: 'containerManage', name: 'business-containerManage', component: _import('business/container/containerManage.vue'), meta: { ...meta, title: '待出库存装箱单' } },
+    { path: 'application', name: 'business-application', component: _import('business/container/application.vue'), meta: { ...meta, title: '店铺管理' } }
   ]
 }
