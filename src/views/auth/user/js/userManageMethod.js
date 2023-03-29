@@ -17,8 +17,10 @@ const dataMethods = {
   pageList(params) {
     this.listLoading = true
     this.handleHttpMethod(pageUserInfoApi(params || {}), true).then(res => {
-      this.list = res.data.dataList
-      this.total = res.data.total
+      if (res.code === '100000') {
+        this.list = res.data.dataList
+        this.total = res.data.total
+      }
       this.listLoading = false
     })
   },
@@ -73,7 +75,7 @@ const dataMethods = {
   handleFilter() {
     // 对象拷贝，防止数据污染
     const params = Object.assign({}, this.listQuery)
-    this.buildConditionData('user_name', '4', params, true)
+    this.buildConditionData('userName', '4', params, true)
     this.pageList(params)
   },
 
