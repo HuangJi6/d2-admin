@@ -3,7 +3,6 @@
  */
 export default {
   install(Vue, options) {
-    debugger
     const store = options.store
     Vue.directive('permission', {
       inserted: function (el, binding, vnode) {

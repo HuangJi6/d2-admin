@@ -13,6 +13,6 @@ export default {
   component: layoutHeaderAside,
   children: [
     { path: 'containerManage', name: 'business-containerManage', component: _import('business/container/containerManage.vue'), meta: { ...meta, title: '待出库存装箱单' } },
-    { path: 'application', name: 'business-application', component: _import('business/container/application.vue'), meta: { ...meta, title: '店铺管理' } }
+    { path: 'application', name: 'business-application', component: _import('business/application/application.vue'), meta: { ...meta, title: '店铺管理' } }
   ]
 }
