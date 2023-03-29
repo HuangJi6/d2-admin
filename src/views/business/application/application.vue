@@ -4,7 +4,7 @@
     <template slot="header">
       <div style="float:left;padding-top:3px">
         <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;margin-right: 20px;" class="filter-item" placeholder="店铺名称搜索" v-model="filterFormData.shopName" size="small"> </el-input>
-        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter" size="small">搜索</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleRefresh" size="small">搜索</el-button>
         <el-button class="filter-item" type="primary" icon="el-icon-refresh" @click="handleRefresh" size="small">刷新</el-button>
       </div>
       <div style="float:right;">
