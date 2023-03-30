@@ -34,6 +34,7 @@
         ref="vxeTableRef"
         height="90%"
         :row-config="{isHover: true}"
+        @cell-click="handleCellClickEvent"
         :data="tableData">
         <vxe-column type="checkbox" width="60"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
@@ -42,6 +43,12 @@
         <vxe-column field="goodsLink" title="商品链接" width="150"></vxe-column>
         <vxe-column field="upcCode" title="UPC码" width="100"></vxe-column>
         <vxe-column field="imgLink" title="图片链接" width="150"></vxe-column>
+        <vxe-column field="imgLink" title="产品图片" width="100">
+          <template #default="{ row }">
+            <el-image style="width: auto; height: 50px" :src="row.imgLink" :preview-src-list="[row.imgLink]"> </el-image>
+            <!-- <img v-if="row.imgLink" :src="row.imgLink" height="45"> -->
+          </template>
+        </vxe-column>
         <vxe-column field="material" title="材料" width="100"></vxe-column>
         <vxe-column field="grade" title="评级" width="100"></vxe-column>
         <vxe-column field="goodsLength" title="商品-长" width="100"></vxe-column>
@@ -67,6 +74,10 @@
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
           </vxe-form>
         </vxe-modal>
+      </div>
+      <div v-show="dialogImgVisible" width="50%">
+        <el-image style="width: 100px; height: 100px" :src="imgShowUrl" :preview-src-list="srcList">
+        </el-image>
       </div>
     </template>
 

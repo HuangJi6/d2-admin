@@ -145,6 +145,9 @@ const handleMethods = {
   handleCancelCreate() {
     this.dialogFormVisible = false
     this.resetCreateForm()
+  },
+  // 表格点击事件
+  handleCellClickEvent(row, column, rowIndex) {
   }
 }
 
