@@ -1,4 +1,4 @@
-import { deleteApi, getOneApi, updateApi, addApi, pageApi } from '@/api/business/supplierApi.js'
+import { deleteApi, getOneApi, updateApi, addApi, pageApi } from '@/api/business/goodsApi.js'
 
 // 初始化方法
 const initMethods = {
@@ -17,14 +17,20 @@ const dataMethods = {
   // 重置表单数据
   resetCreateForm() {
     this.createFormData = {
-      supName: '',
-      linkName: '',
-      linkPhone: '',
-      supAddress: '',
-      supCategory: '',
-      account: '',
+      goodsName: '',
+      goodsCategory: '',
+      goodsLink: '',
+      upcCode: '',
+      imgLink: '',
+      material: '',
       grade: '',
-      qualification: '',
+      goodsLength: '',
+      goodsWidth: '',
+      goodsHigh: '',
+      goodsWeight: '',
+      goodsPrice: '',
+      goodsUse: '',
+      brand: '',
       remark: ''
     }
   },
@@ -122,10 +128,9 @@ const handleMethods = {
   // 过滤方法
   handleFilter(params) {
     // 对象拷贝，防止数据污染
-
     const conditionParams = [
-      { name: 'supName', type: '4', remove: true },
-      { name: 'supCategory', type: '4', remove: true }]
+      { name: 'goodsName', type: '4', remove: true },
+      { name: 'goodsCategory', type: '4', remove: true }]
     if (conditionParams) {
       conditionParams.forEach(item => {
         this.buildConditionData(item.name, item.type, params, item.remove)

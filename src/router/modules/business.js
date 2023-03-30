@@ -14,6 +14,7 @@ export default {
   children: [
     { path: 'containerManage', name: 'business-containerManage', component: _import('business/container/containerManage.vue'), meta: { ...meta, title: '待出库存装箱单' } },
     { path: 'application', name: 'business-application', component: _import('business/application/application.vue'), meta: { ...meta, title: '店铺管理' } },
-    { path: 'supplier', name: 'business-supplier', component: _import('business/supplier/supplier.vue'), meta: { ...meta, title: '供应商管理' } }
+    { path: 'supplier', name: 'business-supplier', component: _import('business/supplier/supplier.vue'), meta: { ...meta, title: '供应商管理' } },
+    { path: 'goods', name: 'business-goods', component: _import('business/goods/goods.vue'), meta: { ...meta, title: '商品管理' } }
   ]
 }
