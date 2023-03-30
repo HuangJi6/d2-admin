@@ -52,7 +52,7 @@
         @close="createModalClose" width="1600">
           <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
-          @submit="handleSubmitCreate('createFrom')" @reset="cancel('createFrom')">
+          @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
           </vxe-form>
         </vxe-modal>
       </div>
@@ -81,11 +81,6 @@ export default {
         currentPage: 1,
         pageSize: 20,
         shopName: ''
-      },
-      listQuery: {
-        currentPage: 1,
-        pageSize: 20,
-        userName: undefined
       },
       createFormData: {
         shopName: '',
