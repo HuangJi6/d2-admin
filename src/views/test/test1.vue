@@ -294,7 +294,6 @@ export default {
   },
   methods: {
     handleBeforeUpload(file) {
-      debugger
       this.fileList.forEach(item => {
         if (item.name === file.name) {
           this.$message.warning('存在同名文件已上传')

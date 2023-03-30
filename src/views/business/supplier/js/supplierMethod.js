@@ -122,7 +122,7 @@ const handleMethods = {
   // 过滤方法
   handleFilter(params) {
     // 对象拷贝，防止数据污染
-    debugger
+
     const conditionParams = [
       { name: 'supName', type: '4', remove: true },
       { name: 'supCategory', type: '4', remove: true }]

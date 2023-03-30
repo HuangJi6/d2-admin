@@ -124,7 +124,6 @@ const dataMethods = {
 const handleMethods = {
   // 上传附件
   handleUploadSuccess(response, file, fileList) {
-    debugger
     this.fileList = JSON.parse(JSON.stringify(fileList))
     this.fileList.forEach(item => {
       if (item.response) {
