@@ -11,7 +11,7 @@ import demoTest from './modules/demo-test'
 // 用户权限管理
 import demoAuth from './modules/demo-auth'
 // 业务管理
-import demoStore from './modules/demo-businessjs'
+import demoStore from './modules/demo-business.js'
 
 /**
  * @description 给菜单数据补充上 path 字段
