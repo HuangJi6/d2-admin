@@ -89,7 +89,10 @@ export default {
     buildConditionData(conditionName, conditionType, data, removeFlag) {
       const condition = this.buildCondition(conditionName, conditionType, data, removeFlag)
       if (condition) {
-        const conditionList = []
+        let conditionList = []
+        if (data.conditionList) {
+          conditionList = data.conditionList
+        }
         conditionList.push(condition)
         data.conditionList = conditionList
       }
