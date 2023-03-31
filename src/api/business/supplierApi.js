@@ -19,3 +19,7 @@ export function getOneApi(query) {
 export function deleteApi(guid) {
   return fetch({ url: '/api/mkd/business/busSupplier/delete/' + guid, method: 'delete' })
 }
+
+export function getSupplierListApi() {
+  return fetch({ url: '/api/mkd/business/busSupplier/getSupplierList', method: 'get' })
+}
