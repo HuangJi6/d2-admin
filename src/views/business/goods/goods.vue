@@ -75,10 +75,6 @@
           </vxe-form>
         </vxe-modal>
       </div>
-      <div v-show="dialogImgVisible" width="50%">
-        <el-image style="width: 100px; height: 100px" :src="imgShowUrl" :preview-src-list="srcList">
-        </el-image>
-      </div>
     </template>
 
     <template slot="footer">
@@ -91,7 +87,7 @@
 import mixins from '@/mixin/commonMixin.js'
 import { myMethods } from './js/goodsMethod.js'
 export default {
-  name: 'application',
+  name: 'goods',
   mixins: [mixins],
   data() {
     return {

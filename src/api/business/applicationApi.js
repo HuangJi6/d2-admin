@@ -19,3 +19,7 @@ export function getOneApi(query) {
 export function deleteApi(guid) {
   return fetch({ url: '/api/mkd/business/sysApplication/delete/' + guid, method: 'delete' })
 }
+
+export function getAllApplication(params) {
+  return fetch({ url: '/api/mkd/business/sysApplication/getAllApplication', method: 'get', data: params })
+}
