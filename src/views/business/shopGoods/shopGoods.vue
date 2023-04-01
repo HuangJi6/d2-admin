@@ -2,18 +2,20 @@
 <template>
   <d2-container>
     <template slot="header">
-      <div style="float:left;padding-top:3px;width:80%">
-        <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;margin-right: 20px;" class="filter-item" placeholder="店铺搜索" v-model="filterFormData.shopName" size="small"> </el-input>
-        <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;margin-right: 20px;" class="filter-item" placeholder="SKU搜索" v-model="filterFormData.sku" size="small"> </el-input>
-        <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;margin-right: 20px;" class="filter-item" placeholder="ITEM ID搜索" v-model="filterFormData.itemId" size="small"> </el-input>
-        <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;margin-right: 20px;" class="filter-item" placeholder="商名称搜索" v-model="filterFormData.goodsName" size="small"> </el-input>
-        <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;margin-right: 20px;" class="filter-item" placeholder="商品类别搜索" v-model="filterFormData.goodsCategory" size="small"> </el-input>
-        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleRefresh" size="small">搜索</el-button>
-        <el-button class="filter-item" type="primary" icon="el-icon-refresh" @click="handleRefresh" size="small">刷新</el-button>
-      </div>
-      <div style="float:right;">
-        <el-button icon="vxe-icon-square-plus" type="success" size="medium" style="width:100px" @click="handleCreate">新增</el-button>
-        <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+      <div style="height:40px">
+        <div style="float:left;padding-top:3px;width:80%">
+          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="店铺搜索" v-model="filterFormData.shopName" size="small"> </el-input>
+          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="SKU搜索" v-model="filterFormData.sku" size="small"> </el-input>
+          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="ITEM ID搜索" v-model="filterFormData.itemId" size="small"> </el-input>
+          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="商名称搜索" v-model="filterFormData.goodsName" size="small"> </el-input>
+          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="商品类别搜索" v-model="filterFormData.goodsCategory" size="small"> </el-input>
+          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleRefresh" size="small">搜索</el-button>
+          <el-button class="filter-item" type="primary" icon="el-icon-refresh" @click="handleRefresh" size="small">刷新</el-button>
+        </div>
+        <div style="float:right;">
+          <el-button icon="vxe-icon-square-plus" type="success" size="medium" style="width:100px" @click="handleCreate">新增</el-button>
+          <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+        </div>
       </div>
     </template>
 
@@ -24,6 +26,7 @@
           <!-- <el-button icon="vxe-icon-chart-pie" size="mini" style="width:120px" @click="filterDialogVisibleClick">过滤数据</el-button> -->
         </template>
       </vxe-toolbar>
+      <!-- style="min-height: 500px;" 设置最小高度不然vxe-table会报错! -->
       <vxe-table
         class="mytable-scrollbar"
         size="medium"
@@ -36,6 +39,7 @@
         v-loading.body="listLoading"
         ref="vxeTableRef"
         height="90%"
+        style="min-height: 450px;"
         :row-config="{isHover: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">

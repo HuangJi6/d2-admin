@@ -79,7 +79,7 @@ export default {
   data() {
     return {
       showIn: this.show,
-      goodsInfoIn: this.goodsInfo,
+      goodsInfoIn: {},
       listLoading: false,
       tableData: [],
       total: null,

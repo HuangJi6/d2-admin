@@ -8,6 +8,7 @@ export default {
     { path: '/business/goods', title: '商品管理', icon: 'user' },
     { path: '/business/supplierGoods', title: '供应商商品管理', icon: 'user' },
     { path: '/business/shopGoods', title: '店铺商品管理', icon: 'user' },
+    { path: '/business/shopGoodsOperate', title: '运营采购管理', icon: 'user' },
     { path: '/business/containerManage', title: '待出库存装箱单', icon: 'user' }
   ]
 }
