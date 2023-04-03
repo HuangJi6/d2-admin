@@ -31,7 +31,7 @@ const dataMethods = {
       boxLength: '',
       boxWidth: '',
       boxHigh: '',
-      boxVolume: '',
+      boxVolume: '0',
       boxAmount: '',
       singleAmount: '',
       boxWeight: '',

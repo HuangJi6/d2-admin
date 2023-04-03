@@ -5,10 +5,10 @@
       <div style="float:left;padding-top:3px">
         <el-radio-group @input="pageList()" v-model="filterFormData.statusCode" size="medium">
           <el-radio-button label="全部" @click="pageList()">全部</el-radio-button>
+          <el-radio-button label="已下单" @click="pageList()">已下单</el-radio-button>
           <el-radio-button label="在途" @click="pageList()">在途</el-radio-button>
           <el-radio-button label="已售" @click="pageList()">已售</el-radio-button>
           <el-radio-button label="售罄" @click="pageList()">售罄</el-radio-button>
-          <el-radio-button label="已下单" @click="pageList()">已下单</el-radio-button>
         </el-radio-group>
       </div>
       <div style="float:right;">

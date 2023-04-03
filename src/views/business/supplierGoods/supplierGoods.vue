@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import $Big from '@/libs/big.js'
 import mixins from '@/mixin/commonMixin.js'
 import GoodsShowComponent from '@/views/business/goods/components/goodsShowComponent.vue'
 import { myMethods } from './js/supplierGoodsMethod.js'
@@ -128,7 +129,7 @@ export default {
         boxLength: '',
         boxWidth: '',
         boxHigh: '',
-        boxVolume: '',
+        boxVolume: '0',
         boxAmount: '',
         singleAmount: '',
         boxWeight: '',
@@ -170,15 +171,15 @@ export default {
             //   }
             // },
             { field: 'goodsName', title: '商品名称', span: 12, slots: { default: 'goodsNameSlots' } },
-            { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数量' } } },
-            { field: 'grade', title: '评级', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入评级' } } },
             { field: 'boxLength', title: '单箱长', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱长' } } },
             { field: 'boxWidth', title: '单箱宽', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱宽' } } },
             { field: 'boxHigh', title: '单箱高', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱高' } } },
             { field: 'boxVolume', title: '单箱体积', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
-            { field: 'boxAmount', title: '单箱价格', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱价格' } } },
+            { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数量' } } },
             { field: 'singleAmount', title: '单个价格', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单个价格' } } },
+            { field: 'boxAmount', title: '单箱价格', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱价格' } } },
             { field: 'boxWeight', title: '单箱重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重量' } } },
+            { field: 'grade', title: '评级', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入评级' } } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },
         {
@@ -211,6 +212,22 @@ export default {
             this.createFormData.supplierName = element.label
           }
         })
+      }
+    },
+    'createFormData.boxLength': {
+      handler(nval, oval) {
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxWidth || 0).times(this.createFormData.boxHigh || 0).toString()
+        console.log(this.createFormData.boxVolume)
+      }
+    },
+    'createFormData.boxWidth': {
+      handler(nval, oval) {
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxHigh || 0).toString()
+      }
+    },
+    'createFormData.boxHigh': {
+      handler(nval, oval) {
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxWidth || 0).toString()
       }
     }
   }
