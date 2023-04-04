@@ -19,6 +19,8 @@ export default {
     { path: 'shopGoods', name: 'business-shopGoods', component: _import('business/shopGoods/shopGoods.vue'), meta: { ...meta, title: '店铺商品管理' } },
     { path: 'supplierGoods', name: 'business-supplierGoods', component: _import('business/supplierGoods/supplierGoods.vue'), meta: { ...meta, title: '供应商商品管理' } },
     { path: 'inContainer', name: 'business-inContainer', component: _import('business/inContainer/inContainer.vue'), meta: { ...meta, title: '仓库入库管理' } },
+    { path: 'outContainer', name: 'business-outContainer', component: _import('business/outContainer/outContainer.vue'), meta: { ...meta, title: '仓库出库管理' } },
+    { path: 'packingList', name: 'business-packingList', component: _import('business/packingList/packingList.vue'), meta: { ...meta, title: '仓箱单管理' } },
     { path: 'shopGoodsOperate', name: 'business-shopGoodsOperate', component: _import('business/shopGoodsOperate/shopGoodsOperate.vue'), meta: { ...meta, title: '运营采购管理' } }
   ]
 }

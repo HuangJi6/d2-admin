@@ -6,6 +6,8 @@
         <el-radio-group @input="pageList()" v-model="filterFormData.statusCode" size="medium">
           <el-radio-button label="待检测" @click="pageOperateList()">待检测</el-radio-button>
           <el-radio-button label="已入库" @click="pageList()">已入库</el-radio-button>
+          <el-radio-button label="待出库" @click="pageList()">待出库</el-radio-button>
+          <el-radio-button label="待重新装箱" @click="pageList()">待重新装箱</el-radio-button>
           <el-radio-button label="已出库" @click="pageOperateList()">已出完</el-radio-button>
         </el-radio-group>
       </div>
@@ -14,6 +16,9 @@
         <el-button  size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '已入库'" >
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleAddPackingList">添加箱单</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">直接出库</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleChangeOutContainer">变更出库</el-button>
         <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
     </template>
@@ -96,10 +101,25 @@
       </div>
     </template>
     <InContainerComponent
-      v-if="showChangeOutContainerComponent"
+      v-if="false"
       :show.sync="showChangeOutContainerComponent"
       :selectionOperateDatas = selectionOperateDatas>
     </InContainerComponent>
+    <!-- 添加箱单组件 -->
+    <AddPackingListFormDialogVue
+      v-if="showAddPackingListFormDialog"
+      :show.sync="showAddPackingListFormDialog">
+    </AddPackingListFormDialogVue>
+    <!-- 直接出库组件 -->
+    <DirectOutContainerComponentVue
+      v-if="showDirectOutContainer"
+      :show.sync="showDirectOutContainer">
+    </DirectOutContainerComponentVue>
+    <!-- 变更出库组件 -->
+    <ChangeOutContainerComponentVue
+      v-if="showChangeOutContainerComponent"
+      :show.sync="showChangeOutContainerComponent">
+    </ChangeOutContainerComponentVue>
     <template slot="footer">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="filterFormData.currentPage" :page-sizes="[10,20,30, 50]" :page-size="filterFormData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
     </template>
@@ -109,14 +129,19 @@
 <script>
 import $Big from '@/libs/big.js'
 import mixins from '@/mixin/commonMixin.js'
-import InContainerComponent from '@/views/business/inContainer/components/inContainerComponent.vue'
+import InContainerComponent from '@/views/business/inContainer/components/inContainerChangeChooseComponent.vue'
+import AddPackingListFormDialogVue from '@/views/business/packingList/components/addPackingListFormDialog.vue'
+import DirectOutContainerComponentVue from '../outContainer/components/directOutContainerComponent.vue'
+import ChangeOutContainerComponentVue from '../outContainer/components/changeOutContainerComponent.vue'
 import { myMethods } from './js/inContainerMethod.js'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { InContainerComponent },
+  components: { InContainerComponent, AddPackingListFormDialogVue, DirectOutContainerComponentVue, ChangeOutContainerComponentVue },
   data() {
     return {
+      showDirectOutContainer: false,
+      showAddPackingListFormDialog: false,
       filterDialogVisible: false,
       goodsInfo: {},
       supplierData: [],

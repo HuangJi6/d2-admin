@@ -292,7 +292,10 @@
               flex-direction: column;
               overflow: hidden;
               .d2-container-full__header {
-                padding: 20px;
+                padding-top: 15px;
+                padding-bottom: 10px;
+                padding-left: 20px;
+                padding-right: 20px;
               }
               .d2-container-full__body {
                 flex-grow: 1;
@@ -302,7 +305,10 @@
                 position: relative;
               }
               .d2-container-full__footer {
-                padding: 20px;
+                padding-top: 10px;
+                padding-bottom: 20px;
+                padding-left: 20px;
+                padding-right: 20px;
               }
             }
             // 填充式布局组件 - 滚动优化

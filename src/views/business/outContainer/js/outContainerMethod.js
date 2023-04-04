@@ -1,5 +1,4 @@
 import { deleteApi, getOneApi, updateApi, pageMapApi, addBatchApi, pageNotCheckMapApi } from '@/api/business/inContainerApi.js'
-import { pageMapApi as outPageMapApi } from '@/api/business/outContainerApi.js'
 // import { getAllApplication } from '@/api/business/applicationApi.js'
 // import { getSupplierListApi } from '@/api/business/supplierApi.js'
 
@@ -10,11 +9,11 @@ const initMethods = {
     this.pageList()
   },
   initCreated() {
-    //   console.log('initCreated...')
-    //   this.handleHttpMethod(getSupplierListApi(), true, '请求中...').then(res => {
-    //     this.supplierData = res.data
-    //     // this.$set(this.createForm[0].children[1].itemRender, 'options', res.data)
-    //   })
+    // console.log('initCreated...')
+    // this.handleHttpMethod(getSupplierListApi(), true, '请求中...').then(res => {
+    //   this.supplierData = res.data
+    //   // this.$set(this.createForm[0].children[1].itemRender, 'options', res.data)
+    // })
   }
 }
 // 接口方法
@@ -59,18 +58,9 @@ const dataMethods = {
         console.log(err)
         this.listLoading = false
       })
-    } else if (paramsCopy.statusCode === '已入库') {
+    } else {
       this.handleFilter(paramsCopy)
       this.handleHttpMethod(pageMapApi(paramsCopy || {}), true).then(res => {
-        this.tableData = res.data.dataList
-        this.total = res.data.total
-        this.listLoading = false
-      }).catch(err => {
-        console.log(err)
-        this.listLoading = false
-      })
-    } else if (paramsCopy.statusCode === '待出库') {
-      this.handleHttpMethod(outPageMapApi(paramsCopy || {}), true).then(res => {
         this.tableData = res.data.dataList
         this.total = res.data.total
         this.listLoading = false
@@ -116,6 +106,7 @@ const dataMethods = {
             }
           })
         }
+        debugger
         if (this.dialogStatus === 'update') {
           this.handleHttpMethod(updateApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
             if (res) {
@@ -253,6 +244,7 @@ const handleMethods = {
   },
   // 取消保存
   handleCancelCreate() {
+    debugger
     this.dialogFormVisible = false
     this.resetCreateForm()
   },
@@ -299,7 +291,6 @@ const handleMethods = {
   },
   // 箱唛变更出库
   handleChangeOutContainer() {
-    this.showChangeOutContainerComponent = true
     const selectionDatas = this.$refs.vxeTableRef.selection
     if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条或一条以上数据')
@@ -308,15 +299,19 @@ const handleMethods = {
       this.showChangeOutContainerComponent = true
     }
   },
-  // 直接出库，不需要拆箱
-  handleDirectOutContainer() {
-    this.showDirectOutContainer = true
+  // 直接出库
+  handleOutContainer() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length < 1) {
+      this.$message.warning('请选择一条或一条以上数据')
+    } else {
+      this.outContainerSubmit(selectionDatas)
+    }
   },
   // 添加箱单
   handleAddPackingList() {
     this.showAddPackingListFormDialog = true
   }
-
 }
 
 export const myMethods = {
