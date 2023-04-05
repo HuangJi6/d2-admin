@@ -68,7 +68,7 @@
       </vxe-table>
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
-        @close="createModalClose" width="1600">
+        @close="createModalClose" width="60%">
           <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
@@ -123,6 +123,9 @@ export default {
         goodsName: [
           { required: true, message: '请输入商名称', trigger: 'blur' }
         ],
+        goodsLink: [
+          { required: true, message: '请输入商品链接', trigger: 'blur' }
+        ],
         goodsCategory: [
           { required: true, message: '请输入商品类别', trigger: 'blur' }
         ],
@@ -138,12 +141,16 @@ export default {
           title: '',
           span: 23,
           children: [
-            { field: 'goodsName', title: '商品名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商名称' } } },
-            { field: 'goodsCategory', title: '商品类别', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入联系人' } } },
-            { field: 'goodsLink', title: '商品链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入联系电话' } } },
-            { field: 'upcCode', title: 'UPC码', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
-            { field: 'imgLink', title: '图片链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
-            { field: 'material', title: '材料', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入付款账户' } } },
+            { field: 'goodsName', title: '商品名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品名称' } } },
+            { field: 'goodsCategory', title: '商品类别', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品类别' } } },
+            { field: 'goodsLink', title: '商品链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品链接' } } },
+            { field: 'upcCode', title: 'UPC码', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入UPC码' } } },
+            { field: 'imgLink', title: '图片链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入图片链接' } } },
+            { field: 'material', title: '材料', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入材料' } } },
+            { field: 'hsCode', title: 'HS CODE', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入海关编码' } } },
+            { field: 'goodsNature', title: '货物性质', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入货物性质' } } },
+            { field: 'outGoodsName', title: '外部名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入外部名称' } } },
+            { field: 'outEnglishGoodsName', title: '英文名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入英文名称' } } },
             {
               field: 'grade',
               title: '评级',
