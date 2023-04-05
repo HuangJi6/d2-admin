@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="height:20px">
+    <div style="height:20px;width:auto;">
       <div style="width:75%; heiht:20px;float:left;padding-right:5px">
         <vxe-input v-model="selectedCategoryIn"></vxe-input>
       </div>
@@ -52,10 +52,17 @@ export default {
       default() {
         return ''
       }
+    },
+    singleSelect: {
+      type: Boolean,
+      default() {
+        return false
+      }
     }
   },
   data() {
     return {
+      singleSelectIn: this.singleSelect,
       // 默认选中
       defaultCheckedKeysIn: this.defaultCheckedKeys,
       show: false,
@@ -108,6 +115,7 @@ export default {
       if (checkedNodes && checkedNodes.length > 0) {
         let treeCheckedStr = ''
         const treeCheckedKeys = []
+        let checkedNum = 0
         checkedNodes.forEach(element => {
           let flag = true
           checkedNodes.forEach(ele2 => {
@@ -117,10 +125,16 @@ export default {
           })
           // 如果不是子节点,则过滤
           if (flag) {
+            checkedNum = checkedNum + 1
             treeCheckedStr = treeCheckedStr + element.label + '/'
           }
           treeCheckedKeys.push(element.id)
         })
+        // 单选校验
+        if (this.singleSelectIn && checkedNum !== 1) {
+          this.$message({ message: '仅能选择一个节点', type: 'warning' })
+          return
+        }
         treeCheckedData.checkedStr = treeCheckedStr.substring(0, treeCheckedStr.length - 1)
         treeCheckedData.checkedKeys = treeCheckedKeys
         treeCheckedData.checkedNodes = checkedNodes
