@@ -62,7 +62,7 @@
           <template #supCategorySlot>
             <ChooseCategoryComponentsVue
             :selectedCategory="createFormData.supCategory"
-            :defaultCheckedKeys="createFormData.cateGoryGuids"
+            :defaultCheckedKeys="createFormData.categoryGuids"
             :busGuid="createFormData.guid"
             @onSureClick="categorySureClick">
             </ChooseCategoryComponentsVue>
@@ -112,7 +112,7 @@ export default {
         grade: '',
         qualification: '',
         remark: '',
-        cateGoryGuids: []
+        categoryGuids: []
       },
       createFromRules: {
         supName: [

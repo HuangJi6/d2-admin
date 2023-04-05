@@ -35,7 +35,7 @@ const dataMethods = {
       grade: '',
       qualification: '',
       remark: '',
-      cateGoryGuids: []
+      categoryGuids: []
     }
   },
   pageList() {
@@ -82,9 +82,8 @@ const dataMethods = {
   },
   // 确定选中类目后
   categorySureClick(checkedData) {
-    debugger
     this.createFormData.supCategory = checkedData.checkedStr
-    this.createFormData.cateGoryGuids = checkedData.checkedKeys
+    this.createFormData.categoryGuids = checkedData.checkedKeys
   }
 }
 // 校验方法
