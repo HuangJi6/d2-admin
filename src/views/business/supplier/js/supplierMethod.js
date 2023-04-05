@@ -1,4 +1,13 @@
-import { deleteApi, getOneApi, updateApi, addApi, pageApi } from '@/api/business/supplierApi.js'
+import {
+  // deleteApi,
+  deleteByGuidApi,
+  getOneApi,
+  // updateApi,
+  updateByDtoApi,
+  // addApi,
+  pageApi,
+  addByDtoApi
+} from '@/api/business/supplierApi.js'
 
 // 初始化方法
 const initMethods = {
@@ -25,7 +34,8 @@ const dataMethods = {
       account: '',
       grade: '',
       qualification: '',
-      remark: ''
+      remark: '',
+      cateGoryGuids: []
     }
   },
   pageList() {
@@ -47,7 +57,8 @@ const dataMethods = {
     refs[formName].validate().then((valid) => {
       if (!valid) {
         if (this.dialogStatus === 'create') {
-          this.handleHttpMethod(addApi(this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
+          debugger
+          this.handleHttpMethod(addByDtoApi(this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
             if (res) {
               this.dialogFormVisible = false
               this.pageList()
@@ -55,7 +66,7 @@ const dataMethods = {
           })
         }
         if (this.dialogStatus === 'update') {
-          this.handleHttpMethod(updateApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
+          this.handleHttpMethod(updateByDtoApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
             if (res) {
               this.dialogFormVisible = false
               this.pageList()
@@ -68,6 +79,12 @@ const dataMethods = {
   // 查询单条数据
   getOne(id) {
     return this.handleHttpMethod(getOneApi(id), true)
+  },
+  // 确定选中类目后
+  categorySureClick(checkedData) {
+    debugger
+    this.createFormData.supCategory = checkedData.checkedStr
+    this.createFormData.cateGoryGuids = checkedData.checkedKeys
   }
 }
 // 校验方法
@@ -114,7 +131,7 @@ const handleMethods = {
       cancelButtonText: '取消',
       type: 'warning'
     }).then(() => {
-      this.handleHttpMethod(deleteApi(row.guid), true, '正在删除中', true, '删除成功').then(res => {
+      this.handleHttpMethod(deleteByGuidApi(row.guid), true, '正在删除中', true, '删除成功').then(res => {
         this.pageList()
       })
     })

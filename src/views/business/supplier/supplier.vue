@@ -55,10 +55,18 @@
       </vxe-table>
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
-        @close="createModalClose" width="1600">
+        @close="createModalClose" width="60%">
           <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
+          <template #supCategorySlot>
+            <ChooseCategoryComponentsVue
+            :selectedCategory="createFormData.supCategory"
+            :defaultCheckedKeys="createFormData.cateGoryGuids"
+            :busGuid="createFormData.guid"
+            @onSureClick="categorySureClick">
+            </ChooseCategoryComponentsVue>
+          </template>
           </vxe-form>
         </vxe-modal>
       </div>
@@ -73,11 +81,16 @@
 <script>
 import mixins from '@/mixin/commonMixin.js'
 import { myMethods } from './js/supplierMethod.js'
+import ChooseCategoryComponentsVue from '../category/components/chooseCategoryComponents.vue'
 export default {
+  components: { ChooseCategoryComponentsVue },
   name: 'application',
   mixins: [mixins],
   data() {
     return {
+      busGuid: '',
+      defaultCheckedKeys: [],
+      categoryList: [],
       dialogStatus: '',
       dialogFormVisible: false,
       tableData: [],
@@ -98,14 +111,12 @@ export default {
         account: '',
         grade: '',
         qualification: '',
-        remark: ''
+        remark: '',
+        cateGoryGuids: []
       },
       createFromRules: {
         supName: [
           { required: true, message: '请输入供应商名称', trigger: 'blur' }
-        ],
-        supCategory: [
-          { required: true, message: '请输入供应类别', trigger: 'blur' }
         ]
       },
       createForm: [
@@ -114,10 +125,10 @@ export default {
           span: 23,
           children: [
             { field: 'supName', title: '供应商名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商名称' } } },
+            { field: 'supCategory', title: '供应类别', span: 12, slots: { default: 'supCategorySlot' } },
             { field: 'linkName', title: '联系人', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入联系人' } } },
             { field: 'linkPhone', title: '联系电话', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入联系电话' } } },
             { field: 'supAddress', title: '供应商地址', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
-            { field: 'supCategory', title: '供应类别', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
             { field: 'account', title: '付款账户', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入付款账户' } } },
             {
               field: 'grade',
