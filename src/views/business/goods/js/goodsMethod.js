@@ -19,6 +19,7 @@ const dataMethods = {
     this.createFormData = {
       goodsName: '',
       goodsCategory: '',
+      categoryGuid: '',
       goodsLink: '',
       upcCode: '',
       imgLink: '',
@@ -74,6 +75,12 @@ const dataMethods = {
   // 查询单条数据
   getOne(id) {
     return this.handleHttpMethod(getOneApi(id), true)
+  },
+  categorySureClick(checkedData) {
+    this.createFormData.goodsCategory = checkedData.checkedStr
+    if (checkedData.checkedKeys || checkedData.checkedKeys === 1) {
+      this.createFormData.categoryGuid = checkedData.checkedKeys[0]
+    }
   }
 }
 // 校验方法

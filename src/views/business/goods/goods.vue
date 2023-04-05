@@ -50,6 +50,10 @@
           </template>
         </vxe-column>
         <vxe-column field="material" title="材料" width="100"></vxe-column>
+        <vxe-column field="hsCode" title="HS CODE" width="100"></vxe-column>
+        <vxe-column field="goodsNature" title="货物性质" width="100"></vxe-column>
+        <vxe-column field="outGoodsName" title="外部名称" width="100"></vxe-column>
+        <vxe-column field="outEnglishGoodsName" title="英文名称" width="100"></vxe-column>
         <vxe-column field="grade" title="评级" width="100"></vxe-column>
         <vxe-column field="goodsLength" title="商品-长" width="100"></vxe-column>
         <vxe-column field="goodsWidth" title="商品-宽" width="100"></vxe-column>
@@ -59,10 +63,10 @@
         <vxe-column field="goodsUse" title="商品-用途" width="100"></vxe-column>
         <vxe-column field="brand" title="商品-品牌" width="100"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
-        <vxe-column title="操作" width="160" fixed="right" show-overflow>
+        <vxe-column title="操作" align="center" width="100" fixed="right" show-overflow>
           <template #default="{ row }">
-            <vxe-button type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)">修改</vxe-button>
-            <vxe-button type="text" status="danger" icon="vxe-icon-delete" @click="handleRemove(row)">删除</vxe-button>
+            <vxe-button type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)"></vxe-button>
+            <vxe-button type="text" status="danger" icon="vxe-icon-delete" @click="handleRemove(row)"></vxe-button>
           </template>
         </vxe-column>
       </vxe-table>
@@ -72,6 +76,16 @@
           <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
+          <template #goodsCategorySlot>
+            <ChooseCategoryComponentsVue
+            :selectedCategory="createFormData.goodsCategory"
+            :defaultCheckedKeys="[createFormData.categoryGuid]"
+            :busGuid="createFormData.guid"
+            :singleSelect="true"
+            @onSureClick="categorySureClick"
+            >
+            </ChooseCategoryComponentsVue>
+          </template>
           </vxe-form>
         </vxe-modal>
       </div>
@@ -86,7 +100,9 @@
 <script>
 import mixins from '@/mixin/commonMixin.js'
 import { myMethods } from './js/goodsMethod.js'
+import ChooseCategoryComponentsVue from '../category/components/chooseCategoryComponents.vue'
 export default {
+  components: { ChooseCategoryComponentsVue },
   name: 'goods',
   mixins: [mixins],
   data() {
@@ -105,6 +121,7 @@ export default {
       createFormData: {
         goodsName: '',
         goodsCategory: '',
+        categoryGuid: '',
         goodsLink: '',
         upcCode: '',
         imgLink: '',
@@ -142,7 +159,7 @@ export default {
           span: 23,
           children: [
             { field: 'goodsName', title: '商品名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品名称' } } },
-            { field: 'goodsCategory', title: '商品类别', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品类别' } } },
+            { field: 'goodsCategory', title: '商品类别', span: 12, slots: { default: 'goodsCategorySlot' } },
             { field: 'goodsLink', title: '商品链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品链接' } } },
             { field: 'upcCode', title: 'UPC码', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入UPC码' } } },
             { field: 'imgLink', title: '图片链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入图片链接' } } },
