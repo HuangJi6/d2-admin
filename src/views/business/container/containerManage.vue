@@ -15,7 +15,7 @@
       </div>
     </template>
     <template>
-      <vxe-toolbar style="height:10%" :refresh="{query: pageList}" export print custom zoom>
+      <vxe-toolbar style="height:8%" :refresh="{query: pageList}" export print custom zoom>
         <template #buttons>
           <el-button icon="vxe-icon-table" size="mini" style="width:120px">待出库存装箱单</el-button>
           <el-button icon="vxe-icon-chart-pie" size="mini" style="width:120px" @click="filterDialogVisibleClick">过滤数据</el-button>
@@ -32,7 +32,7 @@
         show-header-overflow
         v-loading.body="listLoading"
         ref="vxeTableRef"
-        height="90%"
+        height="92%"
         :row-config="{isHover: true}"
         :data="tableData">
         <vxe-column type="checkbox" width="60"></vxe-column>

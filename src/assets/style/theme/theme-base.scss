@@ -27,12 +27,12 @@
   .d2-layout-header-aside-content {
     @extend %full;
     .d2-theme-header {
-      height: 60px;
+      height: 40px;
       .d2-theme-header-menu {
         overflow: hidden;
         &.is-scrollable {
           position: relative;
-          padding: 0 20px;
+          padding: 0 10px;
           .d2-theme-header-menu__prev, .d2-theme-header-menu__next {
             display: -webkit-box;
             display: -ms-flexbox;
@@ -53,7 +53,7 @@
           }
         }
         .d2-theme-header-menu__prev, .d2-theme-header-menu__next {
-          height: 60px;
+          height: 40px;
           position: absolute;
           top: 0;
           font-size: 20px;
@@ -130,7 +130,7 @@
       // 折叠侧边栏切换按钮
       .toggle-aside-btn {
         float: left;
-        height: 60px;
+        height: 40px;
         width: 60px;
         display: flex;
         justify-content: center;
@@ -271,7 +271,8 @@
                     border-bottom-right-radius: 0px;
                   }
                 }
-              }
+              };
+              height: 30px;
             }
           }
         }
@@ -292,21 +293,21 @@
               flex-direction: column;
               overflow: hidden;
               .d2-container-full__header {
-                padding-top: 15px;
-                padding-bottom: 10px;
+                padding-top: 10px;
+                padding-bottom: 8px;
                 padding-left: 20px;
                 padding-right: 20px;
               }
               .d2-container-full__body {
                 flex-grow: 1;
                 height: 100%;
-                padding: 10px 20px;
+                padding: 0px 20px;
                 overflow: auto;
                 position: relative;
               }
               .d2-container-full__footer {
                 padding-top: 10px;
-                padding-bottom: 20px;
+                padding-bottom: 10px;
                 padding-left: 20px;
                 padding-right: 20px;
               }

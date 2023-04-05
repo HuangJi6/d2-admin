@@ -1,6 +1,5 @@
 // 每个主题特有的设置
 .theme-#{$theme-name} {
-
   .el-message {
     &.el-message--info {
       background-color: $theme-message-info-background-color;
