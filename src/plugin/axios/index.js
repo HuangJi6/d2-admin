@@ -32,7 +32,7 @@ function errorLog(err) {
 // 创建一个 axios 实例
 const service = axios.create({
   // 网关地址
-  baseURL: 'http://localhost:9991',
+  baseURL: 'http://106.55.229.185:9991',
   timeout: 20000 // 请求超时时间
 })
 
