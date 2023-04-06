@@ -54,6 +54,11 @@ service.interceptors.request.use(
         // 让每个请求携带token-- ['Authorization']为自定义key 请根据实际情况自行修改
         config.headers.Authorization = 'Bearer ' + token
       }
+      // 业务数据全局过滤条件
+      const clientIds = store.state.d2admin.shopCheck.checkedClientIds
+      if (clientIds && clientIds !== 'undefined' && clientIds !== 'null' && clientIds.length !== 0) {
+        config.headers.clientIds = JSON.stringify(clientIds)
+      }
     }
     return config
   },

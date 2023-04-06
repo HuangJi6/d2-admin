@@ -21,6 +21,7 @@
         <!-- 顶栏右侧 -->
         <div class="d2-header-right" flex-box="0">
           <!-- 如果你只想在开发环境显示这个按钮请添加 v-if="$env === 'development'" -->
+          <shopCheckComponentsVue/>
           <d2-header-search @click="handleSearchClick"/>
           <d2-header-log/>
           <d2-header-fullscreen/>
@@ -89,6 +90,7 @@ import d2HeaderLog from './components/header-log'
 import d2HeaderColor from './components/header-color'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import mixinSearch from './mixins/search'
+import shopCheckComponentsVue from '@/views/common/shopSelectComponents/shopCheckComponents.vue'
 export default {
   name: 'd2-layout-header-aside',
   mixins: [
@@ -105,7 +107,8 @@ export default {
     d2HeaderTheme,
     d2HeaderUser,
     d2HeaderLog,
-    d2HeaderColor
+    d2HeaderColor,
+    shopCheckComponentsVue
   },
   data () {
     return {
