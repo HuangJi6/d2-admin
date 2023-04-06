@@ -110,7 +110,6 @@ export default {
     return {
       filterDialogVisible: false,
       goodsInfo: {},
-      supplierData: [],
       applicationData: [],
       showGoodsComponent: false,
       dialogStatus: '',

@@ -174,7 +174,7 @@ export default {
         sku: '',
         itemId: '',
         mlCode: '',
-        statusCode: '',
+        statusCode: '已下单',
         remark: '',
         hsCode: '',
         goodsCategory: '',

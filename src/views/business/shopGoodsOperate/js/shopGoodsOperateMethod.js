@@ -1,6 +1,6 @@
 import { deleteApi, getOneApi, updateApi, addApi, pageMapApi } from '@/api/business/shopGoodsOperateApi.js'
 // import { getAllApplication } from '@/api/business/applicationApi.js'
-import { getSupplierListApi } from '@/api/business/supplierApi.js'
+import { postSupplierListApi } from '@/api/business/supplierApi.js'
 
 // 初始化方法
 const initMethods = {
@@ -10,10 +10,6 @@ const initMethods = {
   },
   initCreated() {
     console.log('initCreated...')
-    this.handleHttpMethod(getSupplierListApi(), true, '请求中...').then(res => {
-      this.supplierData = res.data
-      // this.$set(this.createForm[0].children[1].itemRender, 'options', res.data)
-    })
   }
 }
 // 接口方法
@@ -32,7 +28,7 @@ const dataMethods = {
       sku: '',
       itemId: '',
       mlCode: '',
-      statusCode: '',
+      statusCode: '已下单',
       remark: '',
       hsCode: '',
       goodsCategory: '',
@@ -93,7 +89,7 @@ const dataMethods = {
   },
   selectedGoods(goodsInfo) {
     this.createFormData.goodsGuid = goodsInfo.guid
-    this.createFormData.goodsName = goodsInfo.goodsCategory + '—' + goodsInfo.goodsName
+    this.createFormData.goodsName = goodsInfo.goodsName
   },
   createFormItemChange() {
   }
@@ -194,7 +190,14 @@ const handleMethods = {
     this.createFormData.shopGoodsGuid = shopGoodsInfo.guid
     this.createFormData.goodsGuid = shopGoodsInfo.goodsGuid
     this.createFormData.clientId = shopGoodsInfo.clientId
-    this.createFormData.goodsName = shopGoodsInfo.shopName + '—' + shopGoodsInfo.goodsName
+    this.createFormData.goodsName = shopGoodsInfo.goodsName
+    // 发送请求获取供应商信息
+    this.getSupplierData(shopGoodsInfo.goodsGuid)
+  },
+  getSupplierData(goodsGuid) {
+    this.handleHttpMethod(postSupplierListApi({ goodsGuid: goodsGuid }), true, '请求中...').then(res => {
+      this.supplierData = res.data
+    })
   }
 }
 

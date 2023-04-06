@@ -1,6 +1,5 @@
 import { deleteApi, getOneApi, updateApi, addApi, pageMapApi } from '@/api/business/packingListApi.js'
 // import { getAllApplication } from '@/api/business/applicationApi.js'
-import { getSupplierListApi } from '@/api/business/supplierApi.js'
 
 // 初始化方法
 const initMethods = {
@@ -10,10 +9,6 @@ const initMethods = {
   },
   initCreated() {
     console.log('initCreated...')
-    this.handleHttpMethod(getSupplierListApi(), true, '请求中...').then(res => {
-      this.supplierData = res.data
-      // this.$set(this.createForm[0].children[1].itemRender, 'options', res.data)
-    })
   }
 }
 // 接口方法

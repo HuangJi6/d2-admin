@@ -1,5 +1,5 @@
 import { deleteApi, getOneApi, updateApi, addApi, pageMapApi } from '@/api/business/shopGoodsApi.js'
-import { getAllApplication } from '@/api/business/applicationApi.js'
+import { queryApplication } from '@/api/business/applicationApi.js'
 
 // 初始化方法
 const initMethods = {
@@ -9,10 +9,6 @@ const initMethods = {
   },
   initCreated() {
     console.log('initCreated...')
-    this.handleHttpMethod(getAllApplication(), true, '请求中...').then(res => {
-      this.applicationData = res.data
-      this.$set(this.createForm[0].children[0].itemRender, 'options', res.data)
-    })
   }
 }
 // 接口方法
@@ -52,6 +48,7 @@ const dataMethods = {
     this.listLoading = true
     const paramsCopy = Object.assign({}, this.filterFormData)
     this.handleFilter(paramsCopy)
+    paramsCopy.needExpendFilter = true
     this.handleHttpMethod(pageMapApi(paramsCopy || {}), true).then(res => {
       this.tableData = res.data.dataList
       this.total = res.data.total
@@ -91,9 +88,16 @@ const dataMethods = {
   },
   selectedGoods(goodsInfo) {
     this.createFormData.goodsGuid = goodsInfo.guid
-    this.createFormData.goodsName = goodsInfo.goodsCategory + '—' + goodsInfo.goodsName
+    this.createFormData.goodsName = goodsInfo.goodsName
   },
   createFormItemChange() {
+  },
+  // 查询店铺信息
+  queryApplication() {
+    this.handleHttpMethod(queryApplication({ needExpendFilter: true }), true, '请求中...').then(res => {
+      this.applicationData = res.data
+      this.$set(this.createForm[0].children[0].itemRender, 'options', res.data)
+    })
   }
 }
 // 校验方法
@@ -115,6 +119,7 @@ const handleMethods = {
     this.resetCreateForm()
     this.dialogStatus = 'create'
     this.dialogFormVisible = true
+    this.queryApplication()
   },
   // 关闭创建窗口
   createModalClose() { },
@@ -130,6 +135,7 @@ const handleMethods = {
         this.fileList = response.data.fileList
       }
       this.dialogFormVisible = true
+      this.queryApplication()
       this.dialogStatus = 'update'
     })
   },

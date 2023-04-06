@@ -39,7 +39,7 @@
         v-loading.body="listLoading"
         ref="vxeTableRef"
         height="92%"
-        style="min-height: 450px;"
+        style="min-height: 600px;"
         :row-config="{isHover: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
@@ -47,7 +47,7 @@
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
         <vxe-column field="optimizeStatus" title="优化标识" width="80"></vxe-column>
-        <vxe-column field="statusCode" title="状态标识" width="150" align="center">
+        <!-- <vxe-column field="statusCode" title="状态标识" width="150" align="center">
           <template #default="{ row }">
             <el-button v-if="row.statusCode==='暂定'" size="mini">{{ row.statusCode }}</el-button>
             <el-button v-if="row.statusCode==='未出售-未上架'" type="primary" size="mini">{{ row.statusCode }}</el-button>
@@ -56,7 +56,7 @@
             <el-button v-if="row.statusCode==='已出售-库存不足'" type="warning" size="mini">{{ row.statusCode }}</el-button>
             <el-button v-if="row.statusCode==='不出售-商品下架'" type="info" size="mini">{{ row.statusCode }}</el-button>
           </template>
-        </vxe-column>
+        </vxe-column> -->
         <vxe-column field="sku" title="SKU" width="120"></vxe-column>
         <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
         <vxe-column field="mlCode" title="ML CODE" width="120"></vxe-column>
@@ -210,22 +210,22 @@ export default {
             { field: 'sku', title: 'SKU', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入SKU' } } },
             { field: 'itemId', title: 'ITEM ID', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
             { field: 'mlCode', title: 'ML CODE', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
-            {
-              field: 'statusCode',
-              title: '状态标识',
-              span: 12,
-              itemRender: {
-                name: '$select',
-                options: [
-                  { value: '暂定', label: '暂定' },
-                  { value: '未出售-未上架', label: '未出售-未上架' },
-                  { value: '未出售-库存不足', label: '未出售-库存不足' },
-                  { value: '已出售-库存充足', label: '已出售-库存充足' },
-                  { value: '已出售-库存不足', label: '已出售-库存不足' },
-                  { value: '不出售-商品下架', label: '不出售-商品下架' }],
-                props: { placeholder: '请输入付款账户' }
-              }
-            },
+            // {
+            //   field: 'statusCode',
+            //   title: '状态标识',
+            //   span: 12,
+            //   itemRender: {
+            //     name: '$select',
+            //     options: [
+            //       { value: '暂定', label: '暂定' },
+            //       { value: '未出售-未上架', label: '未出售-未上架' },
+            //       { value: '未出售-库存不足', label: '未出售-库存不足' },
+            //       { value: '已出售-库存充足', label: '已出售-库存充足' },
+            //       { value: '已出售-库存不足', label: '已出售-库存不足' },
+            //       { value: '不出售-商品下架', label: '不出售-商品下架' }],
+            //     props: { placeholder: '请输入付款账户' }
+            //   }
+            // },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },
         {
