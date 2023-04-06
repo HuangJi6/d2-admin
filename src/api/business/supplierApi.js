@@ -32,6 +32,6 @@ export function deleteByGuidApi(guid) {
   return fetch({ url: '/api/mkd/business/busSupplier/deleteByGuid/' + guid, method: 'delete' })
 }
 
-export function getSupplierListApi() {
-  return fetch({ url: '/api/mkd/business/busSupplier/getSupplierList', method: 'get' })
+export function postSupplierListApi(params) {
+  return fetch({ url: '/api/mkd/business/busSupplier/postSupplierList', method: 'post', data: params })
 }

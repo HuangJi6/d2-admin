@@ -1,5 +1,5 @@
 import { deleteApi, getOneApi, updateApi, addApi, pageMapApi } from '@/api/business/supplierGoodsApi.js'
-import { getSupplierListApi } from '@/api/business/supplierApi.js'
+import { postSupplierListApi } from '@/api/business/supplierApi.js'
 
 // 初始化方法
 const initMethods = {
@@ -8,11 +8,7 @@ const initMethods = {
     this.pageList()
   },
   initCreated() {
-    console.log('initCreated...')
-    this.handleHttpMethod(getSupplierListApi(), true, '请求中...').then(res => {
-      this.applicationData = res.data
-      // this.$set(this.createForm[0].children[0].itemRender, 'options', res.data)
-    })
+
   }
 }
 // 接口方法
@@ -81,9 +77,16 @@ const dataMethods = {
   },
   selectedGoods(goodsInfo) {
     this.createFormData.goodsGuid = goodsInfo.guid
-    this.createFormData.goodsName = goodsInfo.goodsCategory + '—' + goodsInfo.goodsName
+    this.createFormData.goodsName = goodsInfo.goodsName
+    // 发送请求获取供应商信息
+    this.getSupplierData(goodsInfo.categoryGuid)
   },
   createFormItemChange() {
+  },
+  getSupplierData(categoryGuid) {
+    this.handleHttpMethod(postSupplierListApi({ categoryGuid: categoryGuid }), true, '请求中...').then(res => {
+      this.applicationData = res.data
+    })
   }
 }
 // 校验方法

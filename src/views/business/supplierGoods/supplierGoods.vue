@@ -70,12 +70,12 @@
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
             <template #supplierGuidSlot="{ data }">
-              <vxe-select v-model="data.supplierGuid" placeholder="可搜索" :options="applicationData" filterable></vxe-select>
+              <vxe-select v-model="data.supplierGuid" placeholder="请先选择商品信息" :options="applicationData" filterable clearable></vxe-select>
             </template>
             <template #goodsNameSlots="{ data }">
               <span> {{ data.goodsName }}  </span>
               <vxe-button status="primary" content="选择商品"  @click="handleChooseGoods(data)"></vxe-button>
-              <vxe-button status="primary" content="新增商品"  @click="handleChooseGoods(data)"></vxe-button>
+              <!-- <vxe-button status="primary" content="新增商品"  @click="handleChooseGoods(data)"></vxe-button> -->
             </template>
           </vxe-form>
         </vxe-modal>
@@ -154,23 +154,13 @@ export default {
           title: '',
           span: 23,
           children: [
+            { field: 'goodsName', title: '商品名称', span: 12, slots: { default: 'goodsNameSlots' } },
             {
               field: 'supplierGuid',
               title: '供应商',
               span: 12,
               slots: { default: 'supplierGuidSlot' }
             },
-            // {
-            //   field: 'supplierGuid',
-            //   title: '供应商',
-            //   span: 12,
-            //   itemRender: {
-            //     name: '$select',
-            //     options: [{ value: '0', label: '女' }, { value: '1', label: '男' }],
-            //     props: { clearable: true, placeholder: '请输入名称' }
-            //   }
-            // },
-            { field: 'goodsName', title: '商品名称', span: 12, slots: { default: 'goodsNameSlots' } },
             { field: 'boxLength', title: '单箱长', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱长' } } },
             { field: 'boxWidth', title: '单箱宽', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱宽' } } },
             { field: 'boxHigh', title: '单箱高', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱高' } } },
