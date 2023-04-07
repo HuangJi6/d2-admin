@@ -1,6 +1,6 @@
 <template>
   <div class="d2-page-cover">
-    <div class="d2-page-cover__logo">
+    <!-- <div class="d2-page-cover__logo">
       <slot/>
     </div>
     <p class="d2-page-cover__title">D2 Admin {{$version}}</p>
@@ -12,7 +12,7 @@
         style="position: absolute; top: 0; right: 0; border: 0; width: 150px;"
         src="./image/darkblue@2x.png"
         alt="Fork me on GitHub">
-    </a>
+    </a> -->
   </div>
 </template>
 

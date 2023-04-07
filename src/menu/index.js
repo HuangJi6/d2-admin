@@ -1,13 +1,13 @@
 import { uniqueId } from 'lodash'
 
 // 插件
-import demoPlugins from './modules/demo-plugins'
+// import demoPlugins from './modules/demo-plugins'
 // 组件
-import demoComponents from './modules/demo-components'
+// import demoComponents from './modules/demo-components'
 // 功能
-import demoPlayground from './modules/demo-playground'
+// import demoPlayground from './modules/demo-playground'
 // 测试
-import demoTest from './modules/demo-test'
+// import demoTest from './modules/demo-test'
 // 用户权限管理
 import demoAuth from './modules/demo-auth'
 // 业务管理
@@ -30,10 +30,10 @@ function supplementPath(menu) {
 
 // 菜单 侧边栏
 export const menuAside = supplementPath([
-  demoComponents,
-  demoPlugins,
-  demoPlayground,
-  demoTest,
+  // demoComponents,
+  // demoPlugins,
+  // demoPlayground,
+  // demoTest,
   demoAuth,
   demoStore
 ])
@@ -45,10 +45,10 @@ export const menuHeader = supplementPath([
     title: '首页',
     icon: 'home'
   },
-  demoPlayground,
-  demoComponents,
-  demoPlugins,
-  demoTest,
+  // demoPlayground,
+  // demoComponents,
+  // demoPlugins,
+  // demoTest,
   demoAuth,
   demoStore
 ])

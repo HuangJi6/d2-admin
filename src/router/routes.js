@@ -1,6 +1,6 @@
-import playground from './modules/playground'
-import plugins from './modules/plugins'
-import components from './modules/components'
+// import playground from './modules/playground'
+// import plugins from './modules/plugins'
+// import components from './modules/components'
 import test from './modules/test'
 import auth from './modules/auth'
 import store from './modules/business'
@@ -55,9 +55,9 @@ const frameIn = [
       }
     ]
   },
-  playground,
-  plugins,
-  components,
+  // playground,
+  // plugins,
+  // components,
   test,
   auth,
   store
