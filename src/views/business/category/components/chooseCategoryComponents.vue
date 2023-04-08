@@ -111,7 +111,7 @@ export default {
     handleCheckChange() {},
     onSure() {
       const checkedNodes = this.$refs.tree.getCheckedNodes()
-      const treeCheckedData = {}
+      const treeCheckedData = { checkedStr: '', checkedKeys: [], checkedNodes: [] }
       if (checkedNodes && checkedNodes.length > 0) {
         let treeCheckedStr = ''
         const treeCheckedKeys = []
@@ -139,9 +139,9 @@ export default {
         treeCheckedData.checkedKeys = treeCheckedKeys
         treeCheckedData.checkedNodes = checkedNodes
         console.log(treeCheckedData)
-        this.selectedCategoryIn = treeCheckedData.checkedStr
         this.defaultCheckedKeysIn = treeCheckedData.checkedKeys
       }
+      this.selectedCategoryIn = treeCheckedData.checkedStr
       this.show = false
       this.$emit('onSureClick', treeCheckedData)
     },

@@ -53,23 +53,12 @@
           </template>
         </vxe-column>
       </vxe-table>
-      <div v-show="dialogFormVisible" width="60%">
-        <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
-        @close="createModalClose" width="60%">
-          <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
-          :data="createFormData" :items="createForm" :rules="createFromRules"
-          @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
-          <template #supCategorySlot>
-            <ChooseCategoryComponentsVue
-            :selectedCategory="createFormData.supCategory"
-            :defaultCheckedKeys="createFormData.categoryGuids"
-            :busGuid="createFormData.guid"
-            @onSureClick="categorySureClick">
-            </ChooseCategoryComponentsVue>
-          </template>
-          </vxe-form>
-        </vxe-modal>
-      </div>
+      <SupplierAddComponentVue
+      :show.sync="dialogFormVisible"
+      :defaultFormData="createFormData"
+      :dialogStatus="dialogStatus"
+      @onSureClick="pageList">
+      </SupplierAddComponentVue>
     </template>
 
     <template slot="footer">
@@ -81,9 +70,10 @@
 <script>
 import mixins from '@/mixin/commonMixin.js'
 import { myMethods } from './js/supplierMethod.js'
-import ChooseCategoryComponentsVue from '../category/components/chooseCategoryComponents.vue'
+// import ChooseCategoryComponentsVue from '../category/components/chooseCategoryComponents.vue'
+import SupplierAddComponentVue from './components/supplierAddComponent.vue'
 export default {
-  components: { ChooseCategoryComponentsVue },
+  components: { SupplierAddComponentVue },
   name: 'application',
   mixins: [mixins],
   data() {
@@ -102,59 +92,8 @@ export default {
         supName: '',
         supCategory: ''
       },
-      createFormData: {
-        supName: '',
-        linkName: '',
-        linkPhone: '',
-        supAddress: '',
-        supCategory: '',
-        account: '',
-        grade: '',
-        qualification: '',
-        remark: '',
-        categoryGuids: []
-      },
-      createFromRules: {
-        supName: [
-          { required: true, message: '请输入供应商名称', trigger: 'blur' }
-        ]
-      },
-      createForm: [
-        {
-          title: '',
-          span: 23,
-          children: [
-            { field: 'supName', title: '供应商名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商名称' } } },
-            { field: 'supCategory', title: '供应类别', span: 12, slots: { default: 'supCategorySlot' } },
-            { field: 'linkName', title: '联系人', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入联系人' } } },
-            { field: 'linkPhone', title: '联系电话', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入联系电话' } } },
-            { field: 'supAddress', title: '供应商地址', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
-            { field: 'account', title: '付款账户', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入付款账户' } } },
-            {
-              field: 'grade',
-              title: '评级',
-              span: 12,
-              itemRender: {
-                name: '$select',
-                options: [{ label: 'A', value: 'A', key: 'A' }, { label: 'B', value: 'B', key: 'B' }, { label: 'C', value: 'C', key: 'C' }],
-                props: { placeholder: '请输入评级' }
-              }
-            },
-            { field: 'qualification', title: '资质信息', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'remark', title: '备注', span: 24, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }
-          ]
-        },
-        {
-          align: 'right',
-          span: 23,
-          itemRender: {
-            name: '$buttons',
-            children:
-              [{ props: { type: 'submit', content: '保存', status: 'primary' } },
-                { props: { type: 'reset', content: '取消', status: 'warning' } }]
-          }
-        }
-      ]
+      // 新增表单data
+      createFormData: {}
     }
   },
   methods: {
