@@ -14,7 +14,7 @@
     </template>
 
     <template>
-      <vxe-toolbar style="height:8%" :refresh="{query: pageList}" export print custom zoom>
+      <vxe-toolbar ref="vxeToolBarRef" style="height:8%" :refresh="{query: pageList}" custom zoom>
         <template #buttons>
           <el-button icon="vxe-icon-table" size="mini" style="width:120px">店铺管理</el-button>
           <!-- <el-button icon="vxe-icon-chart-pie" size="mini" style="width:120px" @click="filterDialogVisibleClick">过滤数据</el-button> -->
