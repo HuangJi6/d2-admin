@@ -1,12 +1,7 @@
 import {
-  // deleteApi,
   deleteByGuidApi,
   getOneApi,
-  // updateApi,
-  updateByDtoApi,
-  // addApi,
-  pageApi,
-  addByDtoApi
+  pageApi
 } from '@/api/business/supplierApi.js'
 
 // 初始化方法
@@ -23,21 +18,6 @@ const initMethods = {
 const interfaceMethods = {}
 // 数据方法
 const dataMethods = {
-  // 重置表单数据
-  resetCreateForm() {
-    this.createFormData = {
-      supName: '',
-      linkName: '',
-      linkPhone: '',
-      supAddress: '',
-      supCategory: '',
-      account: '',
-      grade: '',
-      qualification: '',
-      remark: '',
-      categoryGuids: []
-    }
-  },
   pageList() {
     this.listLoading = true
     const paramsCopy = Object.assign({}, this.filterFormData)
@@ -51,39 +31,9 @@ const dataMethods = {
       this.listLoading = false
     })
   },
-  // 提交保存
-  submitCreate(formName) {
-    const refs = this.$refs
-    refs[formName].validate().then((valid) => {
-      if (!valid) {
-        if (this.dialogStatus === 'create') {
-          debugger
-          this.handleHttpMethod(addByDtoApi(this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
-            if (res) {
-              this.dialogFormVisible = false
-              this.pageList()
-            }
-          })
-        }
-        if (this.dialogStatus === 'update') {
-          this.handleHttpMethod(updateByDtoApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
-            if (res) {
-              this.dialogFormVisible = false
-              this.pageList()
-            }
-          })
-        }
-      }
-    })
-  },
   // 查询单条数据
   getOne(id) {
     return this.handleHttpMethod(getOneApi(id), true)
-  },
-  // 确定选中类目后
-  categorySureClick(checkedData) {
-    this.createFormData.supCategory = checkedData.checkedStr
-    this.createFormData.categoryGuids = checkedData.checkedKeys
   }
 }
 // 校验方法
@@ -102,23 +52,13 @@ const handleMethods = {
   },
   // 新增按钮
   handleCreate() {
-    this.resetCreateForm()
     this.dialogStatus = 'create'
     this.dialogFormVisible = true
-  },
-  // 关闭创建窗口
-  createModalClose() { },
-  // 提交保存按钮
-  handleSubmitCreate(formName) {
-    this.submitCreate(formName)
   },
   // 点击编辑按钮事件
   handleUpdate(row) {
     this.getOne(row.guid).then(response => {
       this.createFormData = response.data
-      if (response.data.fileList) {
-        this.fileList = response.data.fileList
-      }
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
     })
@@ -151,11 +91,6 @@ const handleMethods = {
   // 刷新方法
   handleRefresh() {
     this.pageList()
-  },
-  // 取消保存
-  handleCancelCreate() {
-    this.dialogFormVisible = false
-    this.resetCreateForm()
   }
 }
 
