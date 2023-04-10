@@ -5,15 +5,19 @@
       <div style="float:left;padding-top:3px">
         <el-radio-group @input="pageList()" v-model="filterFormData.statusCode" size="medium">
           <el-radio-button label="全部" @click="pageList()">全部</el-radio-button>
+          <el-radio-button label="待下单" @click="pageList()">待下单</el-radio-button>
           <el-radio-button label="已下单" @click="pageList()">已下单</el-radio-button>
-          <el-radio-button label="在途" @click="pageList()">在途</el-radio-button>
-          <el-radio-button label="已售" @click="pageList()">已售</el-radio-button>
-          <el-radio-button label="售罄" @click="pageList()">售罄</el-radio-button>
         </el-radio-group>
       </div>
-      <div style="float:right;">
-        <el-button icon="vxe-icon-square-plus" type="success" size="medium" style="width:100px" @click="handleCreate">新增</el-button>
-        <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+      <div  style="float:right;" v-if="filterFormData.statusCode === '待下单'" >
+        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleCreateOrder">新增</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleRemove">删除</el-button>
+        <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+      </div>
+      <div style="float:right;" v-if="filterFormData.statusCode === '已下单'">
+        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
+        <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
     </template>
 
@@ -55,20 +59,16 @@
         <vxe-column field="purAmount" title="采购总额" width="120"></vxe-column>
         <vxe-column field="shipType" title="运输方式" width="120"></vxe-column>
         <vxe-column field="shipAmount" title="运输价格" width="120"></vxe-column>
-        <vxe-column field="shipPayAmount" title="运输已支付费用" width="120"></vxe-column>
-        <vxe-column field="purWeight" title="采购重量" width="120"></vxe-column>
         <vxe-column field="purTime" title="采购时间" width="120"></vxe-column>
-        <vxe-column field="boxLength" title="单箱长" width="120"></vxe-column>
-        <vxe-column field="boxWidth" title="单箱宽" width="120"></vxe-column>
-        <vxe-column field="boxHigh" title="单箱高" width="120"></vxe-column>
-        <vxe-column field="boxVolume" title="单箱体积" width="120"></vxe-column>
+        <vxe-column field="boxLength" title="单箱长/CM" width="120"></vxe-column>
+        <vxe-column field="boxWidth" title="单箱宽/CM" width="120"></vxe-column>
+        <vxe-column field="boxHigh" title="单箱高/CM" width="120"></vxe-column>
+        <vxe-column field="boxVolume" title="单箱体积/M" width="120"></vxe-column>
         <vxe-column field="singleAmount" title="原始单价" width="120"></vxe-column>
-        <vxe-column field="grade" title="评级" width="100"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
-        <vxe-column title="操作" width="120" fixed="right" show-overflow>
+        <vxe-column v-if="filterFormData.statusCode==='待下单'" title="操作" align="center" width="100" fixed="right" show-overflow>
           <template #default="{ row }">
-            <vxe-button size="mini" type="text" status="success"  @click="handleUpdate(row)" content="修改"></vxe-button>
-            <vxe-button size="mini" type="text" status="danger"  @click="handleRemove(row)" content="删除"></vxe-button>
+            <vxe-button v-if="filterFormData.statusCode==='待下单'" size="mini" type="text" status="success"  @click="handleOrder(row)" content="下单"></vxe-button>
           </template>
         </vxe-column>
       </vxe-table>
@@ -79,7 +79,7 @@
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
             <template #supplierGuidSlot="{ data }">
-              <vxe-select v-model="data.supplierGuid" placeholder="可搜索" :options="supplierData" filterable></vxe-select>
+              <vxe-select v-model="data.supplierGuid" placeholder="可搜索" :options="supplierData" filterable @change="supplierChange"></vxe-select>
             </template>
             <template #shopGoodsSlot="{ data }">
               <span> {{ data.goodsName }}  </span>
@@ -112,6 +112,13 @@
         :show.sync="showGoodsComponent"
         @onSureClick="selectedShopGoods"
       ></ShopGoodsComponent>
+      <ShopGoodsOrderComponentVue
+        v-if="showOrderComponent"
+        :show.sync="showOrderComponent"
+        :defaultFormData="createOrderFormData"
+        :dialogStatus="dialogStatus"
+        @onSureClick="pageList"
+      ></ShopGoodsOrderComponentVue>
     </template>
 
     <template slot="footer">
@@ -124,13 +131,17 @@
 import mixins from '@/mixin/commonMixin.js'
 import GoodsShowComponent from '@/views/business/goods/components/goodsShowComponent.vue'
 import ShopGoodsComponent from '@/views/business/shopGoods/components/shopGoodsComponent'
+import ShopGoodsOrderComponentVue from '@/views/business/shopGoodsOperate/components/shopGoodsOrderComponent.vue'
 import { myMethods } from './js/shopGoodsOperateMethod.js'
+import $Big from '@/libs/big.js'
+
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { GoodsShowComponent, ShopGoodsComponent },
+  components: { GoodsShowComponent, ShopGoodsComponent, ShopGoodsOrderComponentVue },
   data() {
     return {
+      showOrderComponent: false,
       filterDialogVisible: false,
       goodsInfo: {},
       supplierData: [],
@@ -164,7 +175,18 @@ export default {
           ]
         }
       ],
+      createOrderFormData: {
+        shopGoodsGuid: '',
+        clientId: '',
+        goodsName: '',
+        goodsGuid: '',
+        statusCode: '待下单',
+        purNumber: ''
+      },
       createFormData: {
+        boxVolume: '',
+        boxQuantity: '',
+        suplierGuid: '',
         shopGoodsGuid: '',
         shopName: '',
         clientId: '',
@@ -218,22 +240,21 @@ export default {
               span: 12,
               itemRender: {
                 name: '$select',
-                options: [{ value: '在途', label: '在途' }, { value: '已售', label: '已售' }, { value: '售罄', label: '售罄' }, { value: '已下单', label: '已下单' }],
+                options: [{ value: '待下单', label: '待下单' }, { value: '已下单', label: '已下单' }],
                 props: { clearable: true, placeholder: '请输入状态标识' }
               }
             },
-            { field: 'shippingMark', title: '箱唛', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱唛' } } },
             { field: 'purNumber', title: '采购数量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购数量' } } },
+            { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
             { field: 'totalBox', title: '总箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
-            { field: 'purVolume', title: '采购体积', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
+            { field: 'boxVolume', title: '单箱体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
+            { field: 'purVolume', title: '采购体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
+            { field: 'shippingMark', title: '箱唛', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱唛' } } },
             { field: 'purUnitPrice', title: '采购单价', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
             { field: 'purAmount', title: '采购总额', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
             { field: 'shipType', title: '运输方式', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
             { field: 'shipAmount', title: '运输总额', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
-            { field: 'shipPayAmount', title: '运输已支付', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
-            { field: 'purWeight', title: '采购重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
             { field: 'purTime', title: '采购时间', span: 12, slots: { default: 'purTimeSlot' } },
-            { field: 'grade', title: '评级', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },
         {
@@ -266,6 +287,13 @@ export default {
             this.createFormData.shopName = element.label
           }
         })
+      }
+    },
+    'createFormData.purUnitPrice': {
+      handler(nval, oval) {
+        if (nval) {
+          this.createFormData.purAmount = new $Big(nval || 0).times(this.createFormData.purNumber || 0).toString()
+        }
       }
     }
   }
