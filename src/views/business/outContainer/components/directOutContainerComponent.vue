@@ -1,6 +1,6 @@
 // 直接出库管理
 <template>
-<vxe-modal v-model="showIn" title="添加箱单"
+<vxe-modal v-model="showIn" title="直接出库"
       @close="handleClose" width="80%" show-footer show-zoom resize>
   <template #footer>
     <vxe-button status="primary" @click="handleSubmitCreate">确定</vxe-button>
@@ -32,11 +32,6 @@
     <vxe-column field="goodsName" title="中文品名" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
       <template #edit="{ row }">
         <vxe-input v-model="row.goodsName" type="text"></vxe-input>
-      </template>
-    </vxe-column>
-    <vxe-column field="goodsNameE" title="Goods Name" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
-      <template #edit="{ row }">
-        <vxe-input v-model="row.goodsNameE" type="text"></vxe-input>
       </template>
     </vxe-column>
     <vxe-column field="shippingMark" title="箱唛编号" width="150"></vxe-column>
@@ -173,6 +168,11 @@ export default {
     onSureSelectedClick(selectedRows) {
       console.log(selectedRows)
       this.selectionOperateDatasIn = selectedRows
+      // 直接选择默认出库箱数以及制造商编号等
+      this.selectionOperateDatasIn.forEach(item => {
+        item.ctnNo = item.totalBox
+        item.ctnNo = item.totalBox
+      })
     },
     packingBoxChange(row) {
       console.log(row)

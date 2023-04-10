@@ -4,14 +4,14 @@
     <template slot="header">
       <div style="float:left;padding-top:3px">
         <el-radio-group @input="pageList()" v-model="filterFormData.statusCode" size="medium">
-          <el-radio-button label="待检测" @click="pageOperateList()">待检测</el-radio-button>
+          <el-radio-button label="已下单" @click="pageOperateList()">已下单</el-radio-button>
           <el-radio-button label="已入库" @click="pageList()">已入库</el-radio-button>
           <el-radio-button label="待出库" @click="pageList()">待出库</el-radio-button>
-          <el-radio-button label="待重新装箱" @click="pageList()">待重新装箱</el-radio-button>
           <el-radio-button label="已出库" @click="pageOperateList()">已出完</el-radio-button>
+          <el-radio-button label="全部" @click="pageOperateList()">全部</el-radio-button>
         </el-radio-group>
       </div>
-      <div style="float:right;" v-if="filterFormData.statusCode === '待检测'" >
+      <div style="float:right;" v-if="filterFormData.statusCode === '已下单'" >
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleBeforeCheck">检测入库</el-button>
         <el-button  size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>

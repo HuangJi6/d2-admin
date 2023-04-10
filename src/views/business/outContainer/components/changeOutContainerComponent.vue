@@ -34,11 +34,6 @@
         <vxe-input v-model="row.goodsName" type="text"></vxe-input>
       </template>
     </vxe-column>
-    <vxe-column field="goodsNameE" title="Goods Name" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
-      <template #edit="{ row }">
-        <vxe-input v-model="row.goodsNameE" type="text"></vxe-input>
-      </template>
-    </vxe-column>
     <vxe-column field="shippingMark" title="原箱唛编号" width="150"></vxe-column>
     <vxe-column field="ctnNo" title="制造商编号" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
       <template #edit="{ row }">
