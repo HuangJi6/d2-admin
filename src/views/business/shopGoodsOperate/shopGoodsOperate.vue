@@ -7,6 +7,7 @@
           <el-radio-button label="全部" @click="pageList()">全部</el-radio-button>
           <el-radio-button label="待下单" @click="pageList()">待下单</el-radio-button>
           <el-radio-button label="已下单" @click="pageList()">已下单</el-radio-button>
+          <el-radio-button label="已入库" @click="pageList()">已入库</el-radio-button>
         </el-radio-group>
       </div>
       <div  style="float:right;" v-if="filterFormData.statusCode === '待下单'" >

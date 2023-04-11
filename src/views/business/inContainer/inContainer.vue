@@ -3,7 +3,7 @@
   <d2-container>
     <template slot="header">
       <div style="float:left;padding-top:3px">
-        <el-radio-group @input="pageList()" v-model="filterFormData.statusCode" size="medium">
+        <el-radio-group @input="handleRefreshPageList()" v-model="filterFormData.statusCode" size="medium">
           <el-radio-button label="已下单" @click="pageOperateList()">已下单</el-radio-button>
           <el-radio-button label="已入库" @click="pageList()">已入库</el-radio-button>
           <el-radio-button label="待出库" @click="pageList()">待出库</el-radio-button>
@@ -13,18 +13,18 @@
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '已下单'" >
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleBeforeCheck">检测入库</el-button>
-        <el-button  size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+        <el-button  size="medium" style="width:100px" @click="handleRefreshPageList()">刷新</el-button>
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '已入库'" >
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleAddPackingList">添加箱单</el-button>
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">直接出库</el-button>
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleChangeOutContainer">变更出库</el-button>
-        <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+        <el-button size="medium" style="width:100px" @click="handleRefreshPageList()">刷新</el-button>
       </div>
     </template>
 
     <template>
-      <vxe-toolbar style="height:8%" :refresh="{query: pageList}" export custom zoom>
+      <vxe-toolbar style="height:8%" :refresh="{query: handleRefreshPageList}" export custom zoom>
         <template #buttons>
           <el-button icon="vxe-icon-table" size="mini" style="width:120px">仓库出库计划表</el-button>
           <el-button icon="vxe-icon-chart-pie" size="mini" style="width:120px" @click="HandlefilterDialogClick">过滤数据</el-button>
@@ -52,25 +52,26 @@
         <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
         <vxe-column field="sku" title="SKU" width="120"></vxe-column>
         <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
-        <vxe-column field="statusCode" title="状态标识" width="100"></vxe-column>
-        <vxe-column field="purNumber" title="总数量" width="120"></vxe-column>
-        <vxe-column field="purNumber" title="已出库数量" width="120"></vxe-column>
-        <vxe-column field="purNumber" title="未出库数量" width="120"></vxe-column>
-        <vxe-column field="totalBox" title="总箱数" width="120"></vxe-column>
-        <vxe-column field="boxQuantity" title="单箱数量" width="120"></vxe-column>
-        <vxe-column field="remeasureWeight" title="单箱重新称重" width="120"></vxe-column>
-        <vxe-column field="remeasureTotalWeight" title="总重新称重" width="120"></vxe-column>
-        <vxe-column field="remeasureLength" title="重新测量长" width="120"></vxe-column>
-        <vxe-column field="remeasureWidth" title="重新测量宽" width="120"></vxe-column>
-        <vxe-column field="remeasureHigh" title="重新测量高" width="120"></vxe-column>
-        <vxe-column field="remeasureVolume" title="重新测量体积" width="120"></vxe-column>
+        <vxe-column field="statusCode" title="状态" width="80"></vxe-column>
+        <vxe-column field="purNumber" title="总数量" width="80"></vxe-column>
+        <vxe-column field="purOutNumber" title="已出库数" width="100"></vxe-column>
+        <vxe-column field="purInNumber" title="未出库数" width="100"></vxe-column>
+        <vxe-column field="totalBox" title="总箱数" width="80"></vxe-column>
+        <vxe-column field="boxQuantity" title="单箱数" width="80"></vxe-column>
+        <vxe-column field="remeasureLength" title="重测长/CM" width="100"></vxe-column>
+        <vxe-column field="remeasureWidth" title="重测宽/CM" width="100"></vxe-column>
+        <vxe-column field="remeasureHigh" title="重测高/CM" width="100"></vxe-column>
+        <vxe-column field="remeasureVolume" title="重测单箱体积/M" width="120"></vxe-column>
+        <vxe-column field="remeasureTotalVolume" title="重测总体积/M" width="120"></vxe-column>
         <vxe-column field="purVolume" title="原体积" width="120"></vxe-column>
+        <vxe-column field="remeasureWeight" title="单箱重称重/KG" width="120"></vxe-column>
+        <vxe-column field="remeasureTotalWeight" title="总重称重/KG" width="120"></vxe-column>
         <vxe-column field="goodsNature" title="货物性质" width="120"></vxe-column>
         <vxe-column field="qualityCode" title="质检情况" width="120"></vxe-column>
         <vxe-column field="inTime" title="入库日期" width="120"></vxe-column>
         <vxe-column field="outTime" title="出库日期" width="120"></vxe-column>
         <vxe-column field="remark" title="备注" width="120"></vxe-column>
-        <vxe-column title="操作" width="100" fixed="right" show-overflow>
+        <vxe-column v-if="filterFormData.statusCode!=='已下单'" title="操作" width="80" fixed="right" align="center" show-overflow>
           <template #default="{ row }">
             <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)" content="修改"></vxe-button>
           </template>
@@ -79,12 +80,11 @@
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="填充检测数据" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
         @close="handleCancelCreate" width="60%">
-          <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+          <vxe-form ref="createFrom" title-width="150" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
-          @submit="submitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
+          @submit="handleSubmitInContainer('createFrom')" @reset="handleCancelInContainer('createFrom')">
             <template #inTimeSlot="{ data }">
               <el-date-picker style="width:100%" v-model="data.inTime" type="date" size="small" placeholder="请选择日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-              <!-- <vxe-input v-model="data.purTime" type="date" placeholder="请选择日期" clearable></vxe-input> -->
             </template>
           </vxe-form>
         </vxe-modal>
@@ -134,6 +134,7 @@ import AddPackingListFormDialogVue from '@/views/business/packingList/components
 import DirectOutContainerComponentVue from '../outContainer/components/directOutContainerComponent.vue'
 import ChangeOutContainerComponentVue from '../outContainer/components/changeOutContainerComponent.vue'
 import { myMethods } from './js/inContainerMethod.js'
+import moment from 'moment'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
@@ -160,7 +161,7 @@ export default {
         shopName: '',
         sku: '',
         itemId: '',
-        statusCode: '待检测',
+        statusCode: '已下单',
         shippingMark: ''
       },
       searchForm: [
@@ -180,18 +181,23 @@ export default {
         goodsName: '',
         itemId: '',
         sku: '',
+        totalBox: '',
         operateGuid: '',
+        purNumber: '',
+        purInNumber: '',
+        purOutNumber: '',
         remeasureLength: '',
         remeasureWidth: '',
         remeasureHigh: '',
         remeasureVolume: '0',
+        remeasureTotalVolume: '0',
         remeasureWeight: '',
         remeasureTotalWeight: '0',
         boxWeight: '',
         statusCode: '',
         goodsNature: '',
-        qualityCode: '',
-        inTime: '',
+        qualityCode: 'OK',
+        inTime: moment().format('YYYY-MM-DD h:mm:ss'),
         outTime: '',
         shippingMark: '',
         remark: ''
@@ -217,16 +223,26 @@ export default {
           children: [
             { field: 'goodsName', title: '商品名称', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入单箱重称重' } } },
             { field: 'itemId', title: 'ITEM ID', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入单箱重称重' } } },
-            { field: 'sku', title: 'sku', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入单箱重称重' } } },
+            { field: 'sku', title: 'SKU', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入单箱重称重' } } },
+            { field: 'purNumber', title: '总数量', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入单箱重称重' } } },
             { field: 'totalBox', title: '总箱数', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入单箱重称重' } } },
             { field: 'remeasureWeight', title: '单箱重称重', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
             { field: 'remeasureTotalWeight', title: '总重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
-            { field: 'remeasureLength', title: '重新测量长', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量长' } } },
-            { field: 'remeasureWidth', title: '重新测量宽', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量宽' } } },
-            { field: 'remeasureHigh', title: '重新测量高', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量高' } } },
-            { field: 'remeasureVolume', title: '重测量体积', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重测量体积' } } },
-            { field: 'goodsNature', title: '货物性质', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入货物性质' } } },
-            { field: 'qualityCode', title: '质检情况', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入质检情况' } } },
+            { field: 'remeasureLength', title: '重新测量长/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量长' } } },
+            { field: 'remeasureWidth', title: '重新测量宽/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量宽' } } },
+            { field: 'remeasureHigh', title: '重新测量高/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量高' } } },
+            { field: 'remeasureVolume', title: '重测体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重测量体积' } } },
+            { field: 'remeasureTotalVolume', title: '重测总体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重测量体积' } } },
+            {
+              field: 'qualityCode',
+              title: '质检情况',
+              span: 12,
+              itemRender: {
+                name: '$select',
+                options: [{ label: 'OK', value: 'OK' }, { label: 'NO', value: 'NO' }],
+                props: { placeholder: '请输入质检情况' }
+              }
+            },
             { field: 'inTime', title: '入库时间', span: 12, slots: { default: 'inTimeSlot' } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },
@@ -256,17 +272,20 @@ export default {
     'createFormData.remeasureLength': {
       handler(nval, oval) {
         debugger
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(2).toString()
       }
     },
     'createFormData.remeasureWidth': {
       handler(nval, oval) {
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(2).toString()
       }
     },
     'createFormData.remeasureHigh': {
       handler(nval, oval) {
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(2).toString()
       }
     },
     'createFormData.remeasureWeight': {

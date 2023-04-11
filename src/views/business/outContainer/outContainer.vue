@@ -225,7 +225,6 @@ export default {
             { field: 'remeasureWidth', title: '重新测量宽', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量宽' } } },
             { field: 'remeasureHigh', title: '重新测量高', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量高' } } },
             { field: 'remeasureVolume', title: '重测量体积', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重测量体积' } } },
-            { field: 'goodsNature', title: '货物性质', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入货物性质' } } },
             { field: 'qualityCode', title: '质检情况', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入质检情况' } } },
             { field: 'inTime', title: '入库时间', span: 12, slots: { default: 'inTimeSlot' } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]

@@ -1,20 +1,16 @@
-import { deleteApi, getOneApi, updateApi, pageMapApi, addBatchApi, pageNotCheckMapApi } from '@/api/business/inContainerApi.js'
+import { deleteApi, getOneApi, updateApi, pageMapApi as pageInContainerList, addBatchApi, pageNotCheckMapApi } from '@/api/business/inContainerApi.js'
 import { pageMapApi as outPageMapApi } from '@/api/business/outContainerApi.js'
-// import { getAllApplication } from '@/api/business/applicationApi.js'
-// import { getSupplierListApi } from '@/api/business/supplierApi.js'
+import { pageMapApi as operatePageMapApi } from '@/api/business/shopGoodsOperateApi.js'
+import moment from 'moment'
 
 // 初始化方法
 const initMethods = {
   initMounted() {
     console.log('initMounted...')
-    this.pageList()
+    this.pageOperateList()
   },
   initCreated() {
-    //   console.log('initCreated...')
-    //   this.handleHttpMethod(getSupplierListApi(), true, '请求中...').then(res => {
-    //     this.supplierData = res.data
-    //     // this.$set(this.createForm[0].children[1].itemRender, 'options', res.data)
-    //   })
+    console.log('initCreated...')
   }
 }
 // 接口方法
@@ -28,17 +24,21 @@ const dataMethods = {
       itemId: '',
       sku: '',
       operateGuid: '',
+      purNumber: '',
+      purInNumber: '',
+      purOutNumber: '',
       remeasureLength: '',
       remeasureWidth: '',
       remeasureHigh: '',
       remeasureVolume: '0',
+      remeasureTotalVolume: '0',
       remeasureWeight: '',
       remeasureTotalWeight: '0',
       boxWeight: '',
       statusCode: '',
       goodsNature: '',
-      qualityCode: '',
-      inTime: '',
+      qualityCode: 'OK',
+      inTime: moment().format('YYYY-MM-DD h:mm:ss'),
       outTime: '',
       shippingMark: '',
       remark: ''
@@ -61,7 +61,7 @@ const dataMethods = {
       })
     } else if (paramsCopy.statusCode === '已入库') {
       this.handleFilter(paramsCopy)
-      this.handleHttpMethod(pageMapApi(paramsCopy || {}), true).then(res => {
+      this.handleHttpMethod(pageInContainerList(paramsCopy || {}), true).then(res => {
         this.tableData = res.data.dataList
         this.total = res.data.total
         this.listLoading = false
@@ -79,23 +79,39 @@ const dataMethods = {
         this.listLoading = false
       })
     }
+    this.listLoading = false
   },
-  // 查询待检测的数据
-  // pageOperateList() {
-  //   this.listLoading = true
-  //   const paramsCopy = Object.assign({}, this.filterFormData)
-  //   this.handleFilter(paramsCopy)
-  //   this.handleHttpMethod(operatePageMapApi(paramsCopy || {}), true).then(res => {
-  //     this.tableData = res.data.dataList
-  //     this.total = res.data.total
-  //     this.listLoading = false
-  //   }).catch(err => {
-  //     console.log(err)
-  //     this.listLoading = false
-  //   })
-  // },
+  // 查询已下单的数据
+  pageOperateList() {
+    debugger
+    this.listLoading = true
+    const paramsCopy = Object.assign({}, this.filterFormData)
+    this.handleFilter(paramsCopy)
+    this.handleHttpMethod(operatePageMapApi(paramsCopy || {}), true).then(res => {
+      this.tableData = res.data.dataList
+      this.total = res.data.total
+      this.listLoading = false
+    }).catch(err => {
+      console.log(err)
+      this.listLoading = false
+    })
+  },
+  // 查询已入库的数据
+  pageInContainerList() {
+    this.listLoading = true
+    const paramsCopy = Object.assign({}, this.filterFormData)
+    this.handleFilter(paramsCopy)
+    this.handleHttpMethod(pageInContainerList(paramsCopy || {}), true).then(res => {
+      this.tableData = res.data.dataList
+      this.total = res.data.total
+      this.listLoading = false
+    }).catch(err => {
+      console.log(err)
+      this.listLoading = false
+    })
+  },
   // 提交保存
-  submitCreate(formName) {
+  handleSubmitInContainer(formName) {
     const refs = this.$refs
     refs[formName].validate().then((valid) => {
       if (!valid) {
@@ -107,12 +123,15 @@ const dataMethods = {
             formDataCopy.operateGuid = ele.guid
             formDataCopy.shippingMark = ele.shippingMark
             formDataCopy.statusCode = '已入库'
+            formDataCopy.purNumber = ele.purNumber
+            formDataCopy.purInNumber = ele.purNumber
+            formDataCopy.purOutNumber = 0
             beforeCheckDatas.push(formDataCopy)
           })
           this.handleHttpMethod(addBatchApi(beforeCheckDatas), true, '正在保存中', true, '信息保存成功').then(res => {
             if (res) {
               this.dialogFormVisible = false
-              this.pageList()
+              this.pageOperateList()
             }
           })
         }
@@ -146,6 +165,8 @@ const dataMethods = {
       formDataCopy.operateGuid = ele.guid
       formDataCopy.shippingMark = ele.shippingMark
       formDataCopy.statusCode = '已入库'
+      formDataCopy.purInNumber = formDataCopy.purNumber
+      formDataCopy.purOutNumber = 0
       beforeCheckDatas.push(formDataCopy)
     })
     console.log(beforeCheckDatas)
@@ -252,7 +273,7 @@ const handleMethods = {
     this.pageList()
   },
   // 取消保存
-  handleCancelCreate() {
+  handleCancelInContainer() {
     this.dialogFormVisible = false
     this.resetCreateForm()
   },
@@ -292,6 +313,10 @@ const handleMethods = {
     this.createFormData.goodsName = selectionDatas[0].goodsName
     this.createFormData.itemId = selectionDatas[0].itemId
     this.createFormData.sku = selectionDatas[0].sku
+    this.createFormData.totalBox = selectionDatas[0].totalBox
+    this.createFormData.purInNumber = selectionDatas[0].purNumber
+    this.createFormData.purOutNumber = 0
+    this.createFormData.purNumber = selectionDatas[0].purNumber
   },
   // 入库前保存检测信息
   handleBeforeCheckSave() {
@@ -315,8 +340,19 @@ const handleMethods = {
   // 添加箱单
   handleAddPackingList() {
     this.showAddPackingListFormDialog = true
+  },
+  // 刷新按钮点击
+  handleRefreshPageList() {
+    if (this.filterFormData.statusCode === '已下单') {
+      this.pageOperateList()
+    }
+    if (this.filterFormData.statusCode === '已入库') {
+      this.pageInContainerList()
+    }
+    if (this.filterFormData.statusCode === '待出库') {
+      this.pageList()
+    }
   }
-
 }
 
 export const myMethods = {

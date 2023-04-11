@@ -165,7 +165,16 @@ export default {
             { field: 'imgLink', title: '图片链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入图片链接' } } },
             { field: 'material', title: '材料', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入材料' } } },
             { field: 'hsCode', title: 'HS CODE', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入海关编码' } } },
-            { field: 'goodsNature', title: '货物性质', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入货物性质' } } },
+            {
+              field: 'goodsNature',
+              title: '货物性质',
+              span: 12,
+              itemRender: {
+                name: '$select',
+                options: [{ label: '普货', value: '普货' }, { label: '纺织品', value: '纺织品' }, { label: '带电产品', value: '带点产品' }, { label: '敏感货', value: '敏感货' }],
+                props: { placeholder: '请输入货物性质' }
+              }
+            },
             { field: 'outGoodsName', title: '外部名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入外部名称' } } },
             { field: 'outEnglishGoodsName', title: '英文名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入英文名称' } } },
             {
