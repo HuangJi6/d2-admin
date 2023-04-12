@@ -205,7 +205,7 @@ export default {
       row.outNumber = row.packingBox * row.boxQuantity
     }
   },
-  crated() {
+  created() {
     console.log('initCreated...')
     this.handleHttpMethod(getUnOutPackingList(), true, '请求中...').then(res => {
       this.createFormItems.children.array.forEach(element => {

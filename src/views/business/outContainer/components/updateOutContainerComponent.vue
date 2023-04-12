@@ -1,6 +1,6 @@
 // 入库组件
 <template>
-<vxe-modal v-model="showIn" title="添加箱单" :visible.sync="dialogFormVisible"
+<vxe-modal v-model="showIn" title="更新出库信息" :visible.sync="showIn"
         @close="handleClose" width="60%">
     <template #footer>
       <vxe-button status="primary" @click="onSure">确定</vxe-button>
@@ -22,7 +22,7 @@ import mixins from '@/mixin/commonMixin.js'
 export default {
   mixins: [mixins],
   components: { },
-  name: 'InContainerComponent',
+  name: 'updateOutContainerComponent',
   props: {
     // 显示标识
     show: {
@@ -57,20 +57,13 @@ export default {
           title: '',
           span: 23,
           children: [
-            { field: 'packingNo', title: '箱单号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
-            { field: 'limitWeight', title: '上限重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
-            { field: 'limitVolume', title: '上限体积', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
-            { field: 'outTime', title: '出库时间', span: 12, slots: { default: 'outTime' } },
-            {
-              field: 'statusCode',
-              title: '箱单状态',
-              span: 12,
-              itemRender: {
-                name: '$select',
-                options: [{ value: '未出', label: '未出' }, { value: '运输中', label: '运输中' }, { value: '已完成', label: '已完成' }],
-                props: { disabled: true, placeholder: '请输入箱唛' }
-              }
-            }]
+            { field: 'packingNo', title: '箱单号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱单号' } } },
+            { field: 'limitWeight', title: '箱唛', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱唛' } } },
+            { field: 'limitVolume', title: '制造商编号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入制造商编号' } } },
+            { field: 'limitVolume', title: '出库箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库箱数' } } },
+            { field: 'limitVolume', title: '出库数量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库数量' } } },
+            { field: 'limitVolume', title: '是否重新装箱', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入是否重新装箱' } } }
+          ]
         },
         {
           align: 'right',
