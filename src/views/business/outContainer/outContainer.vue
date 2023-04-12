@@ -100,11 +100,6 @@
         </vxe-modal>
       </div>
     </template>
-    <InContainerComponent
-      v-if="false"
-      :show.sync="showChangeOutContainerComponent"
-      :selectionOperateDatas = selectionOperateDatas>
-    </InContainerComponent>
     <!-- 添加箱单组件 -->
     <AddPackingListFormDialogVue
       v-if="showAddPackingListFormDialog"
@@ -129,7 +124,6 @@
 <script>
 import $Big from '@/libs/big.js'
 import mixins from '@/mixin/commonMixin.js'
-import InContainerComponent from '@/views/business/inContainer/components/inContainerChangeChooseComponent.vue'
 import AddPackingListFormDialogVue from '@/views/business/packingList/components/addPackingListFormDialog.vue'
 import DirectOutContainerComponentVue from '@/views/business/outContainer/components/directOutContainerComponent.vue'
 import ChangeOutContainerComponentVue from '@/views/business/outContainer/components/changeOutContainerComponent.vue'
@@ -137,7 +131,7 @@ import { myMethods } from './js/outContainerMethod.js'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { InContainerComponent, AddPackingListFormDialogVue, DirectOutContainerComponentVue, ChangeOutContainerComponentVue },
+  components: { AddPackingListFormDialogVue, DirectOutContainerComponentVue, ChangeOutContainerComponentVue },
   data() {
     return {
       showDirectOutContainer: false,

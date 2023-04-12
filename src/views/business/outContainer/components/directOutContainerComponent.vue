@@ -84,23 +84,7 @@ export default {
       shopGoodsInfoIn: {},
       createFormData: {
         packingGuid: '',
-        inContainerGuid: '',
-        operateGuid: '',
-        packingOutNumber: '',
-        outTime: '',
-        isRepacking: '',
-        packingLenhth: '',
-        packingWidth: '',
-        packingHigh: '',
-        packingVolume: '',
-        packingWeight: '',
-        goodsName: '',
-        goodsNameE: '',
-        shopName: '',
-        shippingMark: '',
-        packingNo: '',
-        packingBox: '',
-        ctnNo: ''
+        packingNo: ''
       },
       createFromRules: {},
       createFormItems: [
@@ -123,17 +107,21 @@ export default {
     // 保存接口
     handleSubmitCreate() {
       const insertList = []
+      debugger
       this.selectionOperateDatasIn.forEach(ele => {
         const eleCopy = Object.assign({}, ele)
         eleCopy.guid = ''
+        eleCopy.packingNo = this.createFormData.packingNo
         eleCopy.packingGuid = this.createFormData.packingGuid
         eleCopy.packingBox = ele.totalBox
+        eleCopy.packingBoxQuantity = ele.boxQuantity
         eleCopy.packingLength = ele.remeasureLength
         eleCopy.packingWidth = ele.remeasureWidth
         eleCopy.packingHigh = ele.remeasureHigh
         eleCopy.packingBoxVolume = ele.remeasureVolume
         eleCopy.packingTotalVolume = ele.remeasureTotalVolume
-        eleCopy.packingWeight = ele.remeasureTotalWeight
+        eleCopy.packingBoxWeight = ele.remeasureWeight
+        eleCopy.packingTotalWeight = ele.remeasureTotalWeight
         eleCopy.inContainerGuid = ele.guid
         eleCopy.isRepacking = '否'
         insertList.push(eleCopy)
@@ -193,7 +181,7 @@ export default {
       handler(nval, oval) {
         if (nval) {
           this.unOutPackingList.forEach(ele => {
-            if (ele.lable === nval) {
+            if (ele.value === nval) {
               this.createFormData.packingNo = ele.packingNo
             }
           })

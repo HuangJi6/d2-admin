@@ -31,3 +31,7 @@ export function deleteApi(guid) {
 export function pageNotCheckMapApi(params) {
   return fetch({ url: '/api/mkd/business/busOutContainer/pageNotCheckMapApi', method: 'post', data: params })
 }
+
+export function deleteBatchByGuids(params) {
+  return fetch({ url: '/api/mkd/business/busOutContainer/deleteBatchByGuids', method: 'post', data: params })
+}
