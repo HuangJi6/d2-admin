@@ -1,11 +1,6 @@
 // 入库组件
 <template>
-<vxe-modal v-model="showIn" title="更新出库信息" :visible.sync="showIn"
-        @close="handleClose" width="60%">
-    <template #footer>
-      <vxe-button status="primary" @click="onSure">确定</vxe-button>
-      <vxe-button @click="handleClose">取消</vxe-button>
-    </template>
+<vxe-modal v-model="showIn" title="更新出库信息" :visible.sync="showIn" @close="handleClose" width="60%">
     <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
       :data="createFormData" :rules="createFromRules" :items="createFormItems"
       @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
@@ -17,7 +12,7 @@
 </template>
 
 <script>
-import { addApi } from '@/api/business/packingListApi.js'
+import { updateApi } from '@/api/business/outContainerApi.js'
 import mixins from '@/mixin/commonMixin.js'
 export default {
   mixins: [mixins],
@@ -31,11 +26,16 @@ export default {
         return false
       }
     },
-    // 操作数据
-    selectionOperateDatas: {
-      type: Array,
+    defaultFormData: {
+      type: Object,
       default() {
-        return []
+        return {}
+      }
+    },
+    dialogStatus: {
+      type: String,
+      default() {
+        return ''
       }
     }
   },
@@ -45,6 +45,7 @@ export default {
       showIn: this.show,
       shopGoodsInfoIn: {},
       createFormData: {
+        guid: '',
         packingNo: '',
         limitWeight: '',
         limitVolume: '',
@@ -57,12 +58,12 @@ export default {
           title: '',
           span: 23,
           children: [
-            { field: 'packingNo', title: '箱单号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱单号' } } },
-            { field: 'limitWeight', title: '箱唛', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱唛' } } },
-            { field: 'limitVolume', title: '制造商编号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入制造商编号' } } },
-            { field: 'limitVolume', title: '出库箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库箱数' } } },
-            { field: 'limitVolume', title: '出库数量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库数量' } } },
-            { field: 'limitVolume', title: '是否重新装箱', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入是否重新装箱' } } }
+            { field: 'packingNo', title: '箱单号', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入箱单号' } } },
+            { field: 'shippingMark', title: '箱唛', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱唛' } } },
+            { field: 'ctnNo', title: '制造商编号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入制造商编号' } } },
+            { field: 'packingBox', title: '装箱箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库箱数' } } },
+            { field: 'packingOutNumber', title: '装箱数量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库数量' } } },
+            { field: 'isRepacking', title: '是否变更箱规', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入是否重新装箱' } } }
           ]
         },
         {
@@ -84,30 +85,29 @@ export default {
       this.showIn = false
       this.$emit('update:show', false)
     },
-    // 确定
-    onSure() {
-      const rows = this.$refs.shopGoodsVue.$refs.vxeTableRef.selection
-      if (!rows || rows.length !== 1) {
-        this.$message.warning('请选择一条数据')
-      } else {
-        this.shopGoodsInfoIn = rows[0]
-        console.log(rows)
-        this.$emit('onSureClick', this.shopGoodsInfoIn)
-        this.handleClose()
-      }
-    },
     // 保存接口
     handleSubmitCreate() {
-      this.handleHttpMethod(addApi(this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
+      this.handleHttpMethod(updateApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
         if (res) {
-          this.dialogFormVisible = false
-          this.pageList()
+          this.handleClose()
+          this.$emit('onSureClick')
         }
       })
     }
   },
   crated() {},
-  mounted() {}
+  mounted() {},
+  watch: {
+    defaultFormData: {
+      handler(nval, oval) {
+        if (nval && !(JSON.stringify(nval) === '{}')) {
+          this.createFormData = Object.assign({}, nval)
+        }
+      },
+      immediate: true,
+      deep: true
+    }
+  }
 }
 </script>
 

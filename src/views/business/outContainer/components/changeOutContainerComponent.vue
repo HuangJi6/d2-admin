@@ -1,4 +1,4 @@
-// 直接出库管理
+// 变更出库管理
 <template>
 <vxe-modal v-model="showIn" title="变更箱唛"
       @close="handleClose" width="80%" show-footer show-zoom resize>
@@ -29,28 +29,24 @@
     <vxe-column type="checkbox" width="60"></vxe-column>
     <vxe-column type="seq" title="序号" width="60"></vxe-column>
     <vxe-column field="shopName" title="店铺名称" width="150"></vxe-column>
-    <vxe-column field="goodsName" title="中文品名" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
-      <template #edit="{ row }">
-        <vxe-input v-model="row.goodsName" type="text"></vxe-input>
-      </template>
-    </vxe-column>
-    <vxe-column field="shippingMark" title="原箱唛编号" width="150"></vxe-column>
+    <vxe-column field="goodsName" title="中文品名" width="150"></vxe-column>
+    <vxe-column field="shippingMark" title="箱唛编号" width="150"></vxe-column>
+    <vxe-column field="purNumber" title="库存数量" width="100"></vxe-column>
+    <vxe-column field="totalBox" title="总箱数" width="100"></vxe-column>
+    <vxe-column field="boxQuantity" title="单箱数量" width="100"></vxe-column>
     <vxe-column field="ctnNo" title="制造商编号" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
       <template #edit="{ row }">
         <vxe-input v-model="row.ctnNo" type="text"></vxe-input>
       </template>
     </vxe-column>
-    <vxe-column field="purNumber" title="库存数量" width="100"></vxe-column>
-    <vxe-column field="totalBox" title="总箱数" width="100"></vxe-column>
-    <vxe-column field="boxQuantity" title="单箱数量" width="100"></vxe-column>
-    <vxe-column field="packingBox" title="出库箱数" width="100" :edit-render="{autofocus: '.vxe-input--inner'}">
+    <!-- <vxe-column field="packingBox" title="出库箱数" width="100" :edit-render="{autofocus: '.vxe-input--inner'}">
       <template #edit="{ row }">
         <vxe-input v-model="row.packingBox" type="text"></vxe-input>
       </template>
-    </vxe-column>
-    <vxe-column field="outNumber" title="出库数量" width="100" :edit-render="{autofocus: '.vxe-input--inner'}">
+    </vxe-column> -->
+    <vxe-column field="packingOutNumber" title="出库数量" width="100" :edit-render="{autofocus: '.vxe-input--inner'}">
       <template #edit="{ row }">
-        <vxe-input v-model="row.outNumber" type="text"></vxe-input>
+        <vxe-input v-model="row.packingOutNumber" type="text"></vxe-input>
       </template>
     </vxe-column>
     <vxe-column field="isRepacking" title="是否重新装箱" width="140" :edit-render="{autofocus: '.vxe-input--inner'}">
@@ -105,23 +101,8 @@ export default {
       ],
       createFormData: {
         packingGuid: '',
-        inContainerGuid: '',
-        operateGuid: '',
-        outNumber: '',
-        outTime: '',
-        isRepacking: '',
-        packingLenhth: '',
-        packingWidth: '',
-        packingHigh: '',
-        packingVolume: '',
-        packingWeight: '',
-        goodsName: '',
-        goodsNameE: '',
-        shopName: '',
-        shippingMark: '',
         packingNo: '',
-        packingBox: '',
-        ctnNo: ''
+        shippingMark: ''
       },
       createFromRules: {},
       createFormItems: [
@@ -129,28 +110,10 @@ export default {
           title: '',
           span: 23,
           children: [
-            // { field: 'shopName', title: '店铺名称', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入单箱重称重' } } },
-            // { field: 'shippingMark', title: '箱唛', span: 12, itemRender: { name: '$input', disabled: true, props: { disabled: true, placeholder: '请输入单箱重称重' } } },
-            // { field: 'goodsName', title: '中文品名', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
-            // { field: 'goodsNameE', title: 'Goods Name', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
             { field: 'packingGuid', title: '箱单号', span: 10, itemRender: { name: '$select', props: { placeholder: '请输入单箱重称重' } } },
             { field: 'shippingMark', title: '箱唛', span: 10, itemRender: { name: '$input', disabled: true, props: { placeholder: '请输入单箱重称重' } } }
-
-            // { field: 'ctnNo', title: '制造商编号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库箱数' } } },
-            // { field: 'boxQuantity', title: '总箱数', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入出库箱数' } } },
-            // { field: 'packingBox', title: '出库箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库箱数' } } }
           ]
         }
-        // {
-        //   align: 'right',
-        //   span: 23,
-        //   itemRender: {
-        //     name: '$buttons',
-        //     children:
-        //       [{ props: { type: 'submit', content: '保存', status: 'primary' } },
-        //         { props: { type: 'reset', content: '取消', status: 'warning' } }]
-        //   }
-        // }
       ]
     }
   },
@@ -160,34 +123,29 @@ export default {
       this.showIn = false
       this.$emit('update:show', false)
     },
-    // 确定
-    onSure() {
-      const rows = this.$refs.shopGoodsVue.$refs.vxeTableRef.selection
-      if (!rows || rows.length !== 1) {
-        this.$message.warning('请选择一条数据')
-      } else {
-        this.shopGoodsInfoIn = rows[0]
-        console.log(rows)
-        this.$emit('onSureClick', this.shopGoodsInfoIn)
-        this.handleClose()
-      }
-    },
     // 保存接口
     handleSubmitCreate() {
       const insertList = []
+      debugger
       this.selectionOperateDatasIn.forEach(ele => {
         const eleCopy = Object.assign({}, ele)
-        debugger
         eleCopy.guid = ''
-        eleCopy.packingGuid = this.createFormData.packingGuid
-        eleCopy.inContainerGuid = ele.guid
         eleCopy.shippingMark = this.createFormData.shippingMark
+        eleCopy.packingNo = this.createFormData.packingNo
+        eleCopy.packingGuid = this.createFormData.packingGuid
+        eleCopy.packingBoxQuantity = ele.boxQuantity
+        eleCopy.packingLength = ele.remeasureLength
+        eleCopy.packingWidth = ele.remeasureWidth
+        eleCopy.packingHigh = ele.remeasureHigh
+        eleCopy.packingBoxVolume = ele.remeasureVolume
+        eleCopy.packingBoxWeight = ele.remeasureWeight
+        eleCopy.inContainerGuid = ele.guid
         insertList.push(eleCopy)
       })
       this.handleHttpMethod(addBatchApi(insertList), true, '正在保存中', true, '信息保存成功').then(res => {
         if (res) {
-          this.dialogFormVisible = false
-          this.pageList()
+          this.handleClose()
+          this.$emit('onSureClick')
         }
       })
     },
@@ -199,21 +157,10 @@ export default {
     onSureSelectedClick(selectedRows) {
       console.log(selectedRows)
       this.selectionOperateDatasIn = selectedRows
-    },
-    packingBoxChange(row) {
-      console.log(row)
-      row.outNumber = row.packingBox * row.boxQuantity
     }
   },
   created() {
     console.log('initCreated...')
-    this.handleHttpMethod(getUnOutPackingList(), true, '请求中...').then(res => {
-      this.createFormItems.children.array.forEach(element => {
-        if (element.field === 'packingNo') {
-          this.$set(element.itemRender, 'options', res.data)
-        }
-      })
-    })
   },
   mounted() {
   },
@@ -234,22 +181,14 @@ export default {
       immediate: true,
       deep: true
     },
-    'createFormData.packingNo': {
+    'createFormData.packingGuid': {
       handler(nval, oval) {
         if (nval) {
           this.unOutPackingList.forEach(ele => {
-            if (ele.lable === nval) {
-              this.createFormData.packingGuid = ele.guid
+            if (ele.value === nval) {
+              this.createFormData.packingNo = ele.packingNo
             }
           })
-        }
-      }
-    },
-    'createFormData.packingBox': {
-      handler(nval, oval) {
-        if (nval) {
-          debugger
-          this.createFormData.outNumber = this.createFormData.packingBox * this.createFormData.boxQuantity
         }
       }
     }

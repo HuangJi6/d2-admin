@@ -23,8 +23,8 @@
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '待出库'" >
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">出库</el-button>
-        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">变更箱规</el-button>
-        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">删除</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleChangePacking">变更箱规</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDeleteOutContainer">删除</el-button>
         <el-button size="medium" style="width:100px" @click="handleRefreshPageList()">刷新</el-button>
       </div>
     </template>
@@ -36,55 +36,104 @@
           <el-button icon="vxe-icon-chart-pie" size="mini" style="width:120px" @click="HandlefilterDialogClick">过滤数据</el-button>
         </template>
       </vxe-toolbar>
-      <vxe-table
-        class="mytable-scrollbar"
-        size="medium"
-        header-cell-class-name="headerClassName"
-        cell-class-name="cellClassName"
-        border
-        resizable
-        show-overflow
-        show-header-overflow
-        v-loading.body="listLoading"
-        ref="vxeTableRef"
-        height="92%"
-        :row-config="{isHover: true}"
-        @cell-click="handleCellClickEvent"
-        :data="tableData">
-        <vxe-column type="checkbox" width="60"></vxe-column>
-        <vxe-column type="seq" title="序号" width="60"></vxe-column>
-        <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
-        <vxe-column field="packingNo" title="箱单" width="120"></vxe-column>
-        <vxe-column field="shippingMark" title="箱唛" width="120"></vxe-column>
-        <vxe-column field="isRepacking" title="是否变更箱规" width="140"></vxe-column>
-        <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
-        <vxe-column field="sku" title="SKU" width="120"></vxe-column>
-        <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
-        <!-- <vxe-column field="statusCode" title="状态" width="80"></vxe-column> -->
-        <vxe-column field="purNumber" title="总数量" width="80"></vxe-column>
-        <vxe-column field="purOutNumber" title="出库数" width="100"></vxe-column>
-        <vxe-column field="purInNumber" title="未出库数" width="100"></vxe-column>
-        <vxe-column field="totalBox" title="总箱数" width="80"></vxe-column>
-        <vxe-column field="boxQuantity" title="单箱数" width="80"></vxe-column>
-        <vxe-column field="remeasureLength" title="重测长/CM" width="100"></vxe-column>
-        <vxe-column field="remeasureWidth" title="重测宽/CM" width="100"></vxe-column>
-        <vxe-column field="remeasureHigh" title="重测高/CM" width="100"></vxe-column>
-        <vxe-column field="remeasureVolume" title="重测单箱体积/M" width="120"></vxe-column>
-        <vxe-column field="remeasureTotalVolume" title="重测总体积/M" width="120"></vxe-column>
-        <vxe-column field="purVolume" title="原体积" width="120"></vxe-column>
-        <vxe-column field="remeasureWeight" title="单箱重称重/KG" width="120"></vxe-column>
-        <vxe-column field="remeasureTotalWeight" title="总重称重/KG" width="120"></vxe-column>
-        <vxe-column field="goodsNature" title="货物性质" width="120"></vxe-column>
-        <vxe-column field="qualityCode" title="质检情况" width="120"></vxe-column>
-        <vxe-column field="inTime" title="入库日期" width="120"></vxe-column>
-        <vxe-column field="outTime" title="出库日期" width="120"></vxe-column>
-        <vxe-column field="remark" title="备注" width="120"></vxe-column>
-        <vxe-column v-if="filterFormData.statusCode!=='已下单'" title="操作" width="80" fixed="right" align="center" show-overflow>
-          <template #default="{ row }">
-            <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)" content="修改"></vxe-button>
-          </template>
-        </vxe-column>
-      </vxe-table>
+      <div style="height:92%" v-show="this.filterFormData.statusCode !== '待出库'">
+        <vxe-table
+          v-if="this.filterFormData.statusCode !== '待出库'"
+          class="mytable-scrollbar"
+          size="medium"
+          header-cell-class-name="headerClassName"
+          cell-class-name="cellClassName"
+          border
+          resizable
+          show-overflow
+          show-header-overflow
+          v-loading.body="listLoading"
+          ref="vxeTableRef"
+          height="100%"
+          :row-config="{isHover: true}"
+          @cell-click="handleCellClickEvent"
+          :data="tableData">
+          <vxe-column type="checkbox" width="60"></vxe-column>
+          <vxe-column type="seq" title="序号" width="60"></vxe-column>
+          <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
+          <vxe-column field="shippingMark" title="箱唛" width="120"></vxe-column>
+          <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
+          <vxe-column field="sku" title="SKU" width="120"></vxe-column>
+          <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
+          <!-- <vxe-column field="statusCode" title="状态" width="80"></vxe-column> -->
+          <vxe-column field="purNumber" title="总数量" width="80"></vxe-column>
+          <vxe-column field="purOutNumber" title="出库数" width="100"></vxe-column>
+          <vxe-column field="purInNumber" title="未出库数" width="100"></vxe-column>
+          <vxe-column field="totalBox" title="总箱数" width="80"></vxe-column>
+          <vxe-column field="boxQuantity" title="单箱数" width="80"></vxe-column>
+          <vxe-column field="remeasureLength" title="重测长/CM" width="100"></vxe-column>
+          <vxe-column field="remeasureWidth" title="重测宽/CM" width="100"></vxe-column>
+          <vxe-column field="remeasureHigh" title="重测高/CM" width="100"></vxe-column>
+          <vxe-column field="remeasureVolume" title="重测单箱体积/M" width="120"></vxe-column>
+          <vxe-column field="remeasureTotalVolume" title="重测总体积/M" width="120"></vxe-column>
+          <vxe-column field="purVolume" title="原体积" width="120"></vxe-column>
+          <vxe-column field="remeasureWeight" title="单箱重称重/KG" width="120"></vxe-column>
+          <vxe-column field="remeasureTotalWeight" title="总重称重/KG" width="120"></vxe-column>
+          <vxe-column field="goodsNature" title="货物性质" width="120"></vxe-column>
+          <vxe-column field="qualityCode" title="质检情况" width="120"></vxe-column>
+          <vxe-column field="inTime" title="入库日期" width="120"></vxe-column>
+          <vxe-column field="outTime" title="出库日期" width="120"></vxe-column>
+          <vxe-column field="remark" title="备注" width="120"></vxe-column>
+          <vxe-column v-if="filterFormData.statusCode!=='已下单'" title="操作" width="80" fixed="right" align="center" show-overflow>
+            <template #default="{ row }">
+              <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)" content="修改"></vxe-button>
+            </template>
+          </vxe-column>
+        </vxe-table>
+      </div>
+      <!-- 出库表头 -->
+      <div style="height:92%" v-show="this.filterFormData.statusCode === '待出库'">
+        <vxe-table
+          v-if="this.filterFormData.statusCode === '待出库'"
+          class="mytable-scrollbar"
+          size="medium"
+          header-cell-class-name="headerClassName"
+          cell-class-name="cellClassName"
+          border
+          resizable
+          show-overflow
+          show-header-overflow
+          v-loading.body="listLoading"
+          ref="vxeTableRef"
+          height="100%"
+          :row-config="{isHover: true}"
+          @cell-click="handleCellClickEvent"
+          :data="tableData">
+          <vxe-column type="checkbox" width="60"></vxe-column>
+          <vxe-column type="seq" title="序号" width="60"></vxe-column>
+          <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
+          <vxe-column field="packingNo" title="箱单" width="120"></vxe-column>
+          <vxe-column field="shippingMark" title="箱唛" width="120"></vxe-column>
+          <vxe-column field="isRepacking" title="是否变更箱规" width="140"></vxe-column>
+          <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
+          <vxe-column field="sku" title="SKU" width="120"></vxe-column>
+          <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
+          <vxe-column field="packingOutNumber" title="装箱数" width="100"></vxe-column>
+          <vxe-column field="packingBoxQuantity" title="单箱数量" width="80"></vxe-column>
+          <vxe-column field="packingLength" title="装箱长/CM" width="100"></vxe-column>
+          <vxe-column field="packingWidth" title="装箱宽/CM" width="100"></vxe-column>
+          <vxe-column field="packingHigh" title="装箱高/CM" width="100"></vxe-column>
+          <vxe-column field="packingBoxVolume" title="装箱体积/M" width="120"></vxe-column>
+          <vxe-column field="packingTotalVolume" title="装箱总体积/M" width="120"></vxe-column>
+          <vxe-column field="packingBoxWeight" title="装箱称重/KG" width="120"></vxe-column>
+          <vxe-column field="packingTotalWeight" title="总装箱重/KG" width="120"></vxe-column>
+          <vxe-column field="goodsNature" title="货物性质" width="120"></vxe-column>
+          <vxe-column field="qualityCode" title="质检情况" width="120"></vxe-column>
+          <vxe-column field="inTime" title="入库日期" width="120"></vxe-column>
+          <vxe-column field="outTime" title="出库日期" width="120"></vxe-column>
+          <vxe-column field="remark" title="备注" width="120"></vxe-column>
+          <vxe-column v-if="filterFormData.statusCode!=='已下单'" title="操作" width="80" fixed="right" align="center" show-overflow>
+            <template #default="{ row }">
+              <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdateOutContainer(row)" content="修改"></vxe-button>
+            </template>
+          </vxe-column>
+        </vxe-table>
+      </div>
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="填充检测数据" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
         @close="handleCancelCreate" width="60%">
@@ -108,11 +157,6 @@
         </vxe-modal>
       </div>
     </template>
-    <InContainerComponent
-      v-if="false"
-      :show.sync="showChangeOutContainerComponent"
-      :selectionOperateDatas = selectionOperateDatas>
-    </InContainerComponent>
     <!-- 添加箱单组件 -->
     <AddPackingListFormDialogVue
       v-if="showAddPackingListFormDialog"
@@ -122,18 +166,28 @@
     <DirectOutContainerComponentVue
       v-if="showDirectOutContainer"
       :show.sync="showDirectOutContainer"
-      @onSureClick="directOnSureClick">
+      @onSureClick="pageInContainerList">
     </DirectOutContainerComponentVue>
     <!-- 变更出库组件 -->
     <ChangeOutContainerComponentVue
       v-if="showChangeOutContainerComponent"
-      :show.sync="showChangeOutContainerComponent">
+      :show.sync="showChangeOutContainerComponent"
+      @onSureClick="pageInContainerList">
     </ChangeOutContainerComponentVue>
     <!-- 更新出库信息组件 -->
     <UpdateOutContainerComponentVue
       v-if="showUpdateOutContainerComponent"
-      :show.sync="showUpdateOutContainerComponent">
+      :show.sync="showUpdateOutContainerComponent"
+      :defaultFormData="updateOutContainerForm"
+      :dialogStatus="outContainerDialogStatus"
+      @onSureClick="pageOutContainerList">
     </UpdateOutContainerComponentVue>
+    <ChangePackingComponentVue
+      v-if="showChangePacking"
+      :show.sync="showChangePacking"
+      :defaultFormData="changePackingForm"
+      @onSureClick="pageOutContainerList">
+    </ChangePackingComponentVue>
     <template slot="footer">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="filterFormData.currentPage" :page-sizes="[10,20,30, 50]" :page-size="filterFormData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
     </template>
@@ -143,19 +197,23 @@
 <script>
 import $Big from '@/libs/big.js'
 import mixins from '@/mixin/commonMixin.js'
-import InContainerComponent from '@/views/business/inContainer/components/inContainerChangeChooseComponent.vue'
 import AddPackingListFormDialogVue from '@/views/business/packingList/components/addPackingListFormDialog.vue'
 import DirectOutContainerComponentVue from '../outContainer/components/directOutContainerComponent.vue'
 import ChangeOutContainerComponentVue from '../outContainer/components/changeOutContainerComponent.vue'
 import UpdateOutContainerComponentVue from '../outContainer/components/updateOutContainerComponent.vue'
+import ChangePackingComponentVue from '../outContainer/components/changePackingComponent.vue'
 import { myMethods } from './js/inContainerMethod.js'
 import moment from 'moment'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { InContainerComponent, AddPackingListFormDialogVue, DirectOutContainerComponentVue, ChangeOutContainerComponentVue, UpdateOutContainerComponentVue },
+  components: { AddPackingListFormDialogVue, DirectOutContainerComponentVue, ChangeOutContainerComponentVue, UpdateOutContainerComponentVue, ChangePackingComponentVue },
   data() {
     return {
+      showChangePacking: false,
+      outContainerDialogStatus: '',
+      updateOutContainerForm: {},
+      changePackingForm: {},
       showDirectOutContainer: false,
       showAddPackingListFormDialog: false,
       filterDialogVisible: false,
@@ -287,7 +345,6 @@ export default {
   watch: {
     'createFormData.remeasureLength': {
       handler(nval, oval) {
-        debugger
         this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(2).toString()
         this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(2).toString()
       }

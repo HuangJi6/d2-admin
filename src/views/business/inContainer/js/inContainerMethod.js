@@ -1,5 +1,5 @@
 import { deleteApi, getOneApi, updateApi, pageMapApi as pageInContainerList, addBatchApi } from '@/api/business/inContainerApi.js'
-import { pageMapApi as pageOutContainerList } from '@/api/business/outContainerApi.js'
+import { pageMapApi as pageOutContainerList, deleteBatchByGuids, getOneApi as getOutOnApi } from '@/api/business/outContainerApi.js'
 import { pageMapApi as operatePageMapApi } from '@/api/business/shopGoodsOperateApi.js'
 import moment from 'moment'
 
@@ -177,6 +177,18 @@ const dataMethods = {
         this.pageList()
       }
     })
+  },
+  // 删除已出库数据
+  removeOutContainerData(params) {
+    this.$confirm('此操作将删除数据, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      this.handleHttpMethod(deleteBatchByGuids(params), true, '正在删除中', true, '删除成功').then(res => {
+        this.pageList()
+      })
+    })
   }
   // 直接出库方法
   // outContainerSubmit(selectionDatas) {
@@ -221,10 +233,6 @@ const handleMethods = {
   },
   // 点击编辑按钮事件
   handleUpdate(row) {
-    if (this.filterFormData.statusCode === '待出库') {
-      this.showUpdateOutContainerComponent = true
-      return
-    }
     this.getOne(row.guid).then(response => {
       this.createFormData = response.data
       this.createFormData.goodsName = row.goodsName
@@ -355,9 +363,47 @@ const handleMethods = {
       this.pageOutContainerList()
     }
   },
-  // 直接出库保存回调函数
-  directOnSureClick() {
-    this.pageInContainerList()
+  handleDeleteOutContainer() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length < 1) {
+      this.$message.warning('请选择一条或一条以上数据')
+    } else {
+      const guids = []
+      selectionDatas.forEach(item => {
+        guids.push(item.guid)
+      })
+      this.removeOutContainerData(guids)
+    }
+  },
+  // 点击变更箱规按钮
+  handleChangePacking() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length !== 1) {
+      this.$message.warning('请选择一条数据')
+    } else {
+      let flag = false
+      selectionDatas.forEach(item => {
+        if (item.isRepacking === '否') {
+          flag = true
+        }
+      })
+      if (flag) {
+        this.$message.warning('请选择需要变更箱规的数据!')
+        return
+      }
+      this.handleHttpMethod(getOutOnApi(selectionDatas[0].guid), true).then(response => {
+        this.changePackingForm = response.data
+        this.showChangePacking = true
+      })
+    }
+  },
+  // 待出库点击编辑按钮
+  handleUpdateOutContainer(row) {
+    this.handleHttpMethod(getOutOnApi(row.guid), true).then(response => {
+      this.updateOutContainerForm = response.data
+      this.showUpdateOutContainerComponent = true
+      this.outContainerDialogStatus = 'update'
+    })
   }
 }
 

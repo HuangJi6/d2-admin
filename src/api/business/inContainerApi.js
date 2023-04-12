@@ -32,6 +32,9 @@ export function pageNotCheckMapApi(params) {
   return fetch({ url: '/api/mkd/business/busInContainer/pageNotCheckMapApi', method: 'post', data: params })
 }
 
+export function deleteBatchByGuids(params) {
+  return fetch({ url: '/api/mkd/business/busInContainer/deleteBatchByGuids', method: 'post', data: params })
+}
 // export function directOutContainerApi(params) {
 //   return fetch({ url: '/api/mkd/business/busOutContainer/directOutContainerApi', method: 'post', data: params })
 // }
