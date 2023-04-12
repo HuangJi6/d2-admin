@@ -8,10 +8,10 @@
     </template>
     <div style="height:40px">
       <div style="float:left;padding-top:3px; width:80%">
-        <el-input @keyup.enter.native="handleFilter" clearable style="width: 15%;margin-right: 20px;" class="filter-item" placeholder="店铺搜索" v-model="filterFormData.shopName" size="small"> </el-input>
         <el-input @keyup.enter.native="handleFilter" clearable style="width: 15%;margin-right: 20px;" class="filter-item" placeholder="SKU搜索" v-model="filterFormData.sku" size="small"> </el-input>
         <el-input @keyup.enter.native="handleFilter" clearable style="width: 15%;margin-right: 20px;" class="filter-item" placeholder="ITEM ID搜索" v-model="filterFormData.itemId" size="small"> </el-input>
         <el-input @keyup.enter.native="handleFilter" clearable style="width: 15%;margin-right: 20px;" class="filter-item" placeholder="商品名称搜索" v-model="filterFormData.goodsName" size="small"> </el-input>
+        <el-input @keyup.enter.native="handleFilter" clearable style="width: 15%;margin-right: 20px;" class="filter-item" placeholder="箱唛搜索" v-model="filterFormData.shippingMark" size="small"> </el-input>
         <el-button class="filter-item" type="primary" icon="el-icon-search" @click="pageList" size="small">搜索</el-button>
         <el-button class="filter-item" type="primary" icon="el-icon-refresh" @click="pageList" size="small">刷新</el-button>
       </div>
@@ -74,7 +74,9 @@ export default {
   mixins: [mixins],
   props: {
     // 显示标识
-    show: { type: Boolean, default() { return false } }
+    show: { type: Boolean, default() { return false } },
+    // 回显数据-暂时不用
+    defaultSelectedGuids: { type: Array, default() { return [] } }
   },
   data() {
     return {
@@ -125,7 +127,8 @@ export default {
         { name: 'goodsCategory', type: '4', remove: true },
         { name: 'shopName', type: '4', remove: true },
         { name: 'sku', type: '4', remove: true },
-        { name: 'itemId', type: '4', remove: true }]
+        { name: 'itemId', type: '4', remove: true },
+        { name: 'shippingMark', type: '4', remove: true }]
       if (conditionParams) {
         conditionParams.forEach(item => {
           this.buildConditionData(item.name, item.type, params, item.remove)
@@ -146,6 +149,10 @@ export default {
       this.handleClose()
     },
     handleCellClickEvent() {},
+    handleSizeChange(val) {
+      this.filterFormData.pageSize = val
+      this.pageList()
+    },
     HandlefilterDialogClick() {
       if (this.filterDialogVisible) {
         this.filterDialogVisible = false
@@ -173,8 +180,6 @@ export default {
       this.filterFormData.currentPage = val
       this.pageList()
     }
-  },
-  computed() {
   },
   watch: {
     showIn: {

@@ -21,6 +21,12 @@
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleChangeOutContainer">变更出库</el-button>
         <el-button size="medium" style="width:100px" @click="handleRefreshPageList()">刷新</el-button>
       </div>
+      <div style="float:right;" v-if="filterFormData.statusCode === '待出库'" >
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">出库</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">变更箱规</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">删除</el-button>
+        <el-button size="medium" style="width:100px" @click="handleRefreshPageList()">刷新</el-button>
+      </div>
     </template>
 
     <template>
@@ -48,13 +54,15 @@
         <vxe-column type="checkbox" width="60"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
+        <vxe-column field="packingNo" title="箱单" width="120"></vxe-column>
         <vxe-column field="shippingMark" title="箱唛" width="120"></vxe-column>
+        <vxe-column field="isRepacking" title="是否变更箱规" width="140"></vxe-column>
         <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
         <vxe-column field="sku" title="SKU" width="120"></vxe-column>
         <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
-        <vxe-column field="statusCode" title="状态" width="80"></vxe-column>
+        <!-- <vxe-column field="statusCode" title="状态" width="80"></vxe-column> -->
         <vxe-column field="purNumber" title="总数量" width="80"></vxe-column>
-        <vxe-column field="purOutNumber" title="已出库数" width="100"></vxe-column>
+        <vxe-column field="purOutNumber" title="出库数" width="100"></vxe-column>
         <vxe-column field="purInNumber" title="未出库数" width="100"></vxe-column>
         <vxe-column field="totalBox" title="总箱数" width="80"></vxe-column>
         <vxe-column field="boxQuantity" title="单箱数" width="80"></vxe-column>
@@ -113,13 +121,19 @@
     <!-- 直接出库组件 -->
     <DirectOutContainerComponentVue
       v-if="showDirectOutContainer"
-      :show.sync="showDirectOutContainer">
+      :show.sync="showDirectOutContainer"
+      @onSureClick="directOnSureClick">
     </DirectOutContainerComponentVue>
     <!-- 变更出库组件 -->
     <ChangeOutContainerComponentVue
       v-if="showChangeOutContainerComponent"
       :show.sync="showChangeOutContainerComponent">
     </ChangeOutContainerComponentVue>
+    <!-- 更新出库信息组件 -->
+    <UpdateOutContainerComponentVue
+      v-if="showUpdateOutContainerComponent"
+      :show.sync="showUpdateOutContainerComponent">
+    </UpdateOutContainerComponentVue>
     <template slot="footer">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="filterFormData.currentPage" :page-sizes="[10,20,30, 50]" :page-size="filterFormData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
     </template>
@@ -133,12 +147,13 @@ import InContainerComponent from '@/views/business/inContainer/components/inCont
 import AddPackingListFormDialogVue from '@/views/business/packingList/components/addPackingListFormDialog.vue'
 import DirectOutContainerComponentVue from '../outContainer/components/directOutContainerComponent.vue'
 import ChangeOutContainerComponentVue from '../outContainer/components/changeOutContainerComponent.vue'
+import UpdateOutContainerComponentVue from '../outContainer/components/updateOutContainerComponent.vue'
 import { myMethods } from './js/inContainerMethod.js'
 import moment from 'moment'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { InContainerComponent, AddPackingListFormDialogVue, DirectOutContainerComponentVue, ChangeOutContainerComponentVue },
+  components: { InContainerComponent, AddPackingListFormDialogVue, DirectOutContainerComponentVue, ChangeOutContainerComponentVue, UpdateOutContainerComponentVue },
   data() {
     return {
       showDirectOutContainer: false,
@@ -149,6 +164,7 @@ export default {
       applicationData: [],
       selectionOperateDatas: [],
       showChangeOutContainerComponent: false,
+      showUpdateOutContainerComponent: false,
       dialogStatus: '',
       dialogFormVisible: false,
       tableData: [],

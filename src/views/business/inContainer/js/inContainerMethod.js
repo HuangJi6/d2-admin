@@ -1,5 +1,5 @@
-import { deleteApi, getOneApi, updateApi, pageMapApi as pageInContainerList, addBatchApi, pageNotCheckMapApi } from '@/api/business/inContainerApi.js'
-import { pageMapApi as outPageMapApi } from '@/api/business/outContainerApi.js'
+import { deleteApi, getOneApi, updateApi, pageMapApi as pageInContainerList, addBatchApi } from '@/api/business/inContainerApi.js'
+import { pageMapApi as pageOutContainerList } from '@/api/business/outContainerApi.js'
 import { pageMapApi as operatePageMapApi } from '@/api/business/shopGoodsOperateApi.js'
 import moment from 'moment'
 
@@ -47,19 +47,7 @@ const dataMethods = {
   pageList() {
     this.listLoading = true
     const paramsCopy = Object.assign({}, this.filterFormData)
-    if (paramsCopy.statusCode === '待检测') {
-      this.listLoading = true
-      const paramsCopy = Object.assign({}, this.filterFormData)
-      this.handleFilter(paramsCopy)
-      this.handleHttpMethod(pageNotCheckMapApi(paramsCopy || {}), true).then(res => {
-        this.tableData = res.data.dataList
-        this.total = res.data.total
-        this.listLoading = false
-      }).catch(err => {
-        console.log(err)
-        this.listLoading = false
-      })
-    } else if (paramsCopy.statusCode === '已入库') {
+    if (paramsCopy.statusCode === '已入库') {
       this.handleFilter(paramsCopy)
       this.handleHttpMethod(pageInContainerList(paramsCopy || {}), true).then(res => {
         this.tableData = res.data.dataList
@@ -70,7 +58,7 @@ const dataMethods = {
         this.listLoading = false
       })
     } else if (paramsCopy.statusCode === '待出库') {
-      this.handleHttpMethod(outPageMapApi(paramsCopy || {}), true).then(res => {
+      this.handleHttpMethod(pageOutContainerList(paramsCopy || {}), true).then(res => {
         this.tableData = res.data.dataList
         this.total = res.data.total
         this.listLoading = false
@@ -83,7 +71,6 @@ const dataMethods = {
   },
   // 查询已下单的数据
   pageOperateList() {
-    debugger
     this.listLoading = true
     const paramsCopy = Object.assign({}, this.filterFormData)
     this.handleFilter(paramsCopy)
@@ -102,6 +89,20 @@ const dataMethods = {
     const paramsCopy = Object.assign({}, this.filterFormData)
     this.handleFilter(paramsCopy)
     this.handleHttpMethod(pageInContainerList(paramsCopy || {}), true).then(res => {
+      this.tableData = res.data.dataList
+      this.total = res.data.total
+      this.listLoading = false
+    }).catch(err => {
+      console.log(err)
+      this.listLoading = false
+    })
+  },
+  // 查询已出库的数据
+  pageOutContainerList() {
+    this.listLoading = true
+    const paramsCopy = Object.assign({}, this.filterFormData)
+    this.handleFilter(paramsCopy)
+    this.handleHttpMethod(pageOutContainerList(paramsCopy || {}), true).then(res => {
       this.tableData = res.data.dataList
       this.total = res.data.total
       this.listLoading = false
@@ -220,6 +221,10 @@ const handleMethods = {
   },
   // 点击编辑按钮事件
   handleUpdate(row) {
+    if (this.filterFormData.statusCode === '待出库') {
+      this.showUpdateOutContainerComponent = true
+      return
+    }
     this.getOne(row.guid).then(response => {
       this.createFormData = response.data
       this.createFormData.goodsName = row.goodsName
@@ -253,7 +258,8 @@ const handleMethods = {
       { name: 'goodsCategory', type: '4', remove: true },
       { name: 'shopName', type: '4', remove: true },
       { name: 'sku', type: '4', remove: true },
-      { name: 'itemId', type: '4', remove: true }]
+      { name: 'itemId', type: '4', remove: true },
+      { name: 'shippingMark', type: '4', remove: true }]
     if (conditionParams) {
       conditionParams.forEach(item => {
         this.buildConditionData(item.name, item.type, params, item.remove)
@@ -262,10 +268,6 @@ const handleMethods = {
     // 如果状态为全部则不过滤状态
     if (params.statusCode === '全部') {
       params.statusCode = ''
-    }
-    // 如果状态为未入库则查询运营采购表中已下单的数据
-    if (params.statusCode === '待检测') {
-      params.statusCode = '已下单'
     }
   },
   // 刷新方法
@@ -350,8 +352,12 @@ const handleMethods = {
       this.pageInContainerList()
     }
     if (this.filterFormData.statusCode === '待出库') {
-      this.pageList()
+      this.pageOutContainerList()
     }
+  },
+  // 直接出库保存回调函数
+  directOnSureClick() {
+    this.pageInContainerList()
   }
 }
 
