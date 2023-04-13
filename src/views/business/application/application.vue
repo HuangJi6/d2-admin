@@ -34,7 +34,7 @@
         height="92%"
         :row-config="{isHover: true}"
         :data="tableData">
-        <vxe-column type="checkbox" width="60"></vxe-column>
+        <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="shopName" title="店铺名称" width="400"></vxe-column>
         <vxe-column field="clientId" title="店铺id" width="400"></vxe-column>

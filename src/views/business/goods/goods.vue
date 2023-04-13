@@ -36,7 +36,7 @@
         :row-config="{isHover: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
-        <vxe-column type="checkbox" width="60"></vxe-column>
+        <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
         <vxe-column field="goodsCategory" title="商品类别" width="150"></vxe-column>

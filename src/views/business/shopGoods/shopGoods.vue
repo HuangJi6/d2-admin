@@ -43,7 +43,7 @@
         :row-config="{isHover: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
-        <vxe-column type="checkbox" width="60"></vxe-column>
+        <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
         <vxe-column field="optimizeStatus" title="优化标识" width="80"></vxe-column>
