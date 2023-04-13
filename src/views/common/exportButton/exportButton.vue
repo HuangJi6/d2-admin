@@ -2,7 +2,7 @@
   <div style="margin-right:15px">
     <el-dropdown ref="dropdownButton" trigger="click" @command="handleCommand">
       <el-button size="small" circle>
-        <i class="el-icon-download"></i>
+        <i class="vxe-button--icon vxe-icon-download"></i>
       </el-button>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="exportCurrentPage">导出当前页</el-dropdown-item>

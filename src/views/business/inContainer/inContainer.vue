@@ -7,7 +7,7 @@
           <el-radio-button label="已下单" @click="pageOperateList()">已下单</el-radio-button>
           <el-radio-button label="已入库" @click="pageList()">已入库</el-radio-button>
           <el-radio-button label="待出库" @click="pageList()">待出库</el-radio-button>
-          <el-radio-button label="已出库" @click="pageOperateList()">已出完</el-radio-button>
+          <el-radio-button label="已出完" @click="pageShippingMarkList()">已出完</el-radio-button>
           <el-radio-button label="全部" @click="pageOperateList()">全部</el-radio-button>
         </el-radio-group>
       </div>
@@ -38,12 +38,22 @@
           </div>
           <PackingListTopGatherComponentVue
             ref="packingListTopGather"
-            v-if="filterFormData.statusCode === '待出库'"
+            v-if="filterFormData.statusCode === '待出库'||filterFormData.statusCode === '已出完'"
             @onChangePackingList="changePackingList"
           ></PackingListTopGatherComponentVue>
         </template>
+        <template template #tools>
+          <ExportButtonVue
+            :tableRefsName="'vxeTableRef'"
+            :vuePageName="'inContainer'"
+            :fileName="'装箱表'"
+            :tableDataTotal="parseInt(total/filterFormData.pageSize)+1"
+            :tableDataFunction="handleRefreshPageList"
+            :tableDataParams="filterFormData"
+          ></ExportButtonVue>
+        </template >
       </vxe-toolbar>
-      <div style="height:92%" v-show="this.filterFormData.statusCode !== '待出库'">
+      <div style="height:92%" v-show="this.filterFormData.statusCode !== '待出库'&&filterFormData.statusCode !== '已出完'">
         <vxe-table
           v-if="this.filterFormData.statusCode !== '待出库'"
           class="mytable-scrollbar"
@@ -60,7 +70,7 @@
           :row-config="{isHover: true}"
           @cell-click="handleCellClickEvent"
           :data="tableData">
-          <vxe-column type="checkbox" width="60"></vxe-column>
+          <vxe-column type="checkbox" width="45"></vxe-column>
           <vxe-column type="seq" title="序号" width="60"></vxe-column>
           <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
           <vxe-column field="shippingMark" title="箱唛" width="120"></vxe-column>
@@ -111,7 +121,7 @@
           :row-config="{isHover: true}"
           @cell-click="handleCellClickEvent"
           :data="tableData">
-          <vxe-column type="checkbox" width="60"></vxe-column>
+          <vxe-column type="checkbox" width="45"></vxe-column>
           <vxe-column type="seq" title="序号" width="60"></vxe-column>
           <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
           <vxe-column field="packingNo" title="箱单" width="120"></vxe-column>
@@ -134,6 +144,62 @@
           <vxe-column field="qualityCode" title="质检情况" width="120"></vxe-column>
           <vxe-column field="inTime" title="入库日期" width="120"></vxe-column>
           <vxe-column field="outTime" title="出库日期" width="120"></vxe-column>
+          <vxe-column field="remark" title="备注" width="120"></vxe-column>
+          <vxe-column v-if="filterFormData.statusCode!=='已下单'" title="操作" width="80" fixed="right" align="center" show-overflow>
+            <template #default="{ row }">
+              <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdateOutContainer(row)" content="修改"></vxe-button>
+            </template>
+          </vxe-column>
+        </vxe-table>
+      </div>
+      <div style="height:92%" v-show="this.filterFormData.statusCode === '已出完'">
+        <vxe-table
+          v-if="this.filterFormData.statusCode === '已出完'"
+          class="mytable-scrollbar"
+          size="medium"
+          header-cell-class-name="headerClassName"
+          cell-class-name="cellClassName"
+          border
+          resizable
+          show-overflow
+          show-header-overflow
+          v-loading.body="listLoading"
+          ref="vxeTableRef"
+          height="100%"
+          :row-config="{isHover: true}"
+          @cell-click="handleCellClickEvent"
+          :data="tableData">
+          <vxe-column type="checkbox" width="45" fixed="left"></vxe-column>
+          <vxe-column type="seq" title="序号" width="60" fixed="left"></vxe-column>
+          <vxe-column field="outGoodsName" title="中文品名" width="100" fixed="left"></vxe-column>
+          <vxe-column field="outEnglishGoodsName" title="Goods Name" width="120"></vxe-column>
+          <vxe-column field="ctnNo" title="制造商编号" width="120"></vxe-column>
+          <vxe-column field="mlCode" title="FBA/ML-编码" width="140"></vxe-column>
+          <vxe-column field="clientId" title="Reference ID" width="150"></vxe-column>
+          <vxe-column field="quantity" title="数量" width="120"></vxe-column>
+          <vxe-column field="totalBox" title="总箱数" width="120"></vxe-column>
+          <vxe-column field="weight" title="重量" width="100"></vxe-column>
+          <vxe-column field="length" title="长" width="100"></vxe-column>
+          <vxe-column field="width" title="宽" width="80"></vxe-column>
+          <vxe-column field="high" title="高" width="100"></vxe-column>
+          <vxe-column field="boxVolume" title="单箱体积" width="100"></vxe-column>
+          <vxe-column field="totalVolume" title="总体积" width="100"></vxe-column>
+          <vxe-column field="material" title="材质" width="120"></vxe-column>
+          <vxe-column field="goodsUse" title="用途" width="120"></vxe-column>
+          <vxe-column field="brand" title="品牌" width="120"></vxe-column>
+          <vxe-column field="unitPrice" title="单价" width="120"></vxe-column>
+          <vxe-column field="totalPrice" title="总价" width="120"></vxe-column>
+          <vxe-column field="hsCode" title="海关编码" width="120"></vxe-column>
+          <vxe-column field="goodsNature" title="货物性质" width="120"></vxe-column>
+          <vxe-column field="imgLink" title="产品图片" width="120">
+            <template #default="{ row }">
+            <el-image style="width: auto; height: 50px" :src="row.imgLink" :preview-src-list="[row.imgLink]"> </el-image>
+          </template>
+          </vxe-column>
+          <vxe-column field="mkdUrl" title="mkd地址" width="120"></vxe-column>
+          <vxe-column field="amzUrl" title="amz地址" width="120"></vxe-column>
+          <vxe-column field="personUrl" title="私人地址" width="120"></vxe-column>
+          <vxe-column field="urgencyLevel" title="紧急程度" width="120"></vxe-column>
           <vxe-column field="remark" title="备注" width="120"></vxe-column>
           <vxe-column v-if="filterFormData.statusCode!=='已下单'" title="操作" width="80" fixed="right" align="center" show-overflow>
             <template #default="{ row }">
@@ -196,6 +262,13 @@
       :defaultFormData="changePackingForm"
       @onSureClick="pageOutContainerList">
     </ChangePackingComponentVue>
+    <!-- 装箱组件 -->
+    <EncasementShippingMarkComponentVue
+      v-if="showEncasement"
+      :show.sync="showEncasement"
+      :shippingMarks="encasementShippingMark"
+      @onSureClick="pageOutContainerList">
+    </EncasementShippingMarkComponentVue>
     <template slot="footer">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="filterFormData.currentPage" :page-sizes="[10,20,30, 50]" :page-size="filterFormData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
     </template>
@@ -210,11 +283,13 @@ import DirectOutContainerComponentVue from '../outContainer/components/directOut
 import ChangeOutContainerComponentVue from '../outContainer/components/changeOutContainerComponent.vue'
 import UpdateOutContainerComponentVue from '../outContainer/components/updateOutContainerComponent.vue'
 import ChangePackingComponentVue from '../outContainer/components/changePackingComponent.vue'
+import PackingListTopGatherComponentVue from '../packingList/components/packingListTopGatherComponent.vue'
+import EncasementShippingMarkComponentVue from './components/encasementShippingMarkComponent.vue'
+import ExportButtonVue from '@/views/common/exportButton/exportButton.vue'
 import { myMethods } from './js/inContainerMethod.js'
-import PackingListTopGatherComponentVue from '../packingList/components/packingListTopGatherComponent'
 import moment from 'moment'
 export default {
-  name: 'shopGoods',
+  name: 'inContainer',
   mixins: [mixins],
   components: {
     AddPackingListFormDialogVue,
@@ -222,10 +297,14 @@ export default {
     ChangeOutContainerComponentVue,
     UpdateOutContainerComponentVue,
     ChangePackingComponentVue,
-    PackingListTopGatherComponentVue
+    PackingListTopGatherComponentVue,
+    EncasementShippingMarkComponentVue,
+    ExportButtonVue
   },
   data() {
     return {
+      encasementShippingMark: [],
+      showEncasement: false,
       showChangePacking: false,
       outContainerDialogStatus: '',
       updateOutContainerForm: {},
