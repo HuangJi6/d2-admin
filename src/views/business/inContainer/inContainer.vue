@@ -2,7 +2,7 @@
 <template>
   <d2-container>
     <template slot="header">
-      <div style="float:left;padding-top:3px">
+      <div style="float:left">
         <el-radio-group @input="handleRefreshPageList()" v-model="filterFormData.statusCode" size="medium">
           <el-radio-button label="已下单" @click="pageOperateList()">已下单</el-radio-button>
           <el-radio-button label="已入库" @click="pageList()">已入库</el-radio-button>
@@ -22,7 +22,7 @@
         <el-button size="medium" style="width:100px" @click="handleRefreshPageList()">刷新</el-button>
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '待出库'" >
-        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDirectOutContainer">出库</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" @click="handleEncasement">装箱</el-button>
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleChangePacking">变更箱规</el-button>
         <el-button icon="vxe-icon-square-plus" size="medium" @click="handleDeleteOutContainer">删除</el-button>
         <el-button size="medium" style="width:100px" @click="handleRefreshPageList()">刷新</el-button>
@@ -32,8 +32,15 @@
     <template>
       <vxe-toolbar style="height:8%" :refresh="{query: handleRefreshPageList}" export custom zoom>
         <template #buttons>
-          <el-button icon="vxe-icon-table" size="mini" style="width:120px">仓库出库计划表</el-button>
-          <el-button icon="vxe-icon-chart-pie" size="mini" style="width:120px" @click="HandlefilterDialogClick">过滤数据</el-button>
+          <div>
+            <el-button icon="vxe-icon-table" size="mini" style="width:120px">仓库出库计划表</el-button>
+            <el-button icon="vxe-icon-chart-pie" size="mini" style="width:120px" @click="HandlefilterDialogClick">过滤数据</el-button>
+          </div>
+          <PackingListTopGatherComponentVue
+            ref="packingListTopGather"
+            v-if="filterFormData.statusCode === '待出库'"
+            @onChangePackingList="changePackingList"
+          ></PackingListTopGatherComponentVue>
         </template>
       </vxe-toolbar>
       <div style="height:92%" v-show="this.filterFormData.statusCode !== '待出库'">
@@ -113,7 +120,8 @@
           <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
           <vxe-column field="sku" title="SKU" width="120"></vxe-column>
           <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
-          <vxe-column field="packingOutNumber" title="装箱数" width="100"></vxe-column>
+          <vxe-column field="packingOutNumber" title="出库数量" width="100"></vxe-column>
+          <vxe-column field="packingBox" title="出库箱数" width="100"></vxe-column>
           <vxe-column field="packingBoxQuantity" title="单箱数量" width="80"></vxe-column>
           <vxe-column field="packingLength" title="装箱长/CM" width="100"></vxe-column>
           <vxe-column field="packingWidth" title="装箱宽/CM" width="100"></vxe-column>
@@ -203,11 +211,19 @@ import ChangeOutContainerComponentVue from '../outContainer/components/changeOut
 import UpdateOutContainerComponentVue from '../outContainer/components/updateOutContainerComponent.vue'
 import ChangePackingComponentVue from '../outContainer/components/changePackingComponent.vue'
 import { myMethods } from './js/inContainerMethod.js'
+import PackingListTopGatherComponentVue from '../packingList/components/packingListTopGatherComponent'
 import moment from 'moment'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { AddPackingListFormDialogVue, DirectOutContainerComponentVue, ChangeOutContainerComponentVue, UpdateOutContainerComponentVue, ChangePackingComponentVue },
+  components: {
+    AddPackingListFormDialogVue,
+    DirectOutContainerComponentVue,
+    ChangeOutContainerComponentVue,
+    UpdateOutContainerComponentVue,
+    ChangePackingComponentVue,
+    PackingListTopGatherComponentVue
+  },
   data() {
     return {
       showChangePacking: false,
@@ -236,7 +252,8 @@ export default {
         sku: '',
         itemId: '',
         statusCode: '已下单',
-        shippingMark: ''
+        shippingMark: '',
+        packingGuid: ''
       },
       searchForm: [
         {
