@@ -1,7 +1,7 @@
 import { deleteApi, getOneApi, updateApi, pageMapApi as pageInContainerList, addBatchApi } from '@/api/business/inContainerApi.js'
 import { pageMapApi as pageOutContainerList, deleteBatchByGuids, getOneApi as getOutOnApi } from '@/api/business/outContainerApi.js'
 import { pageMapApi as operatePageMapApi } from '@/api/business/shopGoodsOperateApi.js'
-
+import { pageMapApi as pageShippingMarkList } from '@/api/business/shippingMarkApi.js'
 import moment from 'moment'
 
 // 初始化方法
@@ -104,6 +104,23 @@ const dataMethods = {
     const paramsCopy = Object.assign({}, this.filterFormData)
     this.handleFilter(paramsCopy)
     this.handleHttpMethod(pageOutContainerList(paramsCopy || {}), true).then(res => {
+      this.tableData = res.data.dataList
+      this.total = res.data.total
+      this.listLoading = false
+    }).catch(err => {
+      console.log(err)
+      this.listLoading = false
+    })
+    // 调用子组件的汇总数据
+    if (this.$refs.packingListTopGather) {
+      this.$refs.packingListTopGather.refreshContainerGroup()
+    }
+  },
+  pageShippingMarkList() {
+    this.listLoading = true
+    const paramsCopy = Object.assign({}, this.filterFormData)
+    this.handleFilter(paramsCopy)
+    this.handleHttpMethod(pageShippingMarkList(paramsCopy || {}), true).then(res => {
       this.tableData = res.data.dataList
       this.total = res.data.total
       this.listLoading = false
@@ -345,6 +362,7 @@ const handleMethods = {
   },
   // 刷新按钮点击
   handleRefreshPageList() {
+    debugger
     if (this.filterFormData.statusCode === '已下单') {
       this.pageOperateList()
     }
@@ -353,6 +371,9 @@ const handleMethods = {
     }
     if (this.filterFormData.statusCode === '待出库') {
       this.pageOutContainerList()
+    }
+    if (this.filterFormData.statusCode === '已出完') {
+      this.pageShippingMarkList()
     }
   },
   handleDeleteOutContainer() {
@@ -400,7 +421,12 @@ const handleMethods = {
   // 点击箱单回调函数
   changePackingList(value) {
     this.filterFormData.packingGuid = value
-    this.pageOutContainerList()
+    if (this.filterFormData.statusCode === '待出库') {
+      this.pageOutContainerList()
+    }
+    if (this.filterFormData.statusCode === '已出完') {
+      this.pageShippingMarkList()
+    }
   },
   // 装箱
   handleEncasement() {
@@ -408,7 +434,13 @@ const handleMethods = {
     if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条或一条以上数据')
     } else {
-
+      this.encasementShippingMark = []
+      selectionDatas.forEach(item => {
+        if (!this.encasementShippingMark.includes(item.shippingMark)) {
+          this.encasementShippingMark.push(item.shippingMark)
+        }
+      })
+      this.showEncasement = true
     }
   }
 }
