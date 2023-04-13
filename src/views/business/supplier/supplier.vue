@@ -35,7 +35,7 @@
         height="92%"
         :row-config="{isHover: true}"
         :data="tableData">
-        <vxe-column type="checkbox" width="60"></vxe-column>
+        <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="supName" title="供应商名称" width="200"></vxe-column>
         <vxe-column field="linkName" title="联系人" width="150"></vxe-column>

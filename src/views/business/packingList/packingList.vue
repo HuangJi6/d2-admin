@@ -38,7 +38,7 @@
         :row-config="{isHover: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
-        <vxe-column type="checkbox" width="60"></vxe-column>
+        <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="packingNo" title="箱单号" width="150"></vxe-column>
         <vxe-column field="outTime" title="出库时间" width="150"></vxe-column>

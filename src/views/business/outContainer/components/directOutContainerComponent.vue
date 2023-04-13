@@ -26,7 +26,7 @@
     show-overflow
     :data="selectionOperateDatasIn"
     :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}">
-    <vxe-column type="checkbox" width="60"></vxe-column>
+    <vxe-column type="checkbox" width="45"></vxe-column>
     <vxe-column type="seq" title="序号" width="60"></vxe-column>
     <vxe-column field="shopName" title="店铺名称" width="150"></vxe-column>
     <vxe-column field="goodsName" title="中文品名" width="150"></vxe-column>
