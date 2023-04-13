@@ -1,6 +1,7 @@
 import { deleteApi, getOneApi, updateApi, pageMapApi as pageInContainerList, addBatchApi } from '@/api/business/inContainerApi.js'
 import { pageMapApi as pageOutContainerList, deleteBatchByGuids, getOneApi as getOutOnApi } from '@/api/business/outContainerApi.js'
 import { pageMapApi as operatePageMapApi } from '@/api/business/shopGoodsOperateApi.js'
+
 import moment from 'moment'
 
 // 初始化方法
@@ -110,6 +111,10 @@ const dataMethods = {
       console.log(err)
       this.listLoading = false
     })
+    // 调用子组件的汇总数据
+    if (this.$refs.packingListTopGather) {
+      this.$refs.packingListTopGather.refreshContainerGroup()
+    }
   },
   // 提交保存
   handleSubmitInContainer(formName) {
@@ -190,19 +195,6 @@ const dataMethods = {
       })
     })
   }
-  // 直接出库方法
-  // outContainerSubmit(selectionDatas) {
-  //   const guids = []
-  //   selectionDatas.forEach(ele => {
-  //     guids.push(ele.guid)
-  //   })
-  //   const params = { guids: guids }
-  //   this.handleHttpMethod(directOutContainerApi(params), true, '正在出库中', true, '出库成功').then(res => {
-  //     if (res) {
-  //       this.pageList()
-  //     }
-  //   })
-  // }
 }
 // 校验方法
 const validateMethods = {}
@@ -404,6 +396,20 @@ const handleMethods = {
       this.showUpdateOutContainerComponent = true
       this.outContainerDialogStatus = 'update'
     })
+  },
+  // 点击箱单回调函数
+  changePackingList(value) {
+    this.filterFormData.packingGuid = value
+    this.pageOutContainerList()
+  },
+  // 装箱
+  handleEncasement() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length < 1) {
+      this.$message.warning('请选择一条或一条以上数据')
+    } else {
+
+    }
   }
 }
 

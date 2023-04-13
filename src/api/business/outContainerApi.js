@@ -35,3 +35,7 @@ export function pageNotCheckMapApi(params) {
 export function deleteBatchByGuids(params) {
   return fetch({ url: '/api/mkd/business/busOutContainer/deleteBatchByGuids', method: 'post', data: params })
 }
+
+export function outContainerGroup(params) {
+  return fetch({ url: '/api/mkd/business/busOutContainer/outContainerGroup', method: 'post', data: params })
+}
