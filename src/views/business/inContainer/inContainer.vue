@@ -191,7 +191,7 @@
           <vxe-column field="totalPrice" title="总价" width="120"></vxe-column>
           <vxe-column field="hsCode" title="海关编码" width="120"></vxe-column>
           <vxe-column field="goodsNature" title="货物性质" width="120"></vxe-column>
-          <vxe-column field="imgLink" title="产品图片" width="120">
+          <vxe-column type="image" field="imgLink" title="产品图片" width="120">
             <template #default="{ row }">
             <el-image style="width: auto; height: 50px" :src="row.imgLink" :preview-src-list="[row.imgLink]"> </el-image>
           </template>
@@ -226,7 +226,7 @@
           <vxe-form :data="filterFormData" :items="searchForm" titleColon></vxe-form>
             <div style="margin-top:10px;float:right;margin-right:20px">
             <el-button type="danger" @click="filterDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="pageList">确 定</el-button>
+            <el-button type="primary" @click="handleRefreshPageList">确 定</el-button>
             </div>
         </vxe-modal>
       </div>
