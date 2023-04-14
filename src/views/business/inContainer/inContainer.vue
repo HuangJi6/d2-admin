@@ -210,7 +210,7 @@
       </div>
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="填充检测数据" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
-        @close="handleCancelCreate" width="60%">
+        @close="handleCancelInContainer" width="60%">
           <vxe-form ref="createFrom" title-width="150" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitInContainer('createFrom')" @reset="handleCancelInContainer('createFrom')">

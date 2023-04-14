@@ -17,6 +17,7 @@ const dataMethods = {
   // 重置表单数据
   resetCreateForm() {
     this.createFormData = {
+      goodsNature: '',
       goodsName: '',
       goodsCategory: '',
       categoryGuid: '',
@@ -108,6 +109,15 @@ const handleMethods = {
   // 提交保存按钮
   handleSubmitCreate(formName) {
     this.submitCreate(formName)
+  },
+  // 复制
+  handleCopy(row) {
+    this.getOne(row.guid).then(response => {
+      this.createFormData = response.data
+      this.createFormData.guid = ''
+      this.dialogFormVisible = true
+      this.dialogStatus = 'create'
+    })
   },
   // 点击编辑按钮事件
   handleUpdate(row) {

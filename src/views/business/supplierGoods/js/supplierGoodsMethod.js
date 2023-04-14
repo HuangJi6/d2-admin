@@ -76,6 +76,7 @@ const dataMethods = {
     return this.handleHttpMethod(getOneApi(id), true)
   },
   selectedGoods(goodsInfo) {
+    this.goodsInfo = goodsInfo
     this.createFormData.goodsGuid = goodsInfo.guid
     this.createFormData.goodsName = goodsInfo.goodsName
     // 发送请求获取供应商信息
@@ -85,7 +86,7 @@ const dataMethods = {
   },
   getSupplierData(categoryGuid) {
     this.handleHttpMethod(postSupplierListApi({ categoryGuid: categoryGuid }), true, '请求中...').then(res => {
-      this.applicationData = res.data
+      this.supplierListData = res.data
     })
   }
 }
@@ -166,6 +167,9 @@ const handleMethods = {
   // 选择商品点击事件,显示商品选择弹框
   handleChooseGoods() {
     this.showGoodsComponent = true
+  },
+  handleAddSupplier() {
+    this.showAddSupplierComponent = true
   }
 }
 

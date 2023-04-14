@@ -4,10 +4,10 @@
     <template slot="header">
       <div style="float:left;padding-top:3px">
         <el-radio-group @input="pageList()" v-model="filterFormData.statusCode" size="medium">
-          <el-radio-button label="全部" @click="pageList()">全部</el-radio-button>
           <el-radio-button label="待下单" @click="pageList()">待下单</el-radio-button>
           <el-radio-button label="已下单" @click="pageList()">已下单</el-radio-button>
           <el-radio-button label="已入库" @click="pageList()">已入库</el-radio-button>
+          <el-radio-button label="全部" @click="pageList()">全部</el-radio-button>
         </el-radio-group>
       </div>
       <div  style="float:right;" v-if="filterFormData.statusCode === '待下单'" >
@@ -57,15 +57,17 @@
         <vxe-column field="totalBox" title="总箱数" width="120"></vxe-column>
         <vxe-column field="purVolume" title="采购体积" width="120"></vxe-column>
         <vxe-column field="purUnitPrice" title="采购单价" width="120"></vxe-column>
-        <vxe-column field="purAmount" title="采购总额" width="120"></vxe-column>
+        <vxe-column field="purAmount" title="采购金额" width="120"></vxe-column>
         <vxe-column field="shipType" title="运输方式" width="120"></vxe-column>
         <vxe-column field="shipAmount" title="运输价格" width="120"></vxe-column>
+        <vxe-column field="sumAmount" title="采购总额" width="120"></vxe-column>
         <vxe-column field="purTime" title="采购时间" width="120"></vxe-column>
         <vxe-column field="boxLength" title="单箱长/CM" width="120"></vxe-column>
         <vxe-column field="boxWidth" title="单箱宽/CM" width="120"></vxe-column>
         <vxe-column field="boxHigh" title="单箱高/CM" width="120"></vxe-column>
         <vxe-column field="boxVolume" title="单箱体积/M" width="120"></vxe-column>
         <vxe-column field="singleAmount" title="原始单价" width="120"></vxe-column>
+        <vxe-column field="isComplete" title="是否已完工" width="120"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
         <vxe-column v-if="filterFormData.statusCode==='待下单'" title="操作" align="center" width="100" fixed="right" show-overflow>
           <template #default="{ row }">
@@ -74,9 +76,9 @@
         </vxe-column>
       </vxe-table>
       <div v-show="dialogFormVisible" width="60%">
-        <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
+        <vxe-modal v-if="dialogFormVisible" title="填写下单信息" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
         @close="createModalClose" width="60%">
-          <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+          <vxe-form ref="createFrom" title-width="150" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
             <template #supplierGuidSlot="{ data }">
@@ -88,7 +90,9 @@
             </template>
             <template #purTimeSlot="{ data }">
               <el-date-picker style="width:100%" v-model="data.purTime" type="date" size="small" placeholder="请选择日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-              <!-- <vxe-input v-model="data.purTime" type="date" placeholder="请选择日期" clearable></vxe-input> -->
+            </template>
+            <template #completeTimeSlot="{data}">
+              <el-date-picker style="width:100%" v-model="data.completeTime" type="date" size="small" placeholder="请选择日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
             </template>
           </vxe-form>
         </vxe-modal>
@@ -135,6 +139,7 @@ import ShopGoodsComponent from '@/views/business/shopGoods/components/shopGoodsC
 import ShopGoodsOrderComponentVue from '@/views/business/shopGoodsOperate/components/shopGoodsOrderComponent.vue'
 import { myMethods } from './js/shopGoodsOperateMethod.js'
 import $Big from '@/libs/big.js'
+import moment from 'moment'
 
 export default {
   name: 'shopGoods',
@@ -160,7 +165,7 @@ export default {
         shopName: '',
         sku: '',
         itemId: '',
-        statusCode: '全部',
+        statusCode: '待下单',
         shippingMark: ''
       },
       searchForm: [
@@ -212,7 +217,12 @@ export default {
         goodsWeight: '',
         goodsPrice: '',
         goodsUse: '',
-        brand: ''
+        brand: '',
+        purTime: moment().format('YYYY-MM-DD h:mm:ss'),
+        isComplete: '否',
+        completeTime: '',
+        sumAmount: '',
+        shipAmount: ''
       },
       createFromRules: {
         goodsName: [
@@ -246,16 +256,28 @@ export default {
               }
             },
             { field: 'purNumber', title: '采购数量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购数量' } } },
-            { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
-            { field: 'totalBox', title: '总箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
+            { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数' } } },
+            { field: 'totalBox', title: '总箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入总箱数' } } },
             { field: 'boxVolume', title: '单箱体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
-            { field: 'purVolume', title: '采购体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
+            { field: 'purVolume', title: '采购体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购体积' } } },
+            { field: 'purUnitPrice', title: '采购单价/RMB', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购单价单位人民币' } } },
+            { field: 'purAmount', title: '采购金额/RMB', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入采购金额单位人民币' } } },
+            { field: 'shipAmount', title: '其他费用/RMB', span: 12, itemRender: { name: '$input', props: { placeholder: '其他费用(PS:运输金额等)单位人民币' } } },
+            { field: 'sumAmount', title: '采购总额/RMB', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入采购总额单位人民币' } } },
             { field: 'shippingMark', title: '箱唛', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱唛' } } },
-            { field: 'purUnitPrice', title: '采购单价', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
-            { field: 'purAmount', title: '采购总额', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
-            { field: 'shipType', title: '运输方式', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
-            { field: 'shipAmount', title: '运输总额', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
+            { field: 'shipType', title: '运输方式', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入运输方式' } } },
             { field: 'purTime', title: '采购时间', span: 12, slots: { default: 'purTimeSlot' } },
+            {
+              field: 'isComplete',
+              title: '是否已完工',
+              span: 12,
+              itemRender: {
+                name: '$select',
+                options: [{ value: '是', label: '是' }, { value: '否', label: '否' }],
+                props: { placeholder: '制作商是否已经做完货物' }
+              }
+            },
+            { field: 'completeTime', title: '完工日期', span: 12, slots: { default: 'completeTimeSlot' } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },
         {
@@ -294,6 +316,18 @@ export default {
       handler(nval, oval) {
         if (nval) {
           this.createFormData.purAmount = new $Big(nval || 0).times(this.createFormData.purNumber || 0).toString()
+          this.createFormData.sumAmount = new $Big(nval || 0).times(this.createFormData.purNumber || 0).plus(new $Big(this.createFormData.shipAmount || 0)).toString()
+        } else {
+          this.createFormData.purAmount = 0
+        }
+      }
+    },
+    'createFormData.shipAmount': {
+      handler(nval, oval) {
+        if (nval) {
+          this.createFormData.sumAmount = new $Big(nval || 0).plus(this.createFormData.purAmount || 0).toString()
+        } else {
+          this.createFormData.sumAmount = this.createFormData.purAmount
         }
       }
     }

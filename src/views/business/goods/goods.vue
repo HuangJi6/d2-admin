@@ -55,18 +55,19 @@
         <vxe-column field="outGoodsName" title="外部名称" width="100"></vxe-column>
         <vxe-column field="outEnglishGoodsName" title="英文名称" width="100"></vxe-column>
         <vxe-column field="grade" title="评级" width="100"></vxe-column>
-        <vxe-column field="goodsLength" title="商品-长" width="100"></vxe-column>
-        <vxe-column field="goodsWidth" title="商品-宽" width="100"></vxe-column>
-        <vxe-column field="goodsHigh" title="商品-高" width="100"></vxe-column>
+        <vxe-column field="goodsLength" title="商品-长/CM" width="100"></vxe-column>
+        <vxe-column field="goodsWidth" title="商品-宽/CM" width="100"></vxe-column>
+        <vxe-column field="goodsHigh" title="商品-高/CM" width="100"></vxe-column>
         <vxe-column field="goodsWeight" title="商品-重量" width="100"></vxe-column>
         <vxe-column field="goodsPrice" title="商品-单价" width="100"></vxe-column>
         <vxe-column field="goodsUse" title="商品-用途" width="100"></vxe-column>
         <vxe-column field="brand" title="商品-品牌" width="100"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
-        <vxe-column title="操作" align="center" width="100" fixed="right" show-overflow>
+        <vxe-column title="操作" align="center" width="145" fixed="right" show-overflow>
           <template #default="{ row }">
-            <vxe-button type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)"></vxe-button>
-            <vxe-button type="text" status="danger" icon="vxe-icon-delete" @click="handleRemove(row)"></vxe-button>
+            <vxe-button style="width:40px;margin-left:0px;padding-right:0px;padding-left:0px" type="text" status="primary" content="复制" @click="handleCopy(row)"></vxe-button>
+            <vxe-button style="width:40px;margin-left:0px;padding-right:0px;padding-left:0px" type="text" status="success" content="修改" @click="handleUpdate(row)"></vxe-button>
+            <vxe-button style="width:40px;margin-left:0px;padding-right:0px;padding-left:0px" type="text" status="danger" content="删除" @click="handleRemove(row)"></vxe-button>
           </template>
         </vxe-column>
       </vxe-table>
@@ -119,6 +120,7 @@ export default {
         goodsCategory: ''
       },
       createFormData: {
+        goodsNature: '',
         goodsName: '',
         goodsCategory: '',
         categoryGuid: '',
@@ -177,6 +179,9 @@ export default {
             },
             { field: 'outGoodsName', title: '外部名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入外部名称' } } },
             { field: 'outEnglishGoodsName', title: '英文名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入英文名称' } } },
+            { field: 'goodsPrice', title: '商品-单价', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
+            { field: 'goodsUse', title: '商品-用途', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
+            { field: 'brand', title: '商品-品牌', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
             {
               field: 'grade',
               title: '评级',
@@ -187,13 +192,10 @@ export default {
                 props: { placeholder: '请输入评级' }
               }
             },
-            { field: 'goodsLength', title: '商品-长', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'goodsWidth', title: '商品-宽', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'goodsHigh', title: '商品-高', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
+            { field: 'goodsLength', title: '商品-长/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
+            { field: 'goodsWidth', title: '商品-宽/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
+            { field: 'goodsHigh', title: '商品-高/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
             { field: 'goodsWeight', title: '商品-重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'goodsPrice', title: '商品-单价', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'goodsUse', title: '商品-用途', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'brand', title: '商品-品牌', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
             { field: 'remark', title: '备注', span: 24, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }
           ]
         },

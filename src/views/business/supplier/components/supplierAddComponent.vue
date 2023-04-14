@@ -1,6 +1,6 @@
 <template>
   <div v-show="show" width="60%">
-    <vxe-modal v-if="show" title="新增数据页面" v-model="show" :visible.sync="show"
+    <vxe-modal v-if="show" title="新增供应商页面" v-model="show" :visible.sync="show"
     @close="handleClose" width="60%">
       <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
       :data="createFormData" :items="createForm" :rules="createFromRules"
@@ -104,6 +104,9 @@ export default {
       createFromRules: {
         supName: [
           { required: true, message: '请输入供应商名称', trigger: 'blur' }
+        ],
+        supCategory: [
+          { required: true, message: '请输入供应商类别', trigger: 'blur' }
         ]
       }
     }
@@ -121,8 +124,6 @@ export default {
     // 确定选中类目后
     categorySureClick(checkedData) {
       this.createFormData.supCategory = checkedData.checkedStr
-      this.createFormData.supName = ''
-      this.createFormData.linkName = ''
       this.createFormData.categoryGuids = checkedData.checkedKeys
     },
     submitCreate(formName) {

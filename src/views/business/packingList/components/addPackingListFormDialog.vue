@@ -1,6 +1,6 @@
 // 入库组件
 <template>
-<vxe-modal v-model="showIn" title="添加箱单" :visible.sync="dialogFormVisible"
+<vxe-modal v-model="showIn" title="添加箱单" :visible.sync="showIn"
         @close="handleClose" width="60%">
     <template #footer>
       <vxe-button status="primary" @click="onSure">确定</vxe-button>
@@ -8,7 +8,7 @@
     </template>
     <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
       :data="createFormData" :rules="createFromRules" :items="createFormItems"
-      @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
+      @submit="handleSubmitCreate('createFrom')" @reset="handleClose('createFrom')">
         <template #outTime="{ data }">
           <el-date-picker style="width:100%" v-model="data.outTime" type="date" size="small" placeholder="请选择日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </template>
@@ -107,8 +107,7 @@ export default {
     handleSubmitCreate() {
       this.handleHttpMethod(addApi(this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
         if (res) {
-          this.dialogFormVisible = false
-          this.pageList()
+          this.handleClose()
         }
       })
     }
