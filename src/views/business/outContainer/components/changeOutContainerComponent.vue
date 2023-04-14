@@ -28,17 +28,18 @@
     :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}">
     <vxe-column type="checkbox" width="45"></vxe-column>
     <vxe-column type="seq" title="序号" width="60"></vxe-column>
-    <vxe-column field="shopName" title="店铺名称" width="150"></vxe-column>
-    <vxe-column field="goodsName" title="中文品名" width="150"></vxe-column>
+    <vxe-column field="shopName" title="店铺名称" width="120"></vxe-column>
+    <vxe-column field="goodsName" title="中文品名" width="180"></vxe-column>
     <vxe-column field="shippingMark" title="箱唛编号" width="150"></vxe-column>
-    <vxe-column field="purNumber" title="库存数量" width="100"></vxe-column>
-    <vxe-column field="totalBox" title="总箱数" width="100"></vxe-column>
+    <vxe-column field="purNumber" title="总数量" width="100"></vxe-column>
+    <vxe-column field="purInNumber" title="库存数量" width="100"></vxe-column>
+    <!-- <vxe-column field="totalBox" title="总箱数" width="100"></vxe-column> -->
     <vxe-column field="boxQuantity" title="单箱数量" width="100"></vxe-column>
-    <vxe-column field="ctnNo" title="制造商编号" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
+    <!-- <vxe-column field="ctnNo" title="制造商编号" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
       <template #edit="{ row }">
         <vxe-input v-model="row.ctnNo" type="text"></vxe-input>
       </template>
-    </vxe-column>
+    </vxe-column> -->
     <!-- <vxe-column field="packingBox" title="出库箱数" width="100" :edit-render="{autofocus: '.vxe-input--inner'}">
       <template #edit="{ row }">
         <vxe-input v-model="row.packingBox" type="text"></vxe-input>

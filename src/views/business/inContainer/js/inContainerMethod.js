@@ -412,6 +412,10 @@ const handleMethods = {
   },
   // 待出库点击编辑按钮
   handleUpdateOutContainer(row) {
+    if (row.isRepacking === '否') {
+      this.$message.warning('请选择需要变更箱规的数据!')
+      return
+    }
     this.handleHttpMethod(getOutOnApi(row.guid), true).then(response => {
       this.updateOutContainerForm = response.data
       this.showUpdateOutContainerComponent = true
