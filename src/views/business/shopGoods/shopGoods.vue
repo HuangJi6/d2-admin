@@ -72,9 +72,9 @@
         <vxe-column field="imgLink" title="图片链接" width="150"></vxe-column>
         <vxe-column field="material" title="材料" width="100"></vxe-column>
         <vxe-column field="grade" title="评级" width="100"></vxe-column>
-        <vxe-column field="goodsLength" title="商品-长" width="100"></vxe-column>
-        <vxe-column field="goodsWidth" title="商品-宽" width="100"></vxe-column>
-        <vxe-column field="goodsHigh" title="商品-高" width="100"></vxe-column>
+        <vxe-column field="goodsLength" title="商品-长/CM" width="100"></vxe-column>
+        <vxe-column field="goodsWidth" title="商品-宽/CM" width="100"></vxe-column>
+        <vxe-column field="goodsHigh" title="商品-高/CM" width="100"></vxe-column>
         <vxe-column field="goodsWeight" title="商品-重量" width="100"></vxe-column>
         <vxe-column field="goodsPrice" title="商品-单价" width="100"></vxe-column>
         <vxe-column field="goodsUse" title="商品-用途" width="100"></vxe-column>

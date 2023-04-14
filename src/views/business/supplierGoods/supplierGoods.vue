@@ -70,12 +70,14 @@
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
             <template #supplierGuidSlot="{ data }">
-              <vxe-select v-model="data.supplierGuid" placeholder="请先选择商品信息" :options="applicationData" filterable clearable></vxe-select>
+              <vxe-select v-model="data.supplierGuid" placeholder="请先选择商品信息" :options="supplierListData" filterable clearable></vxe-select>
+            </template>
+            <template #buttonSlot>
+              <vxe-button status="primary" content="新增供应商"  @click="handleAddSupplier()"></vxe-button>
             </template>
             <template #goodsNameSlots="{ data }">
               <span> {{ data.goodsName }}  </span>
               <vxe-button status="primary" content="选择商品"  @click="handleChooseGoods(data)"></vxe-button>
-              <!-- <vxe-button status="primary" content="新增商品"  @click="handleChooseGoods(data)"></vxe-button> -->
             </template>
           </vxe-form>
         </vxe-modal>
@@ -85,6 +87,12 @@
         :show.sync="showGoodsComponent"
         @onSureClick="selectedGoods"
       ></GoodsShowComponent>
+      <SupplierAddComponentVue
+        v-if="showAddSupplierComponent"
+        :show.sync="showAddSupplierComponent"
+        :dialogStatus="'create'"
+        @onSureClick="getSupplierData(goodsInfo.categoryGuid)">
+      </SupplierAddComponentVue>
     </template>
 
     <template slot="footer">
@@ -97,15 +105,18 @@
 import $Big from '@/libs/big.js'
 import mixins from '@/mixin/commonMixin.js'
 import GoodsShowComponent from '@/views/business/goods/components/goodsShowComponent.vue'
+import SupplierAddComponentVue from '../supplier/components/supplierAddComponent.vue'
+
 import { myMethods } from './js/supplierGoodsMethod.js'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { GoodsShowComponent },
+  components: { GoodsShowComponent, SupplierAddComponentVue },
   data() {
     return {
+      showAddSupplierComponent: false,
       goodsInfo: {},
-      applicationData: [],
+      supplierListData: [],
       showGoodsComponent: false,
       dialogStatus: '',
       dialogFormVisible: false,
@@ -158,16 +169,22 @@ export default {
             {
               field: 'supplierGuid',
               title: '供应商',
-              span: 12,
+              span: 9,
               slots: { default: 'supplierGuidSlot' }
+            },
+            {
+              field: '',
+              title: '',
+              span: 3,
+              slots: { default: 'buttonSlot' }
             },
             { field: 'boxLength', title: '单箱长/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱长' } } },
             { field: 'boxWidth', title: '单箱宽/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱宽' } } },
             { field: 'boxHigh', title: '单箱高/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱高' } } },
             { field: 'boxVolume', title: '单箱体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
             { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数量' } } },
-            { field: 'singleAmount', title: '单个价格', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单个价格' } } },
-            { field: 'boxAmount', title: '单箱价格', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱价格' } } },
+            { field: 'singleAmount', title: '单个价格', span: 12, itemRender: { name: '$input', props: { placeholder: '具体看运营采购价格,此处只做估计' } } },
+            // { field: 'boxAmount', title: '单箱价格', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱价格' } } },
             { field: 'boxWeight', title: '单箱重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重量' } } },
             { field: 'grade', title: '评级', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入评级' } } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
@@ -197,9 +214,10 @@ export default {
   watch: {
     'createFormData.supplierGuid': {
       handler(nval, oval) {
-        this.applicationData.forEach(element => {
+        this.supplierListData.forEach(element => {
           if (element.value === nval) {
             this.createFormData.supplierName = element.label
+            this.createFormData.supplierGuid = nval
           }
         })
       }

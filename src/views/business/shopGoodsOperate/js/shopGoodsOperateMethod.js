@@ -2,6 +2,7 @@ import { deleteApi, getOneApi, updateApi, addApi, pageMapApi } from '@/api/busin
 // import { getAllApplication } from '@/api/business/applicationApi.js'
 import { postSupplierListApi } from '@/api/business/supplierApi.js'
 import $Big from '@/libs/big.js'
+import moment from 'moment'
 
 // 初始化方法
 const initMethods = {
@@ -47,7 +48,11 @@ const dataMethods = {
       goodsWeight: '',
       goodsPrice: '',
       goodsUse: '',
-      brand: ''
+      brand: '',
+      isComplete: '否',
+      purTime: moment().format('YYYY-MM-DD h:mm:ss'),
+      sumAmount: '',
+      shipAmount: ''
     }
   },
   pageList() {
@@ -147,9 +152,12 @@ const handleMethods = {
   },
   // 下单操作
   handleOrder(row) {
+    debugger
     this.getOne(row.guid).then(response => {
       this.createFormData = response.data
+      this.createFormData.isComplete = '否'
       this.createFormData.statusCode = '已下单'
+      this.createFormData.purTime = moment().format('YYYY-MM-DD h:mm:ss')
       this.getSupplierData(row.goodsGuid)
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
