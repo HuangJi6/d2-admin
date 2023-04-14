@@ -29,6 +29,7 @@
     "highlight.js": "^10.7.3",
     "hotkeys-js": "^3.9.5",
     "js-cookie": "^2.2.1",
+    "js-table2excel": "^1.0.3",
     "lodash": "^4.17.21",
     "lowdb": "^1.0.0",
     "marked": "^2.1.3",

@@ -15,6 +15,7 @@
 <script>
 import mixins from '@/mixin/commonMixin.js'
 import moment from 'moment'
+import table2excel from 'js-table2excel'
 export default {
   mixins: [mixins],
   name: 'exportButton',
@@ -69,13 +70,32 @@ export default {
       if (this.tableRefsNameIn) {
         const parent = this.findParentComponent(this, this.vuePageNameIn)
         const tableRefs = parent.$refs[this.tableRefsNameIn]
+        const columns = tableRefs.getColumns()
+        const column = []
+        const fileName = this.fileName + moment().format('YYYYMMDDhmmss')
+        columns.forEach(item => {
+          if (item.field) {
+            const a = {
+              key: item.field,
+              title: item.title,
+              type: item.type
+            }
+            if (item.type === 'image') {
+              a.height = 50
+              a.width = 50
+            }
+            column.push(a)
+          }
+        })
         if (command === 'exportCurrentPage') {
-          tableRefs.exportData({ type: 'csv' })
+          const data = tableRefs.getTableData().fullData
+          // 组件导出
+          table2excel(column, data, fileName)
         }
         if (command === 'exportCheckedLine') {
           const selectionData = tableRefs.selection
           if (selectionData && selectionData.length > 0) {
-            tableRefs.exportData({ type: 'csv', data: selectionData })
+            table2excel(column, selectionData, fileName)
           } else {
             this.$message({ message: '请选择数据', type: 'warning' })
           }
@@ -97,20 +117,7 @@ export default {
               }
             }
             if (list && list.length > 0) {
-              tableRefs.exportData({
-                filename: this.fileName + moment().format('YYYYMMDDhmmss'),
-                type: 'csv',
-                isHeader: true,
-                isFooter: true,
-                data: list,
-                columnFilterMethod(column, $columnIndex) {
-                  if (column.$columnIndex === 0 || column.$columnIndex === 1) {
-                    return false
-                  } else {
-                    return true
-                  }
-                }
-              })
+              table2excel(column, list, fileName)
             }
             tableRefs.listLoading = false
           }, 200)
