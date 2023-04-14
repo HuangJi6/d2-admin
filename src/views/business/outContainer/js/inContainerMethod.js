@@ -98,7 +98,7 @@ const dataMethods = {
       this.listLoading = false
     })
   },
-  // 查询已出库的数据
+  // 查询待出库的数据
   pageOutContainerList() {
     this.listLoading = true
     const paramsCopy = Object.assign({}, this.filterFormData)
@@ -358,7 +358,6 @@ const handleMethods = {
   },
   // 刷新按钮点击
   handleRefreshPageList() {
-    debugger
     if (this.filterFormData.statusCode === '已下单') {
       this.pageOperateList()
     }
@@ -368,7 +367,7 @@ const handleMethods = {
     if (this.filterFormData.statusCode === '待出库') {
       this.pageOutContainerList()
     }
-    if (this.filterFormData.statusCode === '已出完') {
+    if (this.filterFormData.statusCode === '装箱单') {
       this.pageShippingMarkList()
     }
   },
@@ -424,7 +423,7 @@ const handleMethods = {
     if (this.filterFormData.statusCode === '待出库') {
       this.pageOutContainerList()
     }
-    if (this.filterFormData.statusCode === '已出完') {
+    if (this.filterFormData.statusCode === '装箱单') {
       this.pageShippingMarkList()
     }
   },
@@ -435,7 +434,21 @@ const handleMethods = {
       this.$message.warning('请选择一条或一条以上数据')
     } else {
       this.encasementShippingMark = []
+      let flag = false
       selectionDatas.forEach(item => {
+        if (!item.packingTotalVolume || item.packingTotalVolume === 0 || item.packingTotalVolume === '0') {
+          flag = true
+        }
+      })
+      if (flag) {
+        this.$message.warning('数据箱规信息不完整，请联系仓库人员！')
+        return
+      }
+      selectionDatas.forEach(item => {
+        if (!item.packingTotalVolume || item.packingTotalVolume === 0 || item.packingTotalVolume === '0') {
+          this.$message.warning('数据未变更箱规!请联系仓库人员')
+          return
+        }
         if (!this.encasementShippingMark.includes(item.shippingMark)) {
           this.encasementShippingMark.push(item.shippingMark)
         }
