@@ -1,19 +1,16 @@
-import { deleteApi, getOneApi, updateApi, pageMapApi, addBatchApi, pageNotCheckMapApi } from '@/api/business/inContainerApi.js'
-// import { getAllApplication } from '@/api/business/applicationApi.js'
-// import { getSupplierListApi } from '@/api/business/supplierApi.js'
+import { getOneApi, updateApi, pageMapApi as pageInContainerList, addBatchApi } from '@/api/business/inContainerApi.js'
+import { pageMapApi as pageOutContainerList, getOneApi as getOutOnApi } from '@/api/business/outContainerApi.js'
+import { pageMapApi as operatePageMapApi } from '@/api/business/shopGoodsOperateApi.js'
+import moment from 'moment'
 
 // 初始化方法
 const initMethods = {
   initMounted() {
     console.log('initMounted...')
-    this.pageList()
+    this.pageOperateList()
   },
   initCreated() {
-    // console.log('initCreated...')
-    // this.handleHttpMethod(getSupplierListApi(), true, '请求中...').then(res => {
-    //   this.supplierData = res.data
-    //   // this.$set(this.createForm[0].children[1].itemRender, 'options', res.data)
-    // })
+    console.log('initCreated...')
   }
 }
 // 接口方法
@@ -27,65 +24,74 @@ const dataMethods = {
       itemId: '',
       sku: '',
       operateGuid: '',
+      purNumber: '',
+      purInNumber: '',
+      purOutNumber: '',
       remeasureLength: '',
       remeasureWidth: '',
       remeasureHigh: '',
       remeasureVolume: '0',
+      remeasureTotalVolume: '0',
       remeasureWeight: '',
       remeasureTotalWeight: '0',
       boxWeight: '',
       statusCode: '',
       goodsNature: '',
-      qualityCode: '',
-      inTime: '',
+      qualityCode: 'OK',
+      inTime: moment().format('YYYY-MM-DD h:mm:ss'),
       outTime: '',
       shippingMark: '',
       remark: ''
     }
   },
-  pageList() {
+  // 查询已下单的数据
+  pageOperateList() {
     this.listLoading = true
     const paramsCopy = Object.assign({}, this.filterFormData)
-    if (paramsCopy.statusCode === '待检测') {
-      this.listLoading = true
-      const paramsCopy = Object.assign({}, this.filterFormData)
-      this.handleFilter(paramsCopy)
-      this.handleHttpMethod(pageNotCheckMapApi(paramsCopy || {}), true).then(res => {
-        this.tableData = res.data.dataList
-        this.total = res.data.total
-        this.listLoading = false
-      }).catch(err => {
-        console.log(err)
-        this.listLoading = false
-      })
-    } else {
-      this.handleFilter(paramsCopy)
-      this.handleHttpMethod(pageMapApi(paramsCopy || {}), true).then(res => {
-        this.tableData = res.data.dataList
-        this.total = res.data.total
-        this.listLoading = false
-      }).catch(err => {
-        console.log(err)
-        this.listLoading = false
-      })
+    this.handleFilter(paramsCopy)
+    this.handleHttpMethod(operatePageMapApi(paramsCopy || {}), true).then(res => {
+      this.tableData = res.data.dataList
+      this.total = res.data.total
+      this.listLoading = false
+    }).catch(err => {
+      console.log(err)
+      this.listLoading = false
+    })
+  },
+  // 查询已入库的数据
+  pageInContainerList() {
+    this.listLoading = true
+    const paramsCopy = Object.assign({}, this.filterFormData)
+    this.handleFilter(paramsCopy)
+    this.handleHttpMethod(pageInContainerList(paramsCopy || {}), true).then(res => {
+      this.tableData = res.data.dataList
+      this.total = res.data.total
+      this.listLoading = false
+    }).catch(err => {
+      console.log(err)
+      this.listLoading = false
+    })
+  },
+  // 查询已出库的数据
+  pageOutContainerList() {
+    this.listLoading = true
+    const paramsCopy = Object.assign({}, this.filterFormData)
+    this.handleFilter(paramsCopy)
+    this.handleHttpMethod(pageOutContainerList(paramsCopy || {}), true).then(res => {
+      this.tableData = res.data.dataList
+      this.total = res.data.total
+      this.listLoading = false
+    }).catch(err => {
+      console.log(err)
+      this.listLoading = false
+    })
+    // 调用子组件的汇总数据
+    if (this.$refs.packingListTopGather) {
+      this.$refs.packingListTopGather.refreshContainerGroup()
     }
   },
-  // 查询待检测的数据
-  // pageOperateList() {
-  //   this.listLoading = true
-  //   const paramsCopy = Object.assign({}, this.filterFormData)
-  //   this.handleFilter(paramsCopy)
-  //   this.handleHttpMethod(operatePageMapApi(paramsCopy || {}), true).then(res => {
-  //     this.tableData = res.data.dataList
-  //     this.total = res.data.total
-  //     this.listLoading = false
-  //   }).catch(err => {
-  //     console.log(err)
-  //     this.listLoading = false
-  //   })
-  // },
   // 提交保存
-  submitCreate(formName) {
+  handleSubmitInContainer(formName) {
     const refs = this.$refs
     refs[formName].validate().then((valid) => {
       if (!valid) {
@@ -97,21 +103,23 @@ const dataMethods = {
             formDataCopy.operateGuid = ele.guid
             formDataCopy.shippingMark = ele.shippingMark
             formDataCopy.statusCode = '已入库'
+            formDataCopy.purNumber = ele.purNumber
+            formDataCopy.purInNumber = ele.purNumber
+            formDataCopy.purOutNumber = 0
             beforeCheckDatas.push(formDataCopy)
           })
           this.handleHttpMethod(addBatchApi(beforeCheckDatas), true, '正在保存中', true, '信息保存成功').then(res => {
             if (res) {
               this.dialogFormVisible = false
-              this.pageList()
+              this.handleRefreshPageList()
             }
           })
         }
-        debugger
         if (this.dialogStatus === 'update') {
           this.handleHttpMethod(updateApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
             if (res) {
               this.dialogFormVisible = false
-              this.pageList()
+              this.handleRefreshPageList()
             }
           })
         }
@@ -137,29 +145,18 @@ const dataMethods = {
       formDataCopy.operateGuid = ele.guid
       formDataCopy.shippingMark = ele.shippingMark
       formDataCopy.statusCode = '已入库'
+      formDataCopy.purInNumber = formDataCopy.purNumber
+      formDataCopy.purOutNumber = 0
       beforeCheckDatas.push(formDataCopy)
     })
     console.log(beforeCheckDatas)
     this.handleHttpMethod(addBatchApi(beforeCheckDatas), true, '正在保存中', true, '信息保存成功').then(res => {
       if (res) {
         this.dialogFormVisible = false
-        this.pageList()
+        this.handleRefreshPageList()
       }
     })
   }
-  // 直接出库方法
-  // outContainerSubmit(selectionDatas) {
-  //   const guids = []
-  //   selectionDatas.forEach(ele => {
-  //     guids.push(ele.guid)
-  //   })
-  //   const params = { guids: guids }
-  //   this.handleHttpMethod(directOutContainerApi(params), true, '正在出库中', true, '出库成功').then(res => {
-  //     if (res) {
-  //       this.pageList()
-  //     }
-  //   })
-  // }
 }
 // 校验方法
 const validateMethods = {}
@@ -169,24 +166,11 @@ const utilMethods = {}
 const handleMethods = {
   handleSizeChange(val) {
     this.filterFormData.pageSize = val
-    this.pageList()
+    this.handleRefreshPageList()
   },
   handleCurrentChange(val) {
     this.filterFormData.currentPage = val
-    this.pageList()
-  },
-  // 新增按钮
-  handleCreate() {
-    this.resetCreateForm()
-    this.dialogStatus = 'create'
-    this.dialogFormVisible = true
-    this.showInContainerComponent = true
-  },
-  // 关闭创建窗口
-  createModalClose() { },
-  // 提交保存按钮
-  handleSubmitCreate(formName) {
-    this.submitCreate(formName)
+    this.handleRefreshPageList()
   },
   // 点击编辑按钮事件
   handleUpdate(row) {
@@ -203,18 +187,6 @@ const handleMethods = {
       this.dialogStatus = 'update'
     })
   },
-  // 删除信息
-  handleRemove(row) {
-    this.$confirm('此操作将删除数据, 是否继续?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(() => {
-      this.handleHttpMethod(deleteApi(row.guid), true, '正在删除中', true, '删除成功').then(res => {
-        this.pageList()
-      })
-    })
-  },
   // 过滤方法
   handleFilter(params) {
     // 对象拷贝，防止数据污染
@@ -223,7 +195,8 @@ const handleMethods = {
       { name: 'goodsCategory', type: '4', remove: true },
       { name: 'shopName', type: '4', remove: true },
       { name: 'sku', type: '4', remove: true },
-      { name: 'itemId', type: '4', remove: true }]
+      { name: 'itemId', type: '4', remove: true },
+      { name: 'shippingMark', type: '4', remove: true }]
     if (conditionParams) {
       conditionParams.forEach(item => {
         this.buildConditionData(item.name, item.type, params, item.remove)
@@ -233,27 +206,14 @@ const handleMethods = {
     if (params.statusCode === '全部') {
       params.statusCode = ''
     }
-    // 如果状态为未入库则查询运营采购表中已下单的数据
-    if (params.statusCode === '待检测') {
-      params.statusCode = '已下单'
-    }
-  },
-  // 刷新方法
-  handleRefresh() {
-    this.pageList()
   },
   // 取消保存
-  handleCancelCreate() {
-    debugger
+  handleCancelInContainer() {
     this.dialogFormVisible = false
     this.resetCreateForm()
   },
   // 表格点击事件
   handleCellClickEvent(row, column, rowIndex) {
-  },
-  // 选择商品点击事件,显示商品选择弹框
-  handleChooseGoods() {
-    this.showGoodsComponent = true
   },
   // 过滤按钮点击事件
   HandlefilterDialogClick() {
@@ -262,12 +222,6 @@ const handleMethods = {
     } else {
       this.filterDialogVisible = true
     }
-  },
-  selectedShopGoods(shopGoodsInfo) {
-    this.createFormData.shopGoodsGuid = shopGoodsInfo.guid
-    this.createFormData.goodsGuid = shopGoodsInfo.goodsGuid
-    this.createFormData.clientId = shopGoodsInfo.clientId
-    this.createFormData.goodsName = shopGoodsInfo.shopName + '—' + shopGoodsInfo.goodsName
   },
   // 入库前填写检测信息
   handleBeforeCheck() {
@@ -284,33 +238,73 @@ const handleMethods = {
     this.createFormData.goodsName = selectionDatas[0].goodsName
     this.createFormData.itemId = selectionDatas[0].itemId
     this.createFormData.sku = selectionDatas[0].sku
+    this.createFormData.totalBox = selectionDatas[0].totalBox
+    this.createFormData.purInNumber = selectionDatas[0].purNumber
+    this.createFormData.purOutNumber = 0
+    this.createFormData.purNumber = selectionDatas[0].purNumber
   },
-  // 入库前保存检测信息
-  handleBeforeCheckSave() {
-    this.submitBeforeCheck()
-  },
-  // 箱唛变更出库
-  handleChangeOutContainer() {
-    const selectionDatas = this.$refs.vxeTableRef.selection
-    if (!selectionDatas || selectionDatas.length < 1) {
-      this.$message.warning('请选择一条或一条以上数据')
-    } else {
-      this.selectionOperateDatas = selectionDatas
-      this.showChangeOutContainerComponent = true
+  // 刷新按钮点击
+  handleRefreshPageList() {
+    if (this.filterFormData.statusCode === '已下单') {
+      this.pageOperateList()
+    }
+    if (this.filterFormData.statusCode === '已入库') {
+      this.pageInContainerList()
+    }
+    if (this.filterFormData.statusCode === '待出库') {
+      this.pageOutContainerList()
+    }
+    if (this.filterFormData.statusCode === '已出库') {
+      this.pageOutContainerList()
+    }
+    if (this.filterFormData.statusCode === '全部') {
+      this.tableData = []
+      this.total = 0
     }
   },
-  // 直接出库
-  handleOutContainer() {
+  // 点击变更箱规按钮
+  handleChangePacking() {
     const selectionDatas = this.$refs.vxeTableRef.selection
-    if (!selectionDatas || selectionDatas.length < 1) {
-      this.$message.warning('请选择一条或一条以上数据')
+    if (!selectionDatas || selectionDatas.length !== 1) {
+      this.$message.warning('请选择一条数据')
     } else {
-      this.outContainerSubmit(selectionDatas)
+      let flag = false
+      selectionDatas.forEach(item => {
+        if (item.isRepacking === '否') {
+          flag = true
+        }
+      })
+      if (flag) {
+        this.$message.warning('请选择需要变更箱规的数据!')
+        return
+      }
+      this.handleHttpMethod(getOutOnApi(selectionDatas[0].guid), true).then(response => {
+        this.changePackingForm = response.data
+        this.showChangePacking = true
+      })
     }
   },
-  // 添加箱单
-  handleAddPackingList() {
-    this.showAddPackingListFormDialog = true
+  // 待出库点击编辑按钮
+  handleUpdateOutContainer(row) {
+    if (row.isRepacking === '否') {
+      this.$message.warning('请选择需要变更箱规的数据!')
+      return
+    }
+    this.handleHttpMethod(getOutOnApi(row.guid), true).then(response => {
+      this.updateOutContainerForm = response.data
+      this.showUpdateOutContainerComponent = true
+      this.outContainerDialogStatus = 'update'
+    })
+  },
+  // 点击箱单回调函数
+  changePackingList(value) {
+    this.filterFormData.packingGuid = value
+    if (this.filterFormData.statusCode === '待出库') {
+      this.pageOutContainerList()
+    }
+    if (this.filterFormData.statusCode === '已出库') {
+      this.pageOutContainerList()
+    }
   }
 }
 
