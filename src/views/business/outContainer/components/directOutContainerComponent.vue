@@ -124,6 +124,7 @@ export default {
         eleCopy.packingTotalWeight = ele.remeasureTotalWeight
         eleCopy.inContainerGuid = ele.guid
         eleCopy.isRepacking = '否'
+        eleCopy.statucCode = '待出库'
         insertList.push(eleCopy)
       })
       this.handleHttpMethod(addBatchApi(insertList), true, '正在保存中', true, '信息保存成功').then(res => {

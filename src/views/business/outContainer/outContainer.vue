@@ -190,12 +190,12 @@
           <vxe-column field="unitPrice" title="单价" width="120"></vxe-column>
           <vxe-column field="totalPrice" title="总价" width="120"></vxe-column>
           <vxe-column field="hsCode" title="海关编码" width="120"></vxe-column>
-          <vxe-column field="goodsNature" title="货物性质" width="120"></vxe-column>
           <vxe-column type="image" field="imgLink" title="产品图片" width="120">
             <template #default="{ row }">
             <el-image style="width: auto; height: 50px" :src="row.imgLink" :preview-src-list="[row.imgLink]"> </el-image>
-          </template>
+            </template>
           </vxe-column>
+          <vxe-column field="goodsNature" title="货物性质" width="120"></vxe-column>
           <vxe-column field="mkdUrl" title="mkd地址" width="120"></vxe-column>
           <vxe-column field="amzUrl" title="amz地址" width="120"></vxe-column>
           <vxe-column field="personUrl" title="私人地址" width="120"></vxe-column>
