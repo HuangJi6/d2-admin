@@ -36,10 +36,10 @@
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
-        <vxe-column field="shopName" title="店铺名称" width="400"></vxe-column>
-        <vxe-column field="clientId" title="店铺id" width="400"></vxe-column>
-        <vxe-column field="shopEmail" title="店铺邮箱" width="400"></vxe-column>
-        <vxe-column field="shopPhone" title="店铺联系电话" width="300"></vxe-column>
+        <vxe-column field="shopName" title="店铺名称" width="200"></vxe-column>
+        <vxe-column field="clientId" title="店铺id" width="200"></vxe-column>
+        <vxe-column field="shopEmail" title="店铺邮箱" width="200"></vxe-column>
+        <vxe-column field="shopPhone" title="店铺联系电话" width="200"></vxe-column>
         <vxe-column title="操作" width="160" fixed="right" show-overflow>
           <template #default="{ row }">
             <vxe-button type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)">修改</vxe-button>
@@ -50,7 +50,7 @@
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
         @close="createModalClose" width="1600">
-          <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+          <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
           </vxe-form>

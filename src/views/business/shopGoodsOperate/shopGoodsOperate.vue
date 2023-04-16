@@ -86,13 +86,13 @@
             </template>
             <template #shopGoodsSlot="{ data }">
               <span> {{ data.goodsName }}  </span>
-              <vxe-button status="primary" content="选择店铺商品"  @click="handleChooseGoods(data)"></vxe-button>
+              <!-- <vxe-button status="primary" content="选择店铺商品"  @click="handleChooseGoods(data)"></vxe-button> -->
             </template>
             <template #purTimeSlot="{ data }">
               <el-date-picker style="width:100%" v-model="data.purTime" type="date" size="small" placeholder="请选择日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
             </template>
             <template #completeTimeSlot="{data}">
-              <el-date-picker style="width:100%" v-model="data.completeTime" type="date" size="small" placeholder="请选择日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+              <el-date-picker style="width:100%" v-model="data.completeTime" type="date" size="small" placeholder="供应商做完后请选择完工日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
             </template>
           </vxe-form>
         </vxe-modal>
@@ -228,14 +228,44 @@ export default {
         goodsName: [
           { required: true, message: '请输入商名称', trigger: 'blur' }
         ],
-        goodsCategory: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        supplierGuid: [
+          { required: true, message: '请输入选择供应商', trigger: 'blur' }
         ],
-        upcCode: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        statusCode: [
+          { required: true, message: '请输入状态标识', trigger: 'blur' }
         ],
-        imgLink: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        purNumber: [
+          { required: true, message: '请输入采购数量', trigger: 'blur' }
+        ],
+        boxQuantity: [
+          { required: true, message: '请输入单箱产品数', trigger: 'blur' }
+        ],
+        totalBox: [
+          { required: true, message: '请输入总箱数', trigger: 'blur' }
+        ],
+        boxVolume: [
+          { required: true, message: '请输入单箱体积', trigger: 'blur' }
+        ],
+        purVolume: [
+          { required: true, message: '请输入采购体积', trigger: 'blur' }
+        ],
+        purUnitPrice: [
+          { required: true, message: '请输入采购单价', trigger: 'blur' }
+        ],
+        purAmount: [
+          { required: true, message: '请输入采购金额', trigger: 'blur' }
+        ],
+        shipAmount: [
+          { required: true, message: '请输入其他费用', trigger: 'blur' }
+        ],
+        sumAmount: [
+          { required: true, message: '请输入采购总额', trigger: 'blur' }
+        ],
+        purTime: [
+          { required: true, message: '请输入采购时间', trigger: 'blur' }
+        ],
+        isComplete: [
+          { required: true, message: '请选择是否已完工', trigger: 'blur' }
         ]
       },
       createForm: [
@@ -252,14 +282,14 @@ export default {
               itemRender: {
                 name: '$select',
                 options: [{ value: '待下单', label: '待下单' }, { value: '已下单', label: '已下单' }],
-                props: { clearable: true, placeholder: '请输入状态标识' }
+                props: { placeholder: '请输入状态标识' }
               }
             },
             { field: 'purNumber', title: '采购数量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购数量' } } },
             { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数' } } },
             { field: 'totalBox', title: '总箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入总箱数' } } },
-            { field: 'boxVolume', title: '单箱体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
-            { field: 'purVolume', title: '采购体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购体积' } } },
+            { field: 'boxVolume', title: '单箱体积/m³', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
+            { field: 'purVolume', title: '采购体积/m³', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购体积' } } },
             { field: 'purUnitPrice', title: '采购单价/RMB', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购单价单位人民币' } } },
             { field: 'purAmount', title: '采购金额/RMB', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入采购金额单位人民币' } } },
             { field: 'shipAmount', title: '其他费用/RMB', span: 12, itemRender: { name: '$input', props: { placeholder: '其他费用(PS:运输金额等)单位人民币' } } },

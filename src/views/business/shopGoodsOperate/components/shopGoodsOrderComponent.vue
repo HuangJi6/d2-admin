@@ -2,7 +2,7 @@
   <div v-show="show" width="40%">
     <vxe-modal v-if="show" title="新增数据页面" v-model="show" :visible.sync="show"
     @close="handleClose" width="40%">
-      <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+      <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
       :data="createFormData" :items="createForm" :rules="createFromRules"
       @submit="handleSubmitCreate('createFrom')" @reset="handleClose('createFrom')">
         <template #shopGoodsSlot="{ data }">

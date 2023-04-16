@@ -52,9 +52,9 @@
         <vxe-column field="boxWidth" title="单箱宽/CM" width="120"></vxe-column>
         <vxe-column field="boxHigh" title="单箱高/CM" width="120"></vxe-column>
         <vxe-column field="boxVolume" title="单箱体积/M" width="100"></vxe-column>
-        <vxe-column field="boxAmount" title="单箱价格" width="150"></vxe-column>
-        <vxe-column field="singleAmount" title="单个价格" width="150"></vxe-column>
-        <vxe-column field="boxWeight" title="单箱重量" width="120"></vxe-column>
+        <vxe-column field="boxQuantity" title="单箱产品数" width="120"></vxe-column>
+        <vxe-column field="singleAmount" title="单个价格" width="120"></vxe-column>
+        <vxe-column field="boxWeight" title="单箱重量/KG" width="120"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
         <vxe-column title="操作" width="150" fixed="right" show-overflow>
           <template #default="{ row }">
@@ -66,7 +66,7 @@
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
         @close="createModalClose" width="60%">
-          <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+          <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
             <template #supplierGuidSlot="{ data }">
@@ -131,6 +131,7 @@ export default {
         supplierName: ''
       },
       createFormData: {
+        categoryGuid: '',
         supplierGuid: '',
         supplierName: '',
         goodsName: '',
@@ -150,14 +151,29 @@ export default {
         goodsName: [
           { required: true, message: '请输入商名称', trigger: 'blur' }
         ],
-        goodsCategory: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        supplierGuid: [
+          { required: true, message: '请选择供应商', trigger: 'blur' }
         ],
-        upcCode: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        boxLength: [
+          { required: true, message: '请输入单箱长', trigger: 'blur' }
         ],
-        imgLink: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        boxWidth: [
+          { required: true, message: '请输入单箱宽', trigger: 'blur' }
+        ],
+        boxHigh: [
+          { required: true, message: '请输入单箱高', trigger: 'blur' }
+        ],
+        boxVolume: [
+          { required: true, message: '请输入单箱体积', trigger: 'blur' }
+        ],
+        boxQuantity: [
+          { required: true, message: '请输入单箱产品数', trigger: 'blur' }
+        ],
+        singleAmount: [
+          { required: true, message: '请输入单个价格', trigger: 'blur' }
+        ],
+        boxWeight: [
+          { required: true, message: '请输入单箱重量/KG', trigger: 'blur' }
         ]
       },
       createForm: [
@@ -181,11 +197,11 @@ export default {
             { field: 'boxLength', title: '单箱长/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱长' } } },
             { field: 'boxWidth', title: '单箱宽/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱宽' } } },
             { field: 'boxHigh', title: '单箱高/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱高' } } },
-            { field: 'boxVolume', title: '单箱体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
+            { field: 'boxVolume', title: '单箱体积/m³', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
             { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数量' } } },
             { field: 'singleAmount', title: '单个价格', span: 12, itemRender: { name: '$input', props: { placeholder: '具体看运营采购价格,此处只做估计' } } },
             // { field: 'boxAmount', title: '单箱价格', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱价格' } } },
-            { field: 'boxWeight', title: '单箱重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重量' } } },
+            { field: 'boxWeight', title: '单箱重量/KG', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重量' } } },
             { field: 'grade', title: '评级', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入评级' } } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },
@@ -224,18 +240,18 @@ export default {
     },
     'createFormData.boxLength': {
       handler(nval, oval) {
-        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxWidth || 0).times(this.createFormData.boxHigh || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxWidth || 0).times(this.createFormData.boxHigh || 0).div(1000000).toFixed(4).toString()
         console.log(this.createFormData.boxVolume)
       }
     },
     'createFormData.boxWidth': {
       handler(nval, oval) {
-        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxHigh || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxHigh || 0).div(1000000).toFixed(4).toString()
       }
     },
     'createFormData.boxHigh': {
       handler(nval, oval) {
-        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxWidth || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxWidth || 0).div(1000000).toFixed(4).toString()
       }
     }
   }

@@ -2,7 +2,7 @@
   <div v-show="show" width="60%">
     <vxe-modal v-if="show" title="新增供应商页面" v-model="show" :visible.sync="show"
     @close="handleClose" width="60%">
-      <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+      <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
       :data="createFormData" :items="createForm" :rules="createFromRules"
       @submit="handleSubmitCreate('createFrom')" @reset="handleClose('createFrom')">
         <template #supCategorySlot>
@@ -107,6 +107,12 @@ export default {
         ],
         supCategory: [
           { required: true, message: '请输入供应商类别', trigger: 'blur' }
+        ],
+        linkName: [
+          { required: true, message: '请输入联系人', trigger: 'blur' }
+        ],
+        linkPhone: [
+          { required: true, message: '请输入联系电话', trigger: 'blur' }
         ]
       }
     }

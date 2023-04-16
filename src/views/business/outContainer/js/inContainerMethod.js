@@ -248,9 +248,6 @@ const handleMethods = {
       this.createFormData.itemId = row.itemId
       this.createFormData.sku = row.sku
       this.createFormData.totalBox = row.totalBox
-      if (response.data.fileList) {
-        this.fileList = response.data.fileList
-      }
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
     })
@@ -430,6 +427,7 @@ const handleMethods = {
   // 装箱
   handleEncasement() {
     const selectionDatas = this.$refs.vxeTableRef.selection
+    debugger
     if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条或一条以上数据')
     } else {

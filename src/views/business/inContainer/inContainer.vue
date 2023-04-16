@@ -401,8 +401,8 @@ export default {
             { field: 'remeasureLength', title: '重新测量长/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量长' } } },
             { field: 'remeasureWidth', title: '重新测量宽/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量宽' } } },
             { field: 'remeasureHigh', title: '重新测量高/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重新测量高' } } },
-            { field: 'remeasureVolume', title: '重测体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重测量体积' } } },
-            { field: 'remeasureTotalVolume', title: '重测总体积/M', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重测量体积' } } },
+            { field: 'remeasureVolume', title: '重测体积/m³', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重测量体积' } } },
+            { field: 'remeasureTotalVolume', title: '重测总体积/m³', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入重测量体积' } } },
             {
               field: 'qualityCode',
               title: '质检情况',
@@ -441,20 +441,20 @@ export default {
   watch: {
     'createFormData.remeasureLength': {
       handler(nval, oval) {
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(2).toString()
-        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(4).toString()
       }
     },
     'createFormData.remeasureWidth': {
       handler(nval, oval) {
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(2).toString()
-        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(4).toString()
       }
     },
     'createFormData.remeasureHigh': {
       handler(nval, oval) {
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).div(1000000).toFixed(2).toString()
-        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(2).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(4).toString()
       }
     },
     'createFormData.remeasureWeight': {

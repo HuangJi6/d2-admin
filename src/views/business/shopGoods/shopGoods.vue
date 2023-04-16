@@ -90,7 +90,7 @@
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
         @close="createModalClose" width="60%">
-          <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+          <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
             <template #goodsNameSlots="{ data }">
@@ -168,17 +168,17 @@ export default {
         brand: ''
       },
       createFromRules: {
+        clientId: [
+          { required: true, message: '请选择店铺', trigger: 'blur' }
+        ],
         goodsName: [
-          { required: true, message: '请输入商名称', trigger: 'blur' }
+          { required: true, message: '请选择商品', trigger: 'blur' }
         ],
-        goodsCategory: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        sku: [
+          { required: true, message: '请输入商品sku', trigger: 'blur' }
         ],
-        upcCode: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
-        ],
-        imgLink: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        itemId: [
+          { required: true, message: '请输入ITEM ID', trigger: 'blur' }
         ]
       },
       createForm: [
@@ -193,7 +193,7 @@ export default {
               itemRender: {
                 name: '$select',
                 options: [{ value: '0', label: '女' }, { value: '1', label: '男' }],
-                props: { clearable: true, placeholder: '请输入名称' }
+                props: { clearable: true, placeholder: '请输入选择店铺名称' }
               }
             },
             { field: 'goodsName', title: '商品名称', span: 12, slots: { default: 'goodsNameSlots' } },
@@ -204,11 +204,11 @@ export default {
               itemRender: {
                 name: '$select',
                 options: [{ value: '未优化', label: '未优化' }, { value: '已优化', label: '已优化' }],
-                props: { placeholder: '请输入优化标识' }
+                props: { placeholder: '请选择优化标识' }
               }
             },
             { field: 'sku', title: 'SKU', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入SKU' } } },
-            { field: 'itemId', title: 'ITEM ID', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
+            { field: 'itemId', title: 'ITEM ID', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入ITEM ID' } } },
             { field: 'mlCode', title: 'ML CODE', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
             // {
             //   field: 'statusCode',

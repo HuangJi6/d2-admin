@@ -74,7 +74,7 @@
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
         @close="createModalClose" width="60%">
-          <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+          <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
           <template #goodsCategorySlot>
@@ -149,10 +149,31 @@ export default {
           { required: true, message: '请输入商品类别', trigger: 'blur' }
         ],
         upcCode: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+          { required: true, message: '请输入商品UPC码', trigger: 'blur' }
         ],
         imgLink: [
-          { required: true, message: '请输入商品类别', trigger: 'blur' }
+          { required: true, message: '请输入商品图片', trigger: 'blur' }
+        ],
+        hsCode: [
+          { required: true, message: '请输入商品HS CODE', trigger: 'blur' }
+        ],
+        goodsNature: [
+          { required: true, message: '请选择商品货物性质', trigger: 'blur' }
+        ],
+        outGoodsName: [
+          { required: true, message: '请输入外部名称,该字段将用于箱单表中', trigger: 'blur' }
+        ],
+        outEnglishGoodsName: [
+          { required: true, message: '请输入英文名称,该字段将用于箱单表中', trigger: 'blur' }
+        ],
+        goodsUse: [
+          { required: true, message: '请输入用途将用于箱单表中,格式:中文 (英文)' }
+        ],
+        material: [
+          { required: true, message: '请输入材质将用于箱单表中,格式:中文 (英文)' }
+        ],
+        brand: [
+          { required: true, message: '请输入品牌将用于箱单表中如无请填写: 无' }
         ]
       },
       createForm: [
@@ -165,7 +186,7 @@ export default {
             { field: 'goodsLink', title: '商品链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品链接' } } },
             { field: 'upcCode', title: 'UPC码', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入UPC码' } } },
             { field: 'imgLink', title: '图片链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入图片链接' } } },
-            { field: 'material', title: '材料', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入材料' } } },
+            { field: 'material', title: '材质', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入材质将用于箱单表中,格式:中文 (英文)' } } },
             { field: 'hsCode', title: 'HS CODE', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入海关编码' } } },
             {
               field: 'goodsNature',
@@ -177,11 +198,11 @@ export default {
                 props: { placeholder: '请输入货物性质' }
               }
             },
-            { field: 'outGoodsName', title: '外部名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入外部名称' } } },
-            { field: 'outEnglishGoodsName', title: '英文名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入英文名称' } } },
-            { field: 'goodsPrice', title: '商品-单价', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'goodsUse', title: '商品-用途', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'brand', title: '商品-品牌', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
+            { field: 'outGoodsName', title: '外部名称', span: 12, itemRender: { name: '$input', props: { placeholder: '外部名称,用于对外展示如箱单中的中文品名' } } },
+            { field: 'outEnglishGoodsName', title: '英文名称', span: 12, itemRender: { name: '$input', props: { placeholder: '英文名称,用于对外展示箱单中的GOODS NAME' } } },
+            { field: 'goodsPrice', title: '商品-单价', span: 12, itemRender: { name: '$input', props: { placeholder: '输入商品-单价,用于建议采购价格' } } },
+            { field: 'goodsUse', title: '商品-用途', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入用途将用于箱单表中,格式:中文 (英文)' } } },
+            { field: 'brand', title: '商品-品牌', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品-品牌,如无请填写: 无' } } },
             {
               field: 'grade',
               title: '评级',
@@ -192,10 +213,10 @@ export default {
                 props: { placeholder: '请输入评级' }
               }
             },
-            { field: 'goodsLength', title: '商品-长/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'goodsWidth', title: '商品-宽/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'goodsHigh', title: '商品-高/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
-            { field: 'goodsWeight', title: '商品-重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入资质信息' } } },
+            { field: 'goodsLength', title: '商品-长/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品-长/CM,选填字段' } } },
+            { field: 'goodsWidth', title: '商品-宽/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品-宽/CM,选填字段' } } },
+            { field: 'goodsHigh', title: '商品-高/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品-高/CM,选填字段' } } },
+            { field: 'goodsWeight', title: '商品-重量/KG', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品-重量,选填字段' } } },
             { field: 'remark', title: '备注', span: 24, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }
           ]
         },

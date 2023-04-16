@@ -90,7 +90,7 @@
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
         @close="createModalClose" width="60%">
-          <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+          <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="submitCreate('createFrom')" @reset="cancel('createFrom')">
             <template #myregion="{ data }">

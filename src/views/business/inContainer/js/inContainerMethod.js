@@ -248,9 +248,6 @@ const handleMethods = {
       this.createFormData.itemId = row.itemId
       this.createFormData.sku = row.sku
       this.createFormData.totalBox = row.totalBox
-      if (response.data.fileList) {
-        this.fileList = response.data.fileList
-      }
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
     })
