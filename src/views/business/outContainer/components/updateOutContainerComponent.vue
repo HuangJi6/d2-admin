@@ -1,7 +1,7 @@
 // 入库组件
 <template>
 <vxe-modal v-model="showIn" title="更新出库信息" :visible.sync="showIn" @close="handleClose" width="60%">
-    <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+    <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
       :data="createFormData" :rules="createFromRules" :items="createFormItems"
       @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
         <template #outTime="{ data }">

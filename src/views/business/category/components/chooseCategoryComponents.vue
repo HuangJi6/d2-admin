@@ -20,7 +20,7 @@
         placeholder="输入关键字进行过滤"
         v-model="filterText">
       </el-input>
-      <el-tree ref="tree" show-checkbox default-expand-all :data="treeData" :props="defaultProps"
+      <el-tree ref="tree" show-checkbox :data="treeData" :props="defaultProps"
       node-key="id"
       :default-checked-keys="defaultCheckedKeysIn"
       :filter-node-method="filterNode">

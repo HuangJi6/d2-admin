@@ -6,7 +6,7 @@
       <vxe-button status="primary" @click="onSure">确定</vxe-button>
       <vxe-button @click="handleClose">取消</vxe-button>
     </template>
-    <vxe-form ref="createFrom" title-width="100" title-align="right" titleColon
+    <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
       :data="createFormData" :rules="createFromRules" :items="createFormItems"
       @submit="handleSubmitCreate('createFrom')" @reset="handleClose('createFrom')">
         <template #outTime="{ data }">

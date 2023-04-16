@@ -18,6 +18,7 @@ const dataMethods = {
   // 重置表单数据
   resetCreateForm() {
     this.createFormData = {
+      categoryGuid: '',
       supplierGuid: '',
       supplierName: '',
       goodsName: '',
@@ -79,6 +80,7 @@ const dataMethods = {
     this.goodsInfo = goodsInfo
     this.createFormData.goodsGuid = goodsInfo.guid
     this.createFormData.goodsName = goodsInfo.goodsName
+    this.createFormData.categoryGuid = goodsInfo.categoryGuid
     // 发送请求获取供应商信息
     this.getSupplierData(goodsInfo.categoryGuid)
   },
@@ -120,9 +122,7 @@ const handleMethods = {
   handleUpdate(row) {
     this.getOne(row.guid).then(response => {
       this.createFormData = response.data
-      if (response.data.fileList) {
-        this.fileList = response.data.fileList
-      }
+      this.getSupplierData(this.createFormData.categoryGuid)
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
     })

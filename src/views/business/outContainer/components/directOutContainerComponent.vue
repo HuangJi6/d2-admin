@@ -30,7 +30,11 @@
     <vxe-column type="seq" title="序号" width="60"></vxe-column>
     <vxe-column field="shopName" title="店铺名称" width="150"></vxe-column>
     <vxe-column field="goodsName" title="中文品名" width="150"></vxe-column>
-    <vxe-column field="shippingMark" title="箱唛编号" width="150"></vxe-column>
+    <vxe-column field="shippingMark" title="箱唛编号" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
+      <template #edit="{ row }">
+        <vxe-input v-model="row.shippingMark" type="text"></vxe-input>
+      </template>
+    </vxe-column>
     <vxe-column field="purNumber" title="库存数量" width="100"></vxe-column>
     <vxe-column field="totalBox" title="总箱数" width="100"></vxe-column>
     <vxe-column field="boxQuantity" title="单箱数量" width="100"></vxe-column>
@@ -107,9 +111,16 @@ export default {
     // 保存接口
     handleSubmitCreate() {
       const insertList = []
-      debugger
+      let flag = false
+      if (!this.createFormData.packingNo) {
+        this.$message.error('请选择箱单')
+        return
+      }
       this.selectionOperateDatasIn.forEach(ele => {
         const eleCopy = Object.assign({}, ele)
+        if (!ele.shippingMark) {
+          flag = true
+        }
         eleCopy.guid = ''
         eleCopy.packingNo = this.createFormData.packingNo
         eleCopy.packingGuid = this.createFormData.packingGuid
@@ -124,9 +135,13 @@ export default {
         eleCopy.packingTotalWeight = ele.remeasureTotalWeight
         eleCopy.inContainerGuid = ele.guid
         eleCopy.isRepacking = '否'
-        eleCopy.statucCode = '待出库'
+        eleCopy.statusCode = '待出库'
         insertList.push(eleCopy)
       })
+      if (flag) {
+        this.$message.error('存在箱唛为空的数据')
+        return
+      }
       this.handleHttpMethod(addBatchApi(insertList), true, '正在保存中', true, '信息保存成功').then(res => {
         if (res) {
           this.handleClose()

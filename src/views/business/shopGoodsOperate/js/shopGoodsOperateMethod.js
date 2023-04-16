@@ -152,7 +152,6 @@ const handleMethods = {
   },
   // 下单操作
   handleOrder(row) {
-    debugger
     this.getOne(row.guid).then(response => {
       this.createFormData = response.data
       this.createFormData.isComplete = '否'
@@ -250,7 +249,7 @@ const handleMethods = {
           this.createFormData.boxVolume = item.boxVolume
           this.createFormData.boxQuantity = item.boxQuantity
           this.createFormData.totalBox = new $Big(this.createFormData.purNumber || 0).div(item.boxQuantity).toFixed(1).toString()
-          this.createFormData.purVolume = new $Big(item.boxVolume || 0).times(this.createFormData.totalBox || 0).toFixed(2).toString()
+          this.createFormData.purVolume = new $Big(item.boxVolume || 0).times(this.createFormData.totalBox || 0).toFixed(4).toString()
         }
       })
     }

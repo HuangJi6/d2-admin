@@ -16,23 +16,35 @@ const dataMethods = {
   // 查询用户信息
   pageList(params) {
     this.listLoading = true
-    this.handleHttpMethod(pageUserInfoApi(params || {}), true).then(res => {
-      if (res.code === '100000') {
-        this.list = res.data.dataList
-        this.total = res.data.total
-      }
+    const paramsCopy = Object.assign({}, this.filterFormData)
+    this.handleFilter(paramsCopy)
+    this.handleHttpMethod(pageUserInfoApi(paramsCopy || {}), true).then(res => {
+      this.tableData = res.data.dataList
+      this.total = res.data.total
       this.listLoading = false
     })
   },
   // 添加用户信息
-  create(formName) {
+  handleSubmitCreate(formName) {
     const set = this.$refs
     set[formName].validate(valid => {
-      if (valid) {
-        this.handleHttpMethod(addUserInfoApi(this.form), true, '正在保存中', true, '用户信息保存成功').then(res => {
-          this.dialogFormVisible = false
-          this.pageList()
-        })
+      if (!valid) {
+        if (this.dialogStatus === 'create') {
+          this.handleHttpMethod(addUserInfoApi(this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
+            if (res) {
+              this.dialogFormVisible = false
+              this.pageList()
+            }
+          })
+        }
+        if (this.dialogStatus === 'update') {
+          this.handleHttpMethod(updateUserInfoApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
+            if (res) {
+              this.dialogFormVisible = false
+              this.pageList()
+            }
+          })
+        }
       }
     })
   },
@@ -43,10 +55,21 @@ const dataMethods = {
   // 点击编辑按钮事件
   handleUpdate(row) {
     this.getOne(row.guid).then(response => {
-      this.form = response.data
+      this.createFormData = response.data
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
     })
+  },
+  resetCreateForm() {
+    this.createFormData = {
+      guid: undefined,
+      userName: undefined,
+      userCode: undefined,
+      userSex: '男',
+      userPassword: undefined,
+      description: undefined,
+      userPhone: undefined
+    }
   },
   // 更新接口
   update(formName) {
@@ -72,16 +95,15 @@ const dataMethods = {
       })
     })
   },
-  handleFilter() {
+  handleFilter(params) {
     // 对象拷贝，防止数据污染
-    const params = Object.assign({}, this.listQuery)
     this.buildConditionData('userName', '4', params, true)
-    this.pageList(params)
   },
 
   handleRefresh() {
     this.pageList()
-  }
+  },
+  createModalClose() { }
 }
 const validateMethods = {
 

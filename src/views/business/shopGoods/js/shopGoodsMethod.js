@@ -131,9 +131,6 @@ const handleMethods = {
   handleUpdate(row) {
     this.getOne(row.guid).then(response => {
       this.createFormData = response.data
-      if (response.data.fileList) {
-        this.fileList = response.data.fileList
-      }
       this.dialogFormVisible = true
       this.queryApplication()
       this.dialogStatus = 'update'

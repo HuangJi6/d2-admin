@@ -81,7 +81,7 @@
           title-colon
           ref="xForm"
           title-align="right"
-          title-width="100"
+          title-width="120"
           :data="formData2"
           :rules="formRules2"
           :loading="loading2"
