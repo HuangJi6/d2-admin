@@ -9,7 +9,7 @@ export default {
   path: '/auth',
   name: 'demo-auth',
   meta,
-  redirect: { name: 'demo-components-index' },
+  // redirect: { name: 'auth-userManage' },
   component: layoutHeaderAside,
   children: [
     { path: 'userManage', name: 'auth-userManage', component: _import('auth/user/userManage.vue'), meta: { ...meta, title: '用户管理' } },

@@ -38,7 +38,8 @@
           </div>
           <PackingListTopGatherComponentVue
             ref="packingListTopGather"
-            v-if="filterFormData.statusCode === '待出库'||filterFormData.statusCode === '装箱单'"
+            :show.sync="filterFormData.statusCode === '待出库'||filterFormData.statusCode === '装箱单'||filterFormData.statusCode === '全部'"
+            :statusCode="filterFormData.statusCode"
             @onChangePackingList="changePackingList"
           ></PackingListTopGatherComponentVue>
         </template>
@@ -53,9 +54,9 @@
           ></ExportButtonVue>
         </template >
       </vxe-toolbar>
-      <div style="height:92%" v-show="this.filterFormData.statusCode !== '待出库'&&filterFormData.statusCode !== '装箱单'">
+      <div style="height:92%" v-show="this.filterFormData.statusCode === '已下单'||filterFormData.statusCode === '已入库'">
         <vxe-table
-          v-if="this.filterFormData.statusCode !== '待出库'"
+          v-if="this.filterFormData.statusCode === '已下单'||filterFormData.statusCode === '已入库'"
           class="mytable-scrollbar"
           size="medium"
           header-cell-class-name="headerClassName"
@@ -152,9 +153,9 @@
           </vxe-column>
         </vxe-table>
       </div>
-      <div style="height:92%" v-show="this.filterFormData.statusCode === '装箱单'">
+      <div style="height:92%" v-show="this.filterFormData.statusCode === '装箱单'||this.filterFormData.statusCode === '全部'">
         <vxe-table
-          v-if="this.filterFormData.statusCode === '装箱单'"
+          v-if="this.filterFormData.statusCode === '装箱单'||this.filterFormData.statusCode === '全部'"
           class="mytable-scrollbar"
           size="medium"
           header-cell-class-name="headerClassName"
@@ -201,7 +202,7 @@
           <vxe-column field="personUrl" title="私人地址" width="120"></vxe-column>
           <vxe-column field="urgencyLevel" title="紧急程度" width="120"></vxe-column>
           <vxe-column field="remark" title="备注" width="120"></vxe-column>
-          <vxe-column v-if="filterFormData.statusCode!=='已下单'" title="操作" width="80" fixed="right" align="center" show-overflow>
+          <vxe-column v-if="filterFormData.statusCode==='装箱单'" title="操作" width="80" fixed="right" align="center" show-overflow>
             <template #default="{ row }">
               <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdateOutContainer(row)" content="修改"></vxe-button>
             </template>

@@ -13,6 +13,10 @@ import demoAuth from './modules/demo-auth'
 // 业务管理
 import demoStore from './modules/demo-business.js'
 
+// import demoStoreHeader from './modules/demo-business-header.js'
+
+// import demoAuthHeader from './modules/demo-auth-header'
+
 /**
  * @description 给菜单数据补充上 path 字段
  * @description https://github.com/d2-projects/d2-admin/issues/209

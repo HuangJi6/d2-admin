@@ -27,3 +27,7 @@ export function deleteApi(guid) {
 export function getUnOutPackingList() {
   return fetch({ url: '/api/mkd/business/busPackingList/getUnOutPackingList', method: 'get' })
 }
+
+export function queryListMap(params) {
+  return fetch({ url: '/api/mkd/business/busPackingList/queryListMap', method: 'post', data: params })
+}
