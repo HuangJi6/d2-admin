@@ -107,14 +107,14 @@ const dataMethods = {
       this.tableData = res.data.dataList
       this.total = res.data.total
       this.listLoading = false
+      // 调用子组件的汇总数据
+      if (this.$refs.packingListTopGather && this.tableData && this.tableData.length > 0) {
+        this.$refs.packingListTopGather.refreshContainerGroup()
+      }
     }).catch(err => {
       console.log(err)
       this.listLoading = false
     })
-    // 调用子组件的汇总数据
-    if (this.$refs.packingListTopGather) {
-      this.$refs.packingListTopGather.refreshContainerGroup()
-    }
   },
   pageShippingMarkList() {
     this.listLoading = true
@@ -124,14 +124,14 @@ const dataMethods = {
       this.tableData = res.data.dataList
       this.total = res.data.total
       this.listLoading = false
+      // 调用子组件的汇总数据
+      if (this.$refs.packingListTopGather && this.tableData && this.tableData.length > 0) {
+        this.$refs.packingListTopGather.refreshContainerGroup()
+      }
     }).catch(err => {
       console.log(err)
       this.listLoading = false
     })
-    // 调用子组件的汇总数据
-    if (this.$refs.packingListTopGather) {
-      this.$refs.packingListTopGather.refreshContainerGroup()
-    }
   },
   // 提交保存
   handleSubmitInContainer(formName) {
@@ -279,10 +279,6 @@ const handleMethods = {
         this.buildConditionData(item.name, item.type, params, item.remove)
       })
     }
-    // 如果状态为全部则不过滤状态
-    if (params.statusCode === '全部') {
-      params.statusCode = ''
-    }
   },
   // 取消保存
   handleCancelInContainer() {
@@ -421,6 +417,9 @@ const handleMethods = {
       this.pageOutContainerList()
     }
     if (this.filterFormData.statusCode === '装箱单') {
+      this.pageShippingMarkList()
+    }
+    if (this.filterFormData.statusCode === '全部') {
       this.pageShippingMarkList()
     }
   },

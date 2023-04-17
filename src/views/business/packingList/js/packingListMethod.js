@@ -1,5 +1,7 @@
 import { deleteApi, getOneApi, updateApi, addApi, pageMapApi } from '@/api/business/packingListApi.js'
 // import { getAllApplication } from '@/api/business/applicationApi.js'
+import { outContainerGroup } from '@/api/business/outContainerApi'
+import moment from 'moment'
 
 // 初始化方法
 const initMethods = {
@@ -20,7 +22,8 @@ const dataMethods = {
     this.createFormData = {
       packingNo: '',
       outTime: '',
-      statusCode: '',
+      outOverTime: '',
+      statusCode: '未出',
       outTotalVolume: '',
       outTotalWeight: '',
       outTotalAmount: '',
@@ -60,6 +63,7 @@ const dataMethods = {
           this.handleHttpMethod(updateApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
             if (res) {
               this.dialogFormVisible = false
+              this.dialogPackingFormVisible = false
               this.pageList()
             }
           })
@@ -147,14 +151,13 @@ const handleMethods = {
   // 取消保存
   handleCancelCreate() {
     this.dialogFormVisible = false
+    this.dialogPackingFormVisible = false
+    this.dialogOverFormVisible = false
+    this.dialogOverFormVisible = false
     this.resetCreateForm()
   },
   // 表格点击事件
   handleCellClickEvent(row, column, rowIndex) {
-  },
-  // 选择商品点击事件,显示商品选择弹框
-  handleChooseGoods() {
-    this.showGoodsComponent = true
   },
   // 过滤按钮点击事件
   HandlefilterDialogClick() {
@@ -164,11 +167,34 @@ const handleMethods = {
       this.filterDialogVisible = true
     }
   },
-  selectedShopGoods(shopGoodsInfo) {
-    this.createFormData.shopGoodsGuid = shopGoodsInfo.guid
-    this.createFormData.goodsGuid = shopGoodsInfo.goodsGuid
-    this.createFormData.clientId = shopGoodsInfo.clientId
-    this.createFormData.goodsName = shopGoodsInfo.shopName + '—' + shopGoodsInfo.goodsName
+  // 装箱完成
+  handlePacking(row) {
+    this.getOne(row.guid).then(response => {
+      this.createFormData = response.data
+      // 获取出库信息
+      this.handleHttpMethod(outContainerGroup({ packingGuid: response.data.guid }), true, '请求中...').then(res => {
+        if (res && res.data && res.data.length > 0) {
+          this.createFormData.outTotalVolume = res.data[0].packingTotalVolume
+          this.createFormData.outTotalWeight = res.data[0].packingTotalWeight
+          this.createFormData.outTotalWeight = res.data[0].packingTotalWeight
+          this.createFormData.outTotalAmount = res.data[0].packingTotalAmount
+          this.createFormData.outTime = moment().format('YYYY-MM-DD h:mm:ss')
+          this.createFormData.statusCode = '运输中'
+          this.dialogPackingFormVisible = true
+          this.dialogStatus = 'update'
+        }
+      })
+    })
+  },
+  // 完成
+  handleOver(row) {
+    this.getOne(row.guid).then(response => {
+      this.createFormData = response.data
+      this.createFormData.outOverTime = moment().format('YYYY-MM-DD h:mm:ss')
+      this.createFormData.statusCode = '已完成'
+      this.dialogOverFormVisible = true
+      this.dialogStatus = 'update'
+    })
   }
 }
 

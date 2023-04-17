@@ -2,6 +2,10 @@
   <el-dropdown size="small" class="d2-mr">
     <span class="btn-text">{{info.name ? `你好 ${info.name}` : '未登录'}}</span>
     <el-dropdown-menu slot="dropdown">
+      <el-dropdown-item @click.native="personInfo">
+        <d2-icon name="id-card-o" class="d2-mr-5"/>
+        个人中心
+      </el-dropdown-item>
       <el-dropdown-item @click.native="logOff">
         <d2-icon name="power-off" class="d2-mr-5"/>
         注销
@@ -29,6 +33,9 @@ export default {
       this.logout({
         confirm: true
       })
+    },
+    personInfo() {
+      console.log('个人中心')
     }
   }
 }
