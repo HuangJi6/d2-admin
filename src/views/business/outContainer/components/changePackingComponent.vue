@@ -53,7 +53,53 @@ export default {
         outTime: '',
         statusCode: '未出'
       },
-      createFromRules: {},
+      createFromRules: {
+        packingNo: [
+          { required: true, message: '请输入商名称', trigger: 'blur' }
+        ],
+        shippingMark: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        goodsName: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        sku: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        itemId: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingBox: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingOutNumber: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingBoxQuantity: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingLength: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingWidth: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingHigh: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingBoxVolume: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingTotalVolume: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingBoxWeight: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ],
+        packingTotalWeight: [
+          { required: true, message: '请输入商品类别', trigger: 'blur' }
+        ]
+      },
       createFormItems: [
         {
           title: '',

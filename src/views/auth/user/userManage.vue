@@ -47,7 +47,7 @@
         <vxe-column title="操作" width="160" fixed="right" show-overflow>
           <template #default="{ row }">
             <vxe-button type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)">修改</vxe-button>
-            <vxe-button type="text" status="danger" icon="vxe-icon-delete" @click="handleRemove(row)">删除</vxe-button>
+            <vxe-button type="text" status="danger" icon="vxe-icon-delete" @click="handleDelete(row)">删除</vxe-button>
           </template>
         </vxe-column>
       </vxe-table>
@@ -247,7 +247,7 @@ export default {
     },
     handleCancelCreate (formName) {
       this.dialogFormVisible = false
-      this.$refs[formName].resetFields()
+      this.resetTemp()
     },
     resetTemp () {
       this.createFormData = {

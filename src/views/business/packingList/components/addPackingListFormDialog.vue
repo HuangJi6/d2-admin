@@ -58,9 +58,7 @@ export default {
           span: 23,
           children: [
             { field: 'packingNo', title: '箱单号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
-            { field: 'limitWeight', title: '上限重量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
-            { field: 'limitVolume', title: '上限体积', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重称重' } } },
-            { field: 'outTime', title: '出库时间', span: 12, slots: { default: 'outTime' } },
+            // { field: 'outTime', title: '出库时间', span: 12, slots: { default: 'outTime' } },
             {
               field: 'statusCode',
               title: '箱单状态',
@@ -70,7 +68,9 @@ export default {
                 options: [{ value: '未出', label: '未出' }, { value: '运输中', label: '运输中' }, { value: '已完成', label: '已完成' }],
                 props: { disabled: true, placeholder: '请输入箱唛' }
               }
-            }]
+            },
+            { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }
+          ]
         },
         {
           align: 'right',
