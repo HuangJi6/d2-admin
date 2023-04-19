@@ -9,9 +9,9 @@ import demoPlayground from './modules/demo-playground'
 // 测试
 import demoTest from './modules/demo-test'
 // 用户权限管理
-import demoAuth from './modules/demo-auth'
+// import demoAuth from './modules/demo-auth'
 // 业务管理
-import demoStore from './modules/demo-business.js'
+// import demoStore from './modules/demo-business.js'
 
 // import demoStoreHeader from './modules/demo-business-header.js'
 
@@ -37,9 +37,7 @@ export const menuAside = supplementPath([
   demoComponents,
   demoPlugins,
   demoPlayground,
-  demoTest,
-  demoAuth,
-  demoStore
+  demoTest
 ])
 
 // 菜单 顶栏
@@ -52,7 +50,5 @@ export const menuHeader = supplementPath([
   demoPlayground,
   demoComponents,
   demoPlugins,
-  demoTest,
-  demoAuth,
-  demoStore
+  demoTest
 ])

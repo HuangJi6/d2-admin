@@ -7,17 +7,18 @@ import 'nprogress/nprogress.css'
 
 import store from '@/store/index'
 import util from '@/libs/util.js'
-
+import * as menuService from '@/api/auth/menuApi'
 // 路由数据
 import routes from './routes'
+import { menuHeader, menuAside } from '@/menu'
 
 // fix vue-router NavigationDuplicated
 const VueRouterPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push (location) {
+VueRouter.prototype.push = function push(location) {
   return VueRouterPush.call(this, location).catch(err => err)
 }
 const VueRouterReplace = VueRouter.prototype.replace
-VueRouter.prototype.replace = function replace (location) {
+VueRouter.prototype.replace = function replace(location) {
   return VueRouterReplace.call(this, location).catch(err => err)
 }
 
@@ -27,6 +28,51 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   routes
 })
+
+// 获取到的权限菜单
+let permissionMenu = []
+// 标记是否已经拉取权限信息
+let isFetchPermissionInfo = false
+
+const fetchPermissionInfo = async () => {
+  try {
+    const userPermissionInfo = await menuService.queryListMap({})
+    // userInfo.name = userPermissionInfo.userName
+    // userInfo.avatarUrl = userPermissionInfo.avatarUrl
+
+    permissionMenu = userPermissionInfo.data
+    // permissionHeader = userPermissionInfo.accessHeader
+    // permissionRouter = userPermissionInfo.accessRoutes
+    // permission.functions = userPermissionInfo.userPermissions
+    // permission.roles = userPermissionInfo.userRoles
+    // permission.interfaces = util.formatInterfaces(userPermissionInfo.accessInterfaces)
+    // permission.isAdmin = userPermissionInfo.isAdmin === 1
+  } catch (ex) {
+    console.log(ex)
+  }
+
+  // formatRoutes(permissionRouter)
+  console.log(permissionMenu)
+  console.log(menuAside)
+  const allMenuAside = [...menuAside, ...permissionMenu]
+  const allMenuHeader = [...menuHeader, ...permissionMenu]
+  // 动态添加路由
+  // router.addRoutes(permissionRouter)
+  // store.dispatch('d2admin/user/set', userInfo)
+  // 处理路由 得到每一级的路由设置
+  // store.commit('d2admin/page/init', [...frameInRoutes, ...permissionRouter])
+  // 设置顶栏菜单
+  store.commit('d2admin/menu/headerSet', allMenuHeader)
+  // 设置侧边栏菜单
+  store.commit('d2admin/menu/fullAsideSet', allMenuAside)
+  // 初始化菜单搜索功能
+  // store.commit('d2admin/search/init', allMenuAside)
+  // 设置权限信息
+  // store.commit('d2admin/permission/set', permission)
+  // 加载上次退出时的多页列表
+  // store.dispatch('d2admin/page/openedLoad')
+  await Promise.resolve()
+}
 
 /**
  * 路由拦截
@@ -47,7 +93,13 @@ router.beforeEach(async (to, from, next) => {
     // 请根据自身业务需要修改
     const token = util.cookies.get('token')
     if (token && token !== 'undefined') {
-      next()
+      if (!isFetchPermissionInfo) {
+        await fetchPermissionInfo()
+        isFetchPermissionInfo = true
+        next(to.path, true)
+      } else {
+        next()
+      }
     } else {
       // 没有登录的时候跳转到登录界面
       // 携带上登陆成功之后需要跳转的页面完整路径
