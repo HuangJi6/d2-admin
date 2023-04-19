@@ -8,10 +8,10 @@ export default {
   mixins: [
     menuMixin
   ],
-  render (h) {
+  render(h) {
     return <div
       flex="cross:center"
-      class={ { 'd2-theme-header-menu': true, 'is-scrollable': this.isScroll } }
+      class={{ 'd2-theme-header-menu': true, 'is-scrollable': this.isScroll }}
       ref="page">
       <div
         ref="content"
@@ -21,13 +21,13 @@ export default {
         <div
           class="d2-theme-header-menu__scroll"
           flex-box="0"
-          style={ { transform: `translateX(${this.currentTranslateX}px)` } }
+          style={{ transform: `translateX(${this.currentTranslateX}px)` }}
           ref="scroll">
           <el-menu
             mode="horizontal"
-            defaultActive={ this.active }
-            onSelect={ this.handleMenuSelect }>
-            { this.header.map(menu => createMenu.call(this, h, menu)) }
+            defaultActive={this.active}
+            onSelect={this.handleMenuSelect}>
+            {this.header.map(menu => createMenu.call(this, h, menu))}
           </el-menu>
         </div>
       </div>
@@ -38,14 +38,14 @@ export default {
               class="d2-theme-header-menu__prev"
               flex="main:center cross:center"
               flex-box="0"
-              onClick={ () => this.scroll('left') }>
+              onClick={() => this.scroll('left')}>
               <i class="el-icon-arrow-left"></i>
             </div>,
             <div
               class="d2-theme-header-menu__next"
               flex="main:center cross:center"
               flex-box="0"
-              onClick={ () => this.scroll('right') }>
+              onClick={() => this.scroll('right')}>
               <i class="el-icon-arrow-right"></i>
             </div>
           ]
@@ -58,7 +58,7 @@ export default {
       'header'
     ])
   },
-  data () {
+  data() {
     return {
       active: '',
       isScroll: false,
@@ -70,14 +70,14 @@ export default {
   },
   watch: {
     '$route.matched': {
-      handler (val) {
+      handler(val) {
         this.active = val[val.length - 1].path
       },
       immediate: true
     }
   },
   methods: {
-    scroll (direction) {
+    scroll(direction) {
       if (direction === 'left') {
         // 向右滚动
         this.currentTranslateX = 0
@@ -90,7 +90,7 @@ export default {
         }
       }
     },
-    checkScroll () {
+    checkScroll() {
       let contentWidth = this.$refs.content.clientWidth
       let scrollWidth = this.$refs.scroll.clientWidth
       if (this.isScroll) {
@@ -125,7 +125,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     // 初始化判断
     // 默认判断父元素和子元素的大小，以确定初始情况是否显示滚动
     this.checkScroll()
@@ -133,7 +133,7 @@ export default {
     this.throttledCheckScroll = throttle(this.checkScroll, 300)
     window.addEventListener('resize', this.throttledCheckScroll)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     // 取消监听
     window.removeEventListener('resize', this.throttledCheckScroll)
   }

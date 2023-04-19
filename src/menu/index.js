@@ -9,9 +9,9 @@ import { uniqueId } from 'lodash'
 // 测试
 // import demoTest from './modules/demo-test'
 // 用户权限管理
-import demoAuth from './modules/demo-auth'
+// import demoAuth from './modules/demo-auth'
 // 业务管理
-import demoStore from './modules/demo-business.js'
+// import demoStore from './modules/demo-business.js'
 
 // import demoStoreHeader from './modules/demo-business-header.js'
 
@@ -34,12 +34,7 @@ function supplementPath(menu) {
 
 // 菜单 侧边栏
 export const menuAside = supplementPath([
-  // demoComponents,
-  // demoPlugins,
-  // demoPlayground,
-  // demoTest,
-  demoAuth,
-  demoStore
+
 ])
 
 // 菜单 顶栏
@@ -48,11 +43,5 @@ export const menuHeader = supplementPath([
     path: '/index',
     title: '首页',
     icon: 'home'
-  },
-  // demoPlayground,
-  // demoComponents,
-  // demoPlugins,
-  // demoTest,
-  demoAuth,
-  demoStore
+  }
 ])

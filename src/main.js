@@ -9,7 +9,7 @@ import store from '@/store/index'
 
 // 菜单和路由设置
 import router from './router'
-import { menuHeader, menuAside } from '@/menu'
+import { menuHeader } from '@/menu'
 import { frameInRoutes } from '@/router/routes'
 
 // 引用vxe-table
@@ -54,10 +54,13 @@ new Vue({
     // 检测路由变化切换侧边栏内容
     '$route.matched': {
       handler(matched) {
-        if (matched.length > 0) {
-          const _side = menuAside.filter(menu => menu.path === matched[0].path)
-          this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? _side[0].children : [])
-        }
+        const fullAside = this.$store.state.d2admin.menu.fullAside
+        const _side = fullAside.filter(menu => menu.path === matched[0].path)
+        this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? _side[0].children : [])
+        // if (matched.length > 0) {
+        //   const _side = menuAside.filter(menu => menu.path === matched[0].path)
+        //   this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? _side[0].children : [])
+        // }
       },
       immediate: true
     }
