@@ -19,7 +19,6 @@ export default {
       username = '',
       password = ''
     } = {}) {
-      debugger
       const params = {
         userCode: username,
         userPassword: password
@@ -51,6 +50,10 @@ export default {
         util.cookies.remove('token')
         // 清空 vuex 用户信息
         await dispatch('d2admin/user/set', {}, { root: true })
+        debugger
+        // 重新拉取菜单
+        commit('d2admin/menu/isFetchPermissionInfoSet', false, { root: true })
+
         util.cookies.remove('uuid')
         // 跳转路由
         router.push({ name: 'login' })
