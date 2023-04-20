@@ -179,6 +179,15 @@ export default {
         ],
         itemId: [
           { required: true, message: '请输入ITEM ID', trigger: 'blur' }
+        ],
+        upcCode: [
+          { required: true, message: '请输入商品UPC码', trigger: 'blur' }
+        ],
+        mlCode: [
+          { required: true, message: '请输入商品ML CODE', trigger: 'blur' }
+        ],
+        optimizeStatus: [
+          { required: true, message: '请输入商品优化标识', trigger: 'blur' }
         ]
       },
       createForm: [
@@ -210,6 +219,8 @@ export default {
             { field: 'sku', title: 'SKU', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入SKU' } } },
             { field: 'itemId', title: 'ITEM ID', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入ITEM ID' } } },
             { field: 'mlCode', title: 'ML CODE', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应类别' } } },
+            { field: 'upcCode', title: 'UPC码', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入UPC码' } } },
+
             // {
             //   field: 'statusCode',
             //   title: '状态标识',

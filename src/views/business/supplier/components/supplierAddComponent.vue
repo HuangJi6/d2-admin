@@ -58,6 +58,7 @@ export default {
         linkName: '',
         linkPhone: '',
         supAddress: '',
+        supUrl: '',
         supCategory: '',
         account: '',
         grade: '',
@@ -75,6 +76,7 @@ export default {
             { field: 'linkName', title: '联系人', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入联系人' } } },
             { field: 'linkPhone', title: '联系电话', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入联系电话' } } },
             { field: 'supAddress', title: '供应商地址', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商地址' } } },
+            { field: 'supUrl', title: '供应商店铺链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应商店铺链接' } } },
             { field: 'account', title: '付款账户', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入付款账户' } } },
             {
               field: 'grade',
@@ -113,6 +115,9 @@ export default {
         ],
         linkPhone: [
           { required: true, message: '请输入联系电话', trigger: 'blur' }
+        ],
+        supAddress: [
+          { required: true, message: '请输入供应商地址', trigger: 'blur' }
         ]
       }
     }
@@ -162,6 +167,7 @@ export default {
         linkName: '',
         linkPhone: '',
         supAddress: '',
+        supUrl: '',
         supCategory: '',
         account: '',
         grade: '',
