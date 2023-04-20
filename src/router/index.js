@@ -7,7 +7,7 @@ import 'nprogress/nprogress.css'
 
 import store from '@/store/index'
 import util from '@/libs/util.js'
-import * as menuService from '@/api/auth/menuApi'
+import * as permService from '@/api/auth/permApi'
 // 路由数据
 import routes from './routes'
 import { menuHeader, menuAside } from '@/menu'
@@ -32,11 +32,11 @@ const router = new VueRouter({
 // 获取到的权限菜单
 let permissionMenu = []
 // 标记是否已经拉取权限信息
-let isFetchPermissionInfo = false
 
 const fetchPermissionInfo = async () => {
   try {
-    const userPermissionInfo = await menuService.queryListMap({})
+    const uuid = util.cookies.get('uuid') || 'ghost-uuid'
+    const userPermissionInfo = await permService.userMenuTree({ userGuid: uuid })
     // userInfo.name = userPermissionInfo.userName
     // userInfo.avatarUrl = userPermissionInfo.avatarUrl
 
@@ -65,6 +65,8 @@ const fetchPermissionInfo = async () => {
   store.commit('d2admin/menu/headerSet', allMenuHeader)
   // 设置侧边栏菜单
   store.commit('d2admin/menu/fullAsideSet', allMenuAside)
+  // 设置需要重新加载菜单
+  store.commit('d2admin/menu/isFetchPermissionInfoSet', true)
   // 初始化菜单搜索功能
   // store.commit('d2admin/search/init', allMenuAside)
   // 设置权限信息
@@ -93,9 +95,11 @@ router.beforeEach(async (to, from, next) => {
     // 请根据自身业务需要修改
     const token = util.cookies.get('token')
     if (token && token !== 'undefined') {
+      debugger
+      const isFetchPermissionInfo = store.state.d2admin.menu.isFetchPermissionInfo
       if (!isFetchPermissionInfo) {
+        debugger
         await fetchPermissionInfo()
-        isFetchPermissionInfo = true
         next(to.path, true)
       } else {
         next()

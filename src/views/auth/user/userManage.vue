@@ -12,6 +12,7 @@
         <el-button class="filter-item" type="primary" icon="el-icon-refresh" @click="handleRefresh" size="small">刷新</el-button>
       </div>
       <div style="float:right;">
+        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleAuthRole">授权</el-button>
         <el-button icon="vxe-icon-square-plus" type="success" size="medium" style="width:100px" @click="handleCreate">新增</el-button>
         <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
@@ -52,36 +53,6 @@
         </vxe-column>
       </vxe-table>
     </template>
-  <!-- <el-table :key='tableKey' :data="list" v-loading.body="listLoading" size="small" stripe highlight-current-row style="width: 100%;margin-top: 10px">
-    <el-table-column width="200" align="center" label="姓名"> <template slot-scope="scope" >
-        <span>{{scope.row.userName}}</span>
-      </template> </el-table-column>
-    <el-table-column width="110" align="center" label="账户"> <template slot-scope="scope" >
-            <span>{{scope.row.userCode}}</span>
-          </template> </el-table-column>
-    <el-table-column width="110" align="center" label="性别"> <template slot-scope="scope" >
-            <span>{{scope.row.userSex}}</span>
-          </template> </el-table-column>
-    <el-table-column width="110" align="center" label="电话号码"> <template slot-scope="scope" >
-            <span>{{scope.row.userPhone}}</span>
-          </template> </el-table-column>
-    <el-table-column width="200" align="center" label="备注"> <template slot-scope="scope" >
-            <span>{{scope.row.description}}</span>
-          </template> </el-table-column>
-    <el-table-column width="100" align="center" label="最后时间"> <template slot-scope="scope" >
-          <span>{{scope.row.updateTime}}</span>
-        </template> </el-table-column>
-    <el-table-column width="100" align="center" label="最后更新人"> <template slot-scope="scope" >
-            <span>{{scope.row.updater}}</span>
-          </template> </el-table-column>
-    <el-table-column align="center" label="操作" width="150"> <template slot-scope="scope" >
-    <el-button v-permission:function="['userManager:btn_edit']" size="small" type="success" @click="handleUpdate(scope.row)">编辑
-    </el-button>
-    <el-button v-permission:function="['userManager:btn_del']" size="small" type="danger" @click="handleDelete(scope.row)">删除
-    </el-button>
-      </template> </el-table-column>
-  </el-table> -->
-  <!-- <div v-show="!listLoading" class="pagination-container"> -->
   <div v-show="dialogFormVisible" width="60%">
     <vxe-modal v-if="dialogFormVisible" width="60%" title="新增数据页面" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
     @close="createModalClose">
@@ -91,40 +62,10 @@
       </vxe-form>
     </vxe-modal>
   </div>
+  <AuthRoleComponent v-if="showAuthRole" :groupId="selectedUserId" :show.sync="showAuthRole"></AuthRoleComponent>
   <template slot="footer">
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.currentPage" :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
   </template>
-  <!-- </div> -->
-  <!-- <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-    <el-form :model="form" :rules="rules" ref="form" label-width="100px">
-      <el-form-item label="姓名" prop="userName">
-        <el-input v-model="form.userName" placeholder="请输入姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="登录账户" prop="userCode">
-        <el-input v-if="dialogStatus == 'create'" v-model="form.userCode" placeholder="请输入账户"></el-input>
-        <el-input v-else v-model="form.userCode" placeholder="请输入账户" readonly></el-input>
-      </el-form-item>
-      <el-form-item label="登录密码" placeholder="请输入密码" prop="userPassword">
-        <el-input type="password" v-model="form.userPassword" show-password></el-input>
-      </el-form-item>
-      <el-form-item label="电话号码" prop="userPhone">
-        <el-input v-model="form.userPhone" placeholder="请输入联系方式"></el-input>
-      </el-form-item>
-      <el-form-item label="性别">
-        <el-select class="filter-item" v-model="form.userSex" placeholder="请选择">
-          <el-option v-for="item in  sexOptions" :key="item" :label="item" :value="item"> </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="描述">
-        <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" placeholder="请输入内容" v-model="form.description"> </el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="cancel('form')">取 消</el-button>
-      <el-button v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
-      <el-button v-else type="primary" @click="update('form')">确 定</el-button>
-    </div>
-  </el-dialog> -->
   </d2-container>
 </template>
 
@@ -132,11 +73,15 @@
 import mixins from '@/mixin/commonMixin.js'
 import { } from '@/api/variations/index'
 import { myMethods } from './js/userManageMethod.js'
+import AuthRoleComponent from '../role/components/authRoleComponent.vue'
 export default {
+  components: { AuthRoleComponent },
   name: 'userManager',
   mixins: [mixins],
   data() {
     return {
+      selectedUserId: '',
+      showAuthRole: false,
       filterFormData: {
         userName: ''
       },

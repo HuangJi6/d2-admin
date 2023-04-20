@@ -103,7 +103,18 @@ const dataMethods = {
   handleRefresh() {
     this.pageList()
   },
-  createModalClose() { }
+  createModalClose() { },
+  // 用户授权角色
+  handleAuthRole() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length !== 1) {
+      this.$message.warning('请选择一条数据')
+    } else {
+      this.showAuthRole = true
+      this.selectedUserId = selectionDatas[0].guid
+    }
+  }
+
 }
 const validateMethods = {
 

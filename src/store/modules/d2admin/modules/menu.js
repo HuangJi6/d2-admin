@@ -13,7 +13,9 @@ export default {
     // 侧边栏收缩
     asideCollapse: setting.menu.asideCollapse,
     // 侧边栏折叠动画
-    asideTransition: setting.menu.asideTransition
+    asideTransition: setting.menu.asideTransition,
+    // 是否已经有菜单了
+    isFetchPermissionInfo: false
   },
   actions: {
     /**
@@ -21,7 +23,7 @@ export default {
      * @param {Object} context
      * @param {Boolean} collapse is collapse
      */
-    async asideCollapseSet ({ state, dispatch }, collapse) {
+    async asideCollapseSet({ state, dispatch }, collapse) {
       // store 赋值
       state.asideCollapse = collapse
       // 持久化
@@ -36,7 +38,7 @@ export default {
      * 切换侧边栏展开和收缩
      * @param {Object} context
      */
-    async asideCollapseToggle ({ state, dispatch }) {
+    async asideCollapseToggle({ state, dispatch }) {
       // store 赋值
       state.asideCollapse = !state.asideCollapse
       // 持久化
@@ -52,7 +54,7 @@ export default {
      * @param {Object} context
      * @param {Boolean} transition is transition
      */
-    async asideTransitionSet ({ state, dispatch }, transition) {
+    async asideTransitionSet({ state, dispatch }, transition) {
       // store 赋值
       state.asideTransition = transition
       // 持久化
@@ -67,7 +69,7 @@ export default {
      * 切换侧边栏折叠动画
      * @param {Object} context
      */
-    async asideTransitionToggle ({ state, dispatch }) {
+    async asideTransitionToggle({ state, dispatch }) {
       // store 赋值
       state.asideTransition = !state.asideTransition
       // 持久化
@@ -82,7 +84,7 @@ export default {
      * 持久化数据加载侧边栏设置
      * @param {Object} context
      */
-    async asideLoad ({ state, dispatch }) {
+    async asideLoad({ state, dispatch }) {
       // store 赋值
       const menu = await dispatch('d2admin/db/get', {
         dbName: 'sys',
@@ -100,7 +102,7 @@ export default {
      * @param {Object} state state
      * @param {Array} menu menu setting
      */
-    headerSet (state, menu) {
+    headerSet(state, menu) {
       // store 赋值
       state.header = menu
     },
@@ -109,7 +111,7 @@ export default {
      * @param {Object} state state
      * @param {Array} menu menu setting
      */
-    asideSet (state, menu) {
+    asideSet(state, menu) {
       // store 赋值
       state.aside = menu
     },
@@ -117,6 +119,10 @@ export default {
       // store 赋值
       state.fullAside = menu
       state.aside = menu
+    },
+    isFetchPermissionInfoSet(state, param) {
+      debugger
+      state.isFetchPermissionInfo = param
     }
   }
 }
