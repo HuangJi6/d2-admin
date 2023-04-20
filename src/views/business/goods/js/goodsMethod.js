@@ -22,7 +22,6 @@ const dataMethods = {
       goodsCategory: '',
       categoryGuid: '',
       goodsLink: '',
-      upcCode: '',
       imgLink: '',
       material: '',
       grade: '',

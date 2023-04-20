@@ -41,7 +41,6 @@
         <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
         <vxe-column field="goodsCategory" title="商品类别" width="150"></vxe-column>
         <vxe-column field="goodsLink" title="商品链接" width="150"></vxe-column>
-        <vxe-column field="upcCode" title="UPC码" width="100"></vxe-column>
         <vxe-column field="imgLink" title="图片链接" width="150"></vxe-column>
         <vxe-column field="imgLink" title="产品图片" width="100">
           <template #default="{ row }">
@@ -125,7 +124,6 @@ export default {
         goodsCategory: '',
         categoryGuid: '',
         goodsLink: '',
-        upcCode: '',
         imgLink: '',
         material: '',
         grade: '',
@@ -147,9 +145,6 @@ export default {
         ],
         goodsCategory: [
           { required: true, message: '请输入商品类别', trigger: 'blur' }
-        ],
-        upcCode: [
-          { required: true, message: '请输入商品UPC码', trigger: 'blur' }
         ],
         imgLink: [
           { required: true, message: '请输入商品图片', trigger: 'blur' }
@@ -184,7 +179,6 @@ export default {
             { field: 'goodsName', title: '商品名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品名称' } } },
             { field: 'goodsCategory', title: '商品类别', span: 12, slots: { default: 'goodsCategorySlot' } },
             { field: 'goodsLink', title: '商品链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品链接' } } },
-            { field: 'upcCode', title: 'UPC码', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入UPC码' } } },
             { field: 'imgLink', title: '图片链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入图片链接' } } },
             { field: 'material', title: '材质', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入材质将用于箱单表中,格式:中文 (英文)' } } },
             { field: 'hsCode', title: 'HS CODE', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入海关编码' } } },
