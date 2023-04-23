@@ -17,5 +17,5 @@ export function updateUserInfoApi(guid, params) {
 }
 
 export function deleteUserInfoApi(guid) {
-  return fetch({ url: '/api/mkd/auth/user/delete/' + guid, method: 'delete' })
+  return fetch({ url: '/api/mkd/auth/user/deleteByGuid/' + guid, method: 'delete' })
 }

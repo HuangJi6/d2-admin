@@ -50,7 +50,6 @@ export default {
         util.cookies.remove('token')
         // 清空 vuex 用户信息
         await dispatch('d2admin/user/set', {}, { root: true })
-        debugger
         // 重新拉取菜单
         commit('d2admin/menu/isFetchPermissionInfoSet', false, { root: true })
 

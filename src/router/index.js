@@ -95,10 +95,8 @@ router.beforeEach(async (to, from, next) => {
     // 请根据自身业务需要修改
     const token = util.cookies.get('token')
     if (token && token !== 'undefined') {
-      debugger
       const isFetchPermissionInfo = store.state.d2admin.menu.isFetchPermissionInfo
       if (!isFetchPermissionInfo) {
-        debugger
         await fetchPermissionInfo()
         next(to.path, true)
       } else {

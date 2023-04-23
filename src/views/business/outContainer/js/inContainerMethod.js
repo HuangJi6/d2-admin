@@ -426,7 +426,6 @@ const handleMethods = {
   // 装箱
   handleEncasement() {
     const selectionDatas = this.$refs.vxeTableRef.selection
-    debugger
     if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条或一条以上数据')
     } else {

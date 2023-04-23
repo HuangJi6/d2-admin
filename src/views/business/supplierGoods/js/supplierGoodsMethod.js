@@ -32,8 +32,10 @@ const dataMethods = {
       boxAmount: '',
       singleAmount: '',
       boxWeight: '',
+      supLink: '',
       remark: ''
     }
+    this.supplierListData = []
   },
   pageList() {
     this.listLoading = true
@@ -81,6 +83,8 @@ const dataMethods = {
     this.createFormData.goodsGuid = goodsInfo.guid
     this.createFormData.goodsName = goodsInfo.goodsName
     this.createFormData.categoryGuid = goodsInfo.categoryGuid
+    this.createFormData.supplierName = ''
+    this.createFormData.supplierGuid = ''
     // 发送请求获取供应商信息
     this.getSupplierData(goodsInfo.categoryGuid)
   },

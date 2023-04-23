@@ -55,6 +55,7 @@
         <vxe-column field="boxQuantity" title="单箱产品数" width="120"></vxe-column>
         <vxe-column field="singleAmount" title="单个价格" width="120"></vxe-column>
         <vxe-column field="boxWeight" title="单箱重量/KG" width="120"></vxe-column>
+        <vxe-column field="supLink" title="供应链接" width="120"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
         <vxe-column title="操作" width="150" fixed="right" show-overflow>
           <template #default="{ row }">
@@ -145,6 +146,7 @@ export default {
         boxAmount: '',
         singleAmount: '',
         boxWeight: '',
+        supLink: '',
         remark: ''
       },
       createFromRules: {
@@ -200,8 +202,8 @@ export default {
             { field: 'boxVolume', title: '单箱体积/m³', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
             { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数量' } } },
             { field: 'singleAmount', title: '单个价格', span: 12, itemRender: { name: '$input', props: { placeholder: '具体看运营采购价格,此处只做估计' } } },
-            // { field: 'boxAmount', title: '单箱价格', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱价格' } } },
             { field: 'boxWeight', title: '单箱重量/KG', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重量' } } },
+            { field: 'supLink', title: '供应链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应链接' } } },
             { field: 'grade', title: '评级', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入评级' } } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },

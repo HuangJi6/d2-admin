@@ -17,5 +17,5 @@ export function updateApi(guid, params) {
 }
 
 export function deleteApi(guid) {
-  return fetch({ url: '/api/mkd/auth/sysMenu/delete/' + guid, method: 'delete' })
+  return fetch({ url: '/api/mkd/auth/sysMenu/deleteByGuid/' + guid, method: 'delete' })
 }

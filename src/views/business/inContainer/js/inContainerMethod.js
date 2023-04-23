@@ -355,7 +355,6 @@ const handleMethods = {
   },
   // 刷新按钮点击
   handleRefreshPageList() {
-    debugger
     if (this.filterFormData.statusCode === '已下单') {
       this.pageOperateList()
     }

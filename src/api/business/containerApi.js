@@ -17,5 +17,5 @@ export function updateStoreContainerApi(guid, params) {
 }
 
 export function deleteStoreContainerApi(guid) {
-  return fetch({ url: '/api/mkd/business/storeContainer/delete/' + guid, method: 'delete' })
+  return fetch({ url: '/api/mkd/business/storeContainer/deleteByGuid/' + guid, method: 'delete' })
 }
