@@ -127,7 +127,6 @@ export default {
     // 保存接口
     handleSubmitCreate() {
       const insertList = []
-      debugger
       this.selectionOperateDatasIn.forEach(ele => {
         const eleCopy = Object.assign({}, ele)
         eleCopy.guid = ''

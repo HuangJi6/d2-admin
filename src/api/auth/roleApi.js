@@ -13,7 +13,7 @@ export function updateApi(guid, params) {
 }
 
 export function deleteApi(guid) {
-  return fetch({ url: '/api/mkd/auth/sysRole/delete/' + guid, method: 'delete' })
+  return fetch({ url: '/api/mkd/auth/sysRole/deleteByGuid/' + guid, method: 'delete' })
 }
 
 export function queryListMap(params) {

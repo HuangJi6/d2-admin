@@ -121,7 +121,6 @@ export default {
       state.aside = menu
     },
     isFetchPermissionInfoSet(state, param) {
-      debugger
       state.isFetchPermissionInfo = param
     }
   }

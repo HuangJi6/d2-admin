@@ -54,6 +54,7 @@ const dataMethods = {
       sumAmount: '',
       shipAmount: ''
     }
+    this.supplierData = []
   },
   pageList() {
     this.listLoading = true

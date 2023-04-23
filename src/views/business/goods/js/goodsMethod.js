@@ -1,5 +1,5 @@
-import { deleteApi, getOneApi, updateApi, addApi, pageApi } from '@/api/business/goodsApi.js'
-
+import { deleteApi, getOneApi, updateApi, addApi, pageApi, updateBatchApi } from '@/api/business/goodsApi.js'
+import { queryCategoryListApi } from '@/api/business/categoryApi.js'
 // 初始化方法
 const initMethods = {
   initMounted() {
@@ -81,6 +81,20 @@ const dataMethods = {
     if (checkedData.checkedKeys || checkedData.checkedKeys === 1) {
       this.createFormData.categoryGuid = checkedData.checkedKeys[0]
     }
+  },
+  categoryItemBlur(rowData) {
+    console.log(rowData)
+    debugger
+    if (rowData.goodsCategory) {
+      this.categoryList.forEach(item => {
+        if (rowData.goodsCategory === item.categoryName) {
+          rowData.categoryGuid = item.guid
+        }
+      })
+    }
+    if (!rowData.categoryGuid) {
+      this.$message({ message: '类目信息输入无效,请输入准确的类目名称', type: 'warning' })
+    }
   }
 }
 // 校验方法
@@ -149,6 +163,7 @@ const handleMethods = {
         this.buildConditionData(item.name, item.type, params, item.remove)
       })
     }
+    params.orderSqlSegment = 'goods_name,update_time'
   },
   // 刷新方法
   handleRefresh() {
@@ -161,6 +176,45 @@ const handleMethods = {
   },
   // 表格点击事件
   handleCellClickEvent(row, column, rowIndex) {
+  },
+  handleUpdateGlobal() {
+    this.handleHttpMethod(queryCategoryListApi({})).then(res => {
+      this.editTableConfig = { trigger: 'dblclick', mode: 'cell', showStatus: true }
+      this.showGlobalSave = true
+      this.categoryList = res.data
+    })
+  },
+  // 全局更新保存
+  async handleUpdateGlobalSave() {
+    const $table = this.$refs.vxeTableRef
+    const errMap = await $table.validate()
+    if (!errMap) {
+      // 重置数据源为最新数据
+      const updateRecords = $table.getUpdateRecords()
+      updateRecords.forEach(item => {
+        $table.reloadRow(item, {})
+      })
+      this.handleHttpMethod(updateBatchApi(updateRecords), true, '全局更新中...', true, '更新完成').then(res => {
+        this.pageList()
+      })
+      // 关闭修改
+      this.editTableConfig = {}
+      this.showGlobalSave = false
+      console.log(updateRecords)
+    }
+  },
+  // 全局更新取消
+  async handleUpdateGlobalCancel() {
+    this.$confirm('确定取消全局修改?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      const $table = this.$refs.vxeTableRef
+      $table.revertData()
+      this.showGlobalSave = false
+      this.editTableConfig = {}
+    })
   }
 }
 

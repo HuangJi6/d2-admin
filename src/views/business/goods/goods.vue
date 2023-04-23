@@ -2,7 +2,7 @@
 <template>
   <d2-container>
     <template slot="header">
-      <div style="float:left;padding-top:3px;width:80%">
+      <div style="float:left;padding-top:3px;width:70%">
         <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;margin-right: 20px;" class="filter-item" placeholder="商名称搜索" v-model="filterFormData.goodsName" size="small"> </el-input>
         <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;margin-right: 20px;" class="filter-item" placeholder="商品类别搜索" v-model="filterFormData.goodsCategory" size="small"> </el-input>
         <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleRefresh" size="small">搜索</el-button>
@@ -11,6 +11,9 @@
       <div style="float:right;">
         <el-button icon="vxe-icon-square-plus" type="success" size="medium" style="width:100px" @click="handleCreate">新增</el-button>
         <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+        <el-button v-if="!showGlobalSave" size="medium" style="width:100px" @click="handleUpdateGlobal">全局修改</el-button>
+        <el-button v-if="showGlobalSave" size="medium" style="width:100px" @click="handleUpdateGlobalSave">保存</el-button>
+        <el-button v-if="showGlobalSave" size="medium" style="width:100px" @click="handleUpdateGlobalCancel">取消</el-button>
       </div>
     </template>
 
@@ -31,36 +34,60 @@
         show-overflow
         show-header-overflow
         v-loading.body="listLoading"
+        keep-source
         ref="vxeTableRef"
         height="92%"
+        :edit-rules="createFromRules"
+        :edit-config="editTableConfig"
         :row-config="{isHover: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
-        <vxe-column field="goodsCategory" title="商品类别" width="150"></vxe-column>
-        <vxe-column field="goodsLink" title="商品链接" width="150"></vxe-column>
-        <vxe-column field="imgLink" title="图片链接" width="150"></vxe-column>
-        <vxe-column field="imgLink" title="产品图片" width="100">
-          <template #default="{ row }">
-            <el-image style="width: auto; height: 50px" :src="row.imgLink" :preview-src-list="[row.imgLink]"> </el-image>
-            <!-- <img v-if="row.imgLink" :src="row.imgLink" height="45"> -->
+        <vxe-column field="goodsCategory" title="商品类别" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }">
+            <vxe-input v-model="row.goodsCategory" type="text" @blur="categoryItemBlur(row)"></vxe-input>
           </template>
         </vxe-column>
-        <vxe-column field="material" title="材料" width="100"></vxe-column>
-        <vxe-column field="hsCode" title="HS CODE" width="100"></vxe-column>
-        <vxe-column field="goodsNature" title="货物性质" width="100"></vxe-column>
-        <vxe-column field="outGoodsName" title="外部名称" width="100"></vxe-column>
-        <vxe-column field="outEnglishGoodsName" title="英文名称" width="100"></vxe-column>
+        <vxe-column field="goodsLink" title="商品链接" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.goodsLink" type="text"></vxe-input></template>
+        </vxe-column>
+        <vxe-column field="imgLink" title="图片链接" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.imgLink" type="text"></vxe-input></template>
+        </vxe-column>
+        <vxe-column field="imgLink" title="产品图片" width="100">
+          <template #default="{ row }">
+            <el-image style="width: auto; height: 50px" :src="row.imgLink" :preview-src-list="[row.imgLink]"></el-image>
+          </template>
+        </vxe-column>
+        <vxe-column field="material" title="材料" width="100" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.material" type="text"></vxe-input></template>
+        </vxe-column>
+        <vxe-column field="hsCode" title="HS CODE" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.hsCode" type="text"></vxe-input></template>
+        </vxe-column>
+        <vxe-column field="goodsNature" title="货物性质" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.goodsNature" type="text"></vxe-input></template>
+        </vxe-column>
+        <vxe-column field="outGoodsName" title="外部名称" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.outGoodsName" type="text"></vxe-input></template>
+        </vxe-column>
+        <vxe-column field="outEnglishGoodsName" title="英文名称" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.outEnglishGoodsName" type="text"></vxe-input></template>
+        </vxe-column>
         <vxe-column field="grade" title="评级" width="100"></vxe-column>
         <vxe-column field="goodsLength" title="商品-长/CM" width="100"></vxe-column>
         <vxe-column field="goodsWidth" title="商品-宽/CM" width="100"></vxe-column>
         <vxe-column field="goodsHigh" title="商品-高/CM" width="100"></vxe-column>
         <vxe-column field="goodsWeight" title="商品-重量" width="100"></vxe-column>
         <vxe-column field="goodsPrice" title="商品-单价" width="100"></vxe-column>
-        <vxe-column field="goodsUse" title="商品-用途" width="100"></vxe-column>
-        <vxe-column field="brand" title="商品-品牌" width="100"></vxe-column>
+        <vxe-column field="goodsUse" title="用途" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.goodsUse" type="text"></vxe-input></template>
+        </vxe-column>
+        <vxe-column field="brand" title="品牌" width="100" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }"><vxe-input v-model="row.brand" type="text"></vxe-input></template>
+        </vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
         <vxe-column title="操作" align="center" width="145" fixed="right" show-overflow>
           <template #default="{ row }">
@@ -107,6 +134,9 @@ export default {
   mixins: [mixins],
   data() {
     return {
+      categoryList: [],
+      showGlobalSave: false,
+      editTableConfig: {},
       dialogStatus: '',
       dialogFormVisible: false,
       tableData: [],

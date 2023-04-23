@@ -5,5 +5,5 @@ export function removeFilesApi(params) {
 }
 
 export function removeFileByGuidApi(guid) {
-  return fetch({ url: '/api/mkd/business/sysFile/delete/' + guid, method: 'delete' })
+  return fetch({ url: '/api/mkd/business/sysFile/deleteByGuid/' + guid, method: 'delete' })
 }

@@ -17,5 +17,9 @@ export function getOneApi(query) {
 }
 
 export function deleteApi(guid) {
-  return fetch({ url: '/api/mkd/business/busGoods/delete/' + guid, method: 'delete' })
+  return fetch({ url: '/api/mkd/business/busGoods/deleteByGuid/' + guid, method: 'delete' })
+}
+
+export function updateBatchApi(params) {
+  return fetch({ url: '/api/mkd/business/busGoods/patchBatch', method: 'patch', data: params })
 }

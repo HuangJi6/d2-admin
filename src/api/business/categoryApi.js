@@ -7,3 +7,7 @@ export function getTreeCategoryApi(query) {
 export function queryListApi(query) {
   return fetch({ url: '/api/mkd/business/busCategoryRelation/queryList', data: query, method: 'post' })
 }
+
+export function queryCategoryListApi(query) {
+  return fetch({ url: '/api/mkd/business/busCategory/queryList', data: query, method: 'post' })
+}
