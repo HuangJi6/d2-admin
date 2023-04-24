@@ -12,16 +12,16 @@
         <el-button class="filter-item" type="primary" icon="el-icon-refresh" @click="handleRefresh" size="small">刷新</el-button>
       </div>
       <div style="float:right;">
-        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleAuthRole">授权</el-button>
         <el-button icon="vxe-icon-square-plus" type="success" size="medium" style="width:100px" @click="handleCreate">新增</el-button>
         <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleAuthRole">授权</el-button>
       </div>
     </template>
     <!-- <el-button class="filter-item"  v-permission:function="['userManager:btn_add']"  style="margin-left: 10px;" @click="handleCreate" type="primary" size="mini" icon="el-icon-circle-plus">添加</el-button> -->
     <template>
       <vxe-toolbar ref="vxeToolBarRef" style="height:8%" :refresh="{query: pageList}" custom zoom>
         <template #buttons>
-          <el-button icon="vxe-icon-table" size="mini" style="width:120px">店铺管理</el-button>
+          <el-button icon="vxe-icon-table" size="mini" style="width:120px">用户管理</el-button>
         </template>
       </vxe-toolbar>
       <vxe-table
@@ -59,10 +59,19 @@
       <vxe-form ref="createFrom" title-width="200" title-align="right" titleColon
       :data="createFormData" :items="createForm" :rules="createFromRules"
       @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
+        <template #buttonSlot="{ data }">
+          <vxe-button status="primary" content="选择部门"  @click="handleChooseDept(data)"></vxe-button>
+        </template>
       </vxe-form>
     </vxe-modal>
   </div>
   <AuthRoleComponent v-if="showAuthRole" :groupId="selectedUserId" :show.sync="showAuthRole"></AuthRoleComponent>
+  <DeptChooseComponentVue
+  v-if="showDeptChoose"
+  :groupId="selectedUserId"
+  :show.sync="showDeptChoose"
+  @onSureClick="onSureDeptClick">
+  </DeptChooseComponentVue>
   <template slot="footer">
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.currentPage" :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
   </template>
@@ -74,12 +83,14 @@ import mixins from '@/mixin/commonMixin.js'
 import { } from '@/api/variations/index'
 import { myMethods } from './js/userManageMethod.js'
 import AuthRoleComponent from '../role/components/authRoleComponent.vue'
+import DeptChooseComponentVue from '@/views/auth/dept/components/deptChooseComponent.vue'
 export default {
-  components: { AuthRoleComponent },
+  components: { AuthRoleComponent, DeptChooseComponentVue },
   name: 'userManager',
   mixins: [mixins],
   data() {
     return {
+      showDeptChoose: false,
       selectedUserId: '',
       showAuthRole: false,
       filterFormData: {
@@ -93,7 +104,10 @@ export default {
         userSex: '男',
         userPassword: undefined,
         description: undefined,
-        userPhone: undefined
+        userPhone: undefined,
+        deptGuid: '',
+        deptCode: '',
+        deptName: ''
       },
       createForm: [
         {
@@ -114,6 +128,18 @@ export default {
                 options: [{ label: '男', value: '男' }, { label: '女', value: '女' }],
                 props: { placeholder: '请输入性别' }
               }
+            },
+            {
+              field: 'deptName',
+              title: '部门',
+              span: 12,
+              itemRender: { name: '$input', props: { disabled: true, placeholder: '请选择部门' } }
+            },
+            {
+              field: '',
+              title: '',
+              span: 5,
+              slots: { default: 'buttonSlot' }
             },
             { field: 'description', title: '描述', span: 20, itemRender: { name: '$input', props: { placeholder: '请输入描述' } } }
           ]
@@ -196,11 +222,16 @@ export default {
     },
     resetTemp () {
       this.createFormData = {
-        username: undefined,
-        name: undefined,
+        guid: undefined,
+        userName: undefined,
+        userCode: undefined,
         userSex: '男',
-        password: undefined,
-        description: undefined
+        userPassword: undefined,
+        description: undefined,
+        userPhone: undefined,
+        deptGuid: '',
+        deptCode: '',
+        deptName: ''
       }
     }
   },

@@ -68,7 +68,10 @@ const dataMethods = {
       userSex: '男',
       userPassword: undefined,
       description: undefined,
-      userPhone: undefined
+      userPhone: undefined,
+      deptGuid: '',
+      deptCode: '',
+      deptName: ''
     }
   },
   // 更新接口
@@ -113,8 +116,20 @@ const dataMethods = {
       this.showAuthRole = true
       this.selectedUserId = selectionDatas[0].guid
     }
+  },
+  // 选择部门
+  handleChooseDept() {
+    this.showDeptChoose = true
+  },
+  // 部门选择回调
+  onSureDeptClick(params) {
+    if (params.checkedStr) {
+      console.log(params)
+      this.createFormData.deptName = params.treeCheckedNames[0]
+      this.createFormData.deptCode = params.treeCheckedCodes[0]
+      this.createFormData.deptGuid = params.treeCheckedIds[0]
+    }
   }
-
 }
 const validateMethods = {
 
