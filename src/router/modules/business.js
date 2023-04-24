@@ -22,6 +22,7 @@ export default {
     { path: 'outContainer', name: 'business-outContainer', component: _import('business/outContainer/outContainer.vue'), meta: { ...meta, title: '仓库出库管理' } },
     { path: 'inContainerOuter', name: 'business-inContainerOuter', component: _import('business/inContainerOuter/inContainerOuter.vue'), meta: { ...meta, title: '仓库管理(外部)' } },
     { path: 'packingList', name: 'business-packingList', component: _import('business/packingList/packingList.vue'), meta: { ...meta, title: '箱单管理' } },
+    { path: 'payer', name: 'business-payer', component: _import('business/payer/payer.vue'), meta: { ...meta, title: '付款人管理' } },
     { path: 'shopGoodsOperate', name: 'business-shopGoodsOperate', component: _import('business/shopGoodsOperate/shopGoodsOperate.vue'), meta: { ...meta, title: '运营采购管理' } }
   ]
 }
