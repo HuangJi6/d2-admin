@@ -15,6 +15,7 @@ export default {
     { path: 'userManage', name: 'auth-userManage', component: _import('auth/user/userManage.vue'), meta: { ...meta, title: '用户管理' } },
     { path: 'roleManage', name: 'auth-roleManage', component: _import('auth/role/roleManage.vue'), meta: { ...meta, title: '角色管理' } },
     { path: 'resourceManage', name: 'auth-resourceManage', component: _import('auth/resource/resourceManage.vue'), meta: { ...meta, title: '资源管理' } },
-    { path: 'businessManage', name: 'auth-businessManage', component: _import('auth/business/businessManage.vue'), meta: { ...meta, title: '业务管理' } }
+    { path: 'businessManage', name: 'auth-businessManage', component: _import('auth/business/businessManage.vue'), meta: { ...meta, title: '业务管理' } },
+    { path: 'deptManage', name: 'auth-deptManage', component: _import('auth/dept/deptManage.vue'), meta: { ...meta, title: '部门管理' } }
   ]
 }

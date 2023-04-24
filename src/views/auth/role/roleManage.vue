@@ -6,7 +6,8 @@
       <el-button type="primary" icon="edit" @click="handlerEdit">编辑</el-button>
       <el-button type="primary" icon="delete" @click="handleDelete">删除</el-button>
       <el-button type="primary" @click="handlerAuthority">权限分配</el-button>
-      <el-button type="primary" @click="handlerUser">关联用户</el-button>
+      <el-button type="primary" icon="delete" @click="getList">刷新</el-button>
+      <!-- <el-button type="primary" @click="handlerUser">关联用户</el-button> -->
     </el-button-group>
   </el-col>
   <el-col :span="8" style='margin-top:15px;'>
