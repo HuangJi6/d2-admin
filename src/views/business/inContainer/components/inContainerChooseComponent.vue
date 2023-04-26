@@ -171,7 +171,7 @@ export default {
       this.selectedRowGuids.splice(this.selectedRowGuids.indexOf(row.guid), 1)
       this.selectedRows.forEach(element => {
         if (element.guid === row.guid) {
-          this.selectedRows.pop(element)
+          this.selectedRows.splice(this.selectedRows.indexOf(element), 1)
         }
       })
       console.log(this.selectedRows)
