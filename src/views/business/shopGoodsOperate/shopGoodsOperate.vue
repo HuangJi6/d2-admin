@@ -46,6 +46,7 @@
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
+        <vxe-column field="purNo" title="采购单号" width="150" align="center"></vxe-column>
         <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
         <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
         <vxe-column field="statusCode" title="状态标识" width="100"></vxe-column>
@@ -162,6 +163,7 @@ export default {
         currentPage: 1,
         pageSize: 20,
         goodsName: '',
+        purNo: '',
         shopName: '',
         sku: '',
         itemId: '',
@@ -173,6 +175,7 @@ export default {
           title: '左侧',
           span: 24,
           children: [
+            { field: 'purNo', title: '采购单号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购单号' } } },
             { field: 'shopName', title: '店铺名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入店铺名称' } } },
             { field: 'goodsName', title: '商品名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品名称' } } },
             { field: 'suk', title: 'SKU', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入SKU' } } },
@@ -195,6 +198,7 @@ export default {
         suplierGuid: '',
         shopGoodsGuid: '',
         shopName: '',
+        purNo: '',
         clientId: '',
         goodsName: '',
         goodsGuid: '',

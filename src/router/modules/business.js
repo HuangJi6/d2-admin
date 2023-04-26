@@ -23,6 +23,7 @@ export default {
     { path: 'inContainerOuter', name: 'business-inContainerOuter', component: _import('business/inContainerOuter/inContainerOuter.vue'), meta: { ...meta, title: '仓库管理(外部)' } },
     { path: 'packingList', name: 'business-packingList', component: _import('business/packingList/packingList.vue'), meta: { ...meta, title: '箱单管理' } },
     { path: 'payer', name: 'business-payer', component: _import('business/payer/payer.vue'), meta: { ...meta, title: '付款人管理' } },
+    { path: 'operatePay', name: 'business-operatePay', component: _import('business/operatePay/operatePay.vue'), meta: { ...meta, title: '采购付款' } },
     { path: 'shopGoodsOperate', name: 'business-shopGoodsOperate', component: _import('business/shopGoodsOperate/shopGoodsOperate.vue'), meta: { ...meta, title: '运营采购管理' } }
   ]
 }
