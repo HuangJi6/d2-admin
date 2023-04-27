@@ -199,6 +199,7 @@ const handleMethods = {
         this.buildConditionData(item.name, item.type, params, item.remove)
       })
     }
+    params.isComplete = '是'
     // 如果状态为全部则不过滤状态
     if (params.statusCode === '全部') {
       params.statusCode = ''

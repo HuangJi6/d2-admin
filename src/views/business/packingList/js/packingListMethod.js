@@ -63,6 +63,7 @@ const dataMethods = {
           this.handleHttpMethod(updateApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
             if (res) {
               this.dialogFormVisible = false
+              this.dialogOverFormVisible = false
               this.dialogPackingFormVisible = false
               this.pageList()
             }
@@ -152,7 +153,6 @@ const handleMethods = {
   handleCancelCreate() {
     this.dialogFormVisible = false
     this.dialogPackingFormVisible = false
-    this.dialogOverFormVisible = false
     this.dialogOverFormVisible = false
     this.resetCreateForm()
   },

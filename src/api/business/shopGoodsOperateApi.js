@@ -16,6 +16,10 @@ export function updateApi(guid, params) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/patch/' + guid, method: 'patch', data: params })
 }
 
+export function updateComplate(params) {
+  return fetch({ url: '/api/mkd/business/busShopGoodsOperate/updateOperateComplate', method: 'post', data: params })
+}
+
 export function getOneApi(query) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/getDto/' + query, method: 'get' })
 }

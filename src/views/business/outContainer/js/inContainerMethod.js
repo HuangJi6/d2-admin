@@ -451,6 +451,10 @@ const handleMethods = {
       })
       this.showEncasement = true
     }
+  },
+  // 更新装箱单
+  handleUpdateEncasement() {
+    this.showUpdateEncasement = true
   }
 }
 
