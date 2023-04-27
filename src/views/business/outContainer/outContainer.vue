@@ -204,7 +204,7 @@
           <vxe-column field="remark" title="备注" width="120"></vxe-column>
           <vxe-column v-if="filterFormData.statusCode==='装箱单'" title="操作" width="80" fixed="right" align="center" show-overflow>
             <template #default="{ row }">
-              <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdateOutContainer(row)" content="修改"></vxe-button>
+              <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdateEncasement(row)" content="修改"></vxe-button>
             </template>
           </vxe-column>
         </vxe-table>

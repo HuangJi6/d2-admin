@@ -12,12 +12,13 @@
       </div>
       <div  style="float:right;" v-if="filterFormData.statusCode === '待下单'" >
         <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleCreateOrder">新增</el-button>
-        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
-        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleRemove">删除</el-button>
+        <el-button size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
+        <el-button size="medium" style="width:100px" @click="handleRemove">删除</el-button>
         <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '已下单'">
-        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
+        <el-button type="primary" size="medium"  @click="handleComplete">工厂已完工</el-button>
+        <el-button size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
         <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
     </template>
@@ -69,6 +70,7 @@
         <vxe-column field="boxVolume" title="单箱体积/M" width="120"></vxe-column>
         <vxe-column field="singleAmount" title="原始单价" width="120"></vxe-column>
         <vxe-column field="isComplete" title="是否已完工" width="120"></vxe-column>
+        <vxe-column field="completeTime" title="完工日期" width="120"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
         <vxe-column v-if="filterFormData.statusCode==='待下单'" title="操作" align="center" width="100" fixed="right" show-overflow>
           <template #default="{ row }">
@@ -195,7 +197,7 @@ export default {
       createFormData: {
         boxVolume: '',
         boxQuantity: '',
-        suplierGuid: '',
+        supplierGuid: '',
         shopGoodsGuid: '',
         shopName: '',
         purNo: '',
@@ -277,8 +279,9 @@ export default {
           title: '',
           span: 23,
           children: [
+            { field: 'shopName', title: '店铺名称', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入店铺名称' } } },
             { field: 'goodsName', title: '店铺商品', span: 12, slots: { default: 'shopGoodsSlot' } },
-            { field: 'suplierGuid', title: '供应商', span: 12, slots: { default: 'supplierGuidSlot' } },
+            { field: 'supplierGuid', title: '供应商', span: 12, slots: { default: 'supplierGuidSlot' } },
             {
               field: 'statusCode',
               title: '状态标识',

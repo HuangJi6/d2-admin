@@ -60,7 +60,7 @@ export default {
           children: [
             { field: 'packingNo', title: '箱单号', span: 12, itemRender: { name: '$input', props: { disabled: true, placeholder: '请输入箱单号' } } },
             { field: 'shippingMark', title: '箱唛', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入箱唛' } } },
-            { field: 'ctnNo', title: '制造商编号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入制造商编号' } } },
+            // { field: 'ctnNo', title: '制造商编号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入制造商编号' } } },
             { field: 'packingBox', title: '出库箱数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库箱数' } } },
             { field: 'packingOutNumber', title: '出库数量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入出库数量' } } },
             { field: 'isRepacking', title: '是否变更箱规', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入是否重新装箱' } } }

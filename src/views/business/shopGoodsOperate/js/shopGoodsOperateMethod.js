@@ -1,4 +1,4 @@
-import { deleteApi, getOneApi, updateApi, addApi, pageMapApi } from '@/api/business/shopGoodsOperateApi.js'
+import { deleteApi, getOneApi, updateApi, addApi, pageMapApi, updateComplate } from '@/api/business/shopGoodsOperateApi.js'
 // import { getAllApplication } from '@/api/business/applicationApi.js'
 import { postSupplierListApi } from '@/api/business/supplierApi.js'
 import $Big from '@/libs/big.js'
@@ -23,7 +23,7 @@ const dataMethods = {
     this.createFormData = {
       boxVolume: '',
       boxQuantity: '',
-      suplierGuid: '',
+      supplierGuid: '',
       shopGoodsGuid: '',
       shopName: '',
       clientId: '',
@@ -144,10 +144,34 @@ const handleMethods = {
           this.dialogStatus = 'update'
         }
         if (this.filterFormData.statusCode === '已下单') {
+          this.getSupplierData(row.goodsGuid)
           this.createFormData = response.data
+          this.createFormData.shopName = row.shopName
           this.dialogFormVisible = true
           this.dialogStatus = 'update'
         }
+      })
+    }
+  },
+  // 工厂已完工
+  handleComplete() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length < 1) {
+      this.$message.warning('请选择一条数据')
+    } else {
+      this.$confirm('确定货物已经完成生产？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const guids = []
+        selectionDatas.forEach(item => {
+          guids.push(item.guid)
+        })
+        const params = { guids: guids, isComplete: '是' }
+        this.handleHttpMethod(updateComplate(params), true, '正在更新中', true, '更新成功').then(res => {
+          this.pageList()
+        })
       })
     }
   },
@@ -155,6 +179,7 @@ const handleMethods = {
   handleOrder(row) {
     this.getOne(row.guid).then(response => {
       this.createFormData = response.data
+      this.createFormData.shopName = row.shopName
       this.createFormData.isComplete = '否'
       this.createFormData.statusCode = '已下单'
       this.createFormData.purTime = moment().format('YYYY-MM-DD h:mm:ss')
