@@ -44,7 +44,7 @@
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
-        <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
+        <vxe-column field="goodsName" title="商品名称" width="250"></vxe-column>
         <vxe-column field="goodsCategory" title="商品类别" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
           <template #edit="{ row }">
             <vxe-input v-model="row.goodsCategory" type="text" @blur="categoryItemBlur(row)"></vxe-input>
@@ -119,7 +119,7 @@
     </template>
 
     <template slot="footer">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="filterFormData.currentPage" :page-sizes="[10,20,30, 50]" :page-size="filterFormData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="filterFormData.currentPage" :page-sizes="[10,20,30, 50,100,200,500]" :page-size="filterFormData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
     </template>
   </d2-container>
 </template>
