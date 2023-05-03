@@ -32,7 +32,8 @@ function errorLog(err) {
 // 创建一个 axios 实例
 const service = axios.create({
   // 网关地址
-  baseURL: 'http://106.55.229.185:9991',
+  // baseURL: 'http://106.55.229.185:9991',
+  baseURL: 'http://little-frog.natapp1.cc',
   timeout: 20000 // 请求超时时间
 })
 
