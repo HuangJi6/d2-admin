@@ -174,8 +174,8 @@ export default {
         singleAmount: [
           { required: true, message: '请输入单个价格', trigger: 'blur' }
         ],
-        boxWeight: [
-          { required: true, message: '请输入单箱重量/KG', trigger: 'blur' }
+        supLink: [
+          { required: true, message: '建议填写供应链接,方便后面查询供应信息,如无填写“无”', trigger: 'blur' }
         ]
       },
       createForm: [
@@ -203,7 +203,7 @@ export default {
             { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数量' } } },
             { field: 'singleAmount', title: '单个价格', span: 12, itemRender: { name: '$input', props: { placeholder: '具体看运营采购价格,此处只做估计' } } },
             { field: 'boxWeight', title: '单箱重量/KG', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重量' } } },
-            { field: 'supLink', title: '供应链接', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入供应链接' } } },
+            { field: 'supLink', title: '供应链接', span: 12, itemRender: { name: '$input', props: { placeholder: '建议填写具体商品供应链接,如无填写“无”' } } },
             { field: 'grade', title: '评级', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入评级' } } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },

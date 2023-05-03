@@ -1,15 +1,48 @@
 <template>
-  <div v-show="show" width="40%">
-    <vxe-modal v-if="show" title="新增数据页面" v-model="show" :visible.sync="show"
-    @close="handleClose" width="40%">
-      <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
+  <div v-show="show" width="auto">
+    <vxe-modal v-if="show" title="新增下单" v-model="show" :visible.sync="show" show-footer show-zoom resize
+    @close="handleClose" width="auto">
+      <!-- <vxe-form ref="createFrom" title-width="120" title-align="right" titleColon
       :data="createFormData" :items="createForm" :rules="createFromRules"
       @submit="handleSubmitCreate('createFrom')" @reset="handleClose('createFrom')">
         <template #shopGoodsSlot="{ data }">
           <span> {{ data.goodsName }}  </span>
           <vxe-button status="primary" content="选择店铺商品"  @click="handleChooseGoods(data)"></vxe-button>
         </template>
-      </vxe-form>
+      </vxe-form> -->
+      <!--  -->
+      <vxe-toolbar>
+        <template #buttons>
+          <el-button icon="vxe-icon-star-fill" type="primary" size="mini" style="width:120px" @click="handleChooseGoods">选择下单商品</el-button>
+        </template>
+      </vxe-toolbar>
+      <vxe-table
+        class="mytable-scrollbar"
+        size="medium"
+        header-cell-class-name="headerClassName"
+        cell-class-name="cellClassName"
+        ref="vxeTableRef"
+        border
+        style="width:auto;min-height: 500px;"
+        resizable
+        height="85%"
+        show-overflow
+        :data="selectionGoodsDatasIn"
+        :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}">
+        <vxe-column type="checkbox" width="45"></vxe-column>
+        <vxe-column type="seq" title="序号" width="60"></vxe-column>
+        <vxe-column field="shopName" title="店铺名称" width="150"></vxe-column>
+        <vxe-column field="goodsName" title="商品名称" width="280"></vxe-column>
+        <vxe-column field="purNumber" title="采购数量" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #edit="{ row }">
+            <vxe-input v-model="row.purNumber" type="text"></vxe-input>
+          </template>
+        </vxe-column>
+      </vxe-table>
+      <template #footer>
+        <vxe-button status="primary" @click="handleSubmitCreate">确定</vxe-button>
+        <vxe-button @click="handleClose">取消</vxe-button>
+      </template>
       <ShopGoodsComponent
         v-if="showGoodsComponent"
         :show.sync="showGoodsComponent"
@@ -22,7 +55,7 @@
 <script>
 import mixins from '@/mixin/commonMixin.js'
 import ShopGoodsComponent from '@/views/business/shopGoods/components/shopGoodsComponent'
-import { updateApi, addApi } from '@/api/business/shopGoodsOperateApi.js'
+import { addBatchApi, updateBatchApi } from '@/api/business/shopGoodsOperateApi.js'
 export default {
   mixins: [mixins],
   components: { ShopGoodsComponent },
@@ -34,10 +67,10 @@ export default {
         return false
       }
     },
-    defaultFormData: {
-      type: Object,
+    defaultFormDataList: {
+      type: Array,
       default() {
-        return {}
+        return []
       }
     },
     dialogStatus: {
@@ -49,89 +82,53 @@ export default {
   },
   data() {
     return {
+      selectionGoodsDatasIn: [],
       showIn: this.show,
-      showGoodsComponent: false,
-      createFormData: {
-        shopGoodsGuid: '',
-        clientId: '',
-        goodsName: '',
-        goodsGuid: '',
-        statusCode: '待下单',
-        purNumber: ''
-      },
-      createForm: [
-        {
-          title: '',
-          span: 23,
-          children: [
-            { field: 'goodsName', title: '店铺商品', span: 12, slots: { default: 'shopGoodsSlot' } },
-            { field: 'purNumber', title: '采购数量', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购数量' } } }
-
-          ]
-        },
-        {
-          align: 'right',
-          span: 23,
-          itemRender: {
-            name: '$buttons',
-            children:
-              [{ props: { type: 'submit', content: '保存', status: 'primary' } },
-                { props: { type: 'reset', content: '取消', status: 'warning' } }]
-          }
-        }
-      ],
-      createFromRules: {
-        goodsName: [
-          { required: true, message: '请选择商品', trigger: 'blur' }
-        ],
-        purNumber: [
-          { required: true, message: '请输入采购数量', trigger: 'blur' }
-        ]
-      }
+      showGoodsComponent: false
     }
   },
   methods: {
     handleClose() {
       this.showIn = false
-      this.resetCreateForm()
+      this.selectionGoodsDatasIn = []
+      this.$emit('update:defaultFormDataList', [])
       this.$emit('update:show', false)
     },
     // 提交保存按钮
-    handleSubmitCreate(formName) {
-      this.submitCreate(formName)
-    },
-    submitCreate(formName) {
-      const refs = this.$refs
-      refs[formName].validate().then((valid) => {
-        if (!valid) {
-          if (this.dialogStatus === 'create') {
-            this.handleHttpMethod(addApi(this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
-              if (res) {
-                this.handleClose()
-                this.pageList()
-              }
-            })
+    handleSubmitCreate() {
+      if (!this.selectionGoodsDatasIn) {
+        this.$message.warning('数据为空!')
+      } else {
+        let flag = false
+        this.selectionGoodsDatasIn.forEach(item => {
+          if (item.purNumber === '' || item.purNumber === '0') {
+            flag = true
           }
-          if (this.dialogStatus === 'update') {
-            this.handleHttpMethod(updateApi(this.createFormData.guid, this.createFormData), true, '正在保存中', true, '信息保存成功').then(res => {
-              if (res) {
-                this.handleClose()
-                this.pageList()
-              }
-            })
-          }
+        })
+        if (flag) {
+          this.$message.warning('存在采购数量为空的数据!')
+          return
         }
-      })
+        this.submitBatchCreate()
+      }
     },
-    // 重置表单数据
-    resetCreateForm() {
-      this.createFormData = {
-        shopGoodsGuid: '',
-        clientId: '',
-        goodsName: '',
-        goodsGuid: '',
-        statusCode: '待下单',
-        purNumber: ''
+    // 批量保存
+    submitBatchCreate() {
+      if (this.dialogStatus === 'create') {
+        this.handleHttpMethod(addBatchApi(this.selectionGoodsDatasIn), true, '正在保存中', true, '信息保存成功').then(res => {
+          if (res) {
+            this.handleClose()
+            this.pageList()
+          }
+        })
+      }
+      if (this.dialogStatus === 'update') {
+        this.handleHttpMethod(updateBatchApi(this.selectionGoodsDatasIn), true, '正在保存中', true, '信息保存成功').then(res => {
+          if (res) {
+            this.handleClose()
+            this.pageList()
+          }
+        })
       }
     },
     pageList() {
@@ -143,10 +140,13 @@ export default {
     },
     // 回调函数，选择店铺商品后的回调函数
     selectedShopGoods(shopGoodsInfo) {
-      this.createFormData.shopGoodsGuid = shopGoodsInfo.guid
-      this.createFormData.goodsGuid = shopGoodsInfo.goodsGuid
-      this.createFormData.clientId = shopGoodsInfo.clientId
-      this.createFormData.goodsName = shopGoodsInfo.goodsName
+      this.selectionGoodsDatasIn = shopGoodsInfo
+      this.selectionGoodsDatasIn.forEach(item => {
+        this.$set(item, 'purNumber', '')
+        this.$set(item, 'shopGoodsGuid', item.guid)
+        item.statusCode = '待下单'
+        item.guid = ''
+      })
     }
   },
   created() {
@@ -154,10 +154,10 @@ export default {
   mounted() {
   },
   watch: {
-    defaultFormData: {
+    defaultFormDataList: {
       handler(nval, oval) {
-        if (nval && !(JSON.stringify(nval) === '{}')) {
-          this.createFormData = Object.assign({}, nval)
+        if (nval && !(JSON.stringify(nval) === '[]')) {
+          this.selectionGoodsDatasIn = JSON.parse(JSON.stringify(nval))
         }
       },
       immediate: true,
