@@ -36,7 +36,7 @@
         :data="tableData">
         <vxe-column type="radio" width="50"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
-        <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
+        <vxe-column field="goodsName" title="商品名称" width="250"></vxe-column>
         <vxe-column field="goodsCategory" title="商品类别" width="150"></vxe-column>
         <vxe-column field="goodsLink" title="商品链接" width="150"></vxe-column>
         <vxe-column field="upcCode" title="UPC码" width="100"></vxe-column>

@@ -40,7 +40,7 @@
         <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="supplierName" title="供应商名称" width="120"></vxe-column>
-        <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
+        <vxe-column field="goodsName" title="商品名称" width="250"></vxe-column>
         <vxe-column field="goodsCategory" title="商品类别" width="150"></vxe-column>
         <vxe-column field="imgLink" title="产品图片" width="100" align="center">
           <template #default="{ row }">
