@@ -34,7 +34,7 @@
       <vxe-column type="seq" title="序号" width="60"></vxe-column>
       <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
       <vxe-column field="shippingMark" title="箱唛" width="120"></vxe-column>
-      <vxe-column field="goodsName" title="商品名称" width="150"></vxe-column>
+      <vxe-column field="goodsName" title="商品名称" width="250"></vxe-column>
       <vxe-column field="sku" title="SKU" width="120"></vxe-column>
       <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
       <vxe-column field="statusCode" title="状态标识" width="100"></vxe-column>
