@@ -17,8 +17,9 @@
         <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '已下单'">
-        <el-button type="primary" size="medium"  @click="handleComplete">工厂已完工</el-button>
+        <el-button type="primary" size="medium"  @click="handleComplete">订单交货</el-button>
         <el-button size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
+        <el-button size="medium" style="width:100px" @click="handleRemove">删除</el-button>
         <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
     </template>
@@ -44,6 +45,8 @@
         height="92%"
         :row-config="{isHover: true}"
         @cell-click="handleCellClickEvent"
+        show-footer
+        :footer-method="footerMethod"
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
@@ -61,7 +64,7 @@
         <vxe-column field="purUnitPrice" title="采购单价" width="120"></vxe-column>
         <vxe-column field="purAmount" title="采购金额" width="120"></vxe-column>
         <vxe-column field="shipType" title="运输方式" width="120"></vxe-column>
-        <vxe-column field="shipAmount" title="运输价格" width="120"></vxe-column>
+        <vxe-column field="shipAmount" title="其他费用" width="120"></vxe-column>
         <vxe-column field="sumAmount" title="采购总额" width="120"></vxe-column>
         <vxe-column field="purTime" title="采购时间" width="120"></vxe-column>
         <vxe-column field="boxLength" title="单箱长/CM" width="120"></vxe-column>
@@ -69,8 +72,8 @@
         <vxe-column field="boxHigh" title="单箱高/CM" width="120"></vxe-column>
         <vxe-column field="boxVolume" title="单箱体积/M" width="120"></vxe-column>
         <vxe-column field="singleAmount" title="原始单价" width="120"></vxe-column>
-        <vxe-column field="isComplete" title="是否已完工" width="120"></vxe-column>
-        <vxe-column field="completeTime" title="完工日期" width="120"></vxe-column>
+        <vxe-column field="isComplete" title="是否已交货" width="120"></vxe-column>
+        <vxe-column field="completeTime" title="交货日期" width="120"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
         <vxe-column v-if="filterFormData.statusCode==='待下单'" title="操作" align="center" width="100" fixed="right" show-overflow>
           <template #default="{ row }">
@@ -95,7 +98,7 @@
               <el-date-picker style="width:100%" v-model="data.purTime" type="date" size="small" placeholder="请选择日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
             </template>
             <template #completeTimeSlot="{data}">
-              <el-date-picker style="width:100%" v-model="data.completeTime" type="date" size="small" placeholder="供应商做完后请选择完工日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+              <el-date-picker style="width:100%" v-model="data.completeTime" type="date" size="small" placeholder="供应商做完后请选择交货日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
             </template>
           </vxe-form>
         </vxe-modal>
@@ -123,7 +126,7 @@
       <ShopGoodsOrderComponentVue
         v-if="showOrderComponent"
         :show.sync="showOrderComponent"
-        :defaultFormData="createOrderFormData"
+        :defaultFormDataList="createOrderListData"
         :dialogStatus="dialogStatus"
         @onSureClick="pageList"
       ></ShopGoodsOrderComponentVue>
@@ -186,14 +189,7 @@ export default {
           ]
         }
       ],
-      createOrderFormData: {
-        shopGoodsGuid: '',
-        clientId: '',
-        goodsName: '',
-        goodsGuid: '',
-        statusCode: '待下单',
-        purNumber: ''
-      },
+      createOrderListData: [],
       createFormData: {
         boxVolume: '',
         boxQuantity: '',
@@ -271,7 +267,7 @@ export default {
           { required: true, message: '请输入采购时间', trigger: 'blur' }
         ],
         isComplete: [
-          { required: true, message: '请选择是否已完工', trigger: 'blur' }
+          { required: true, message: '请选择是否已交货', trigger: 'blur' }
         ]
       },
       createForm: [
@@ -306,7 +302,7 @@ export default {
             { field: 'purTime', title: '采购时间', span: 12, slots: { default: 'purTimeSlot' } },
             {
               field: 'isComplete',
-              title: '是否已完工',
+              title: '是否已交货',
               span: 12,
               itemRender: {
                 name: '$select',
@@ -314,7 +310,7 @@ export default {
                 props: { placeholder: '制作商是否已经做完货物' }
               }
             },
-            { field: 'completeTime', title: '完工日期', span: 12, slots: { default: 'completeTimeSlot' } },
+            { field: 'completeTime', title: '交货日期', span: 12, slots: { default: 'completeTimeSlot' } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
         },
         {

@@ -12,8 +12,16 @@ export function addApi(params) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/post', method: 'post', data: params })
 }
 
+export function addBatchApi(params) {
+  return fetch({ url: '/api/mkd/business/busShopGoodsOperate/postBatch', method: 'post', data: params })
+}
+
 export function updateApi(guid, params) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/patch/' + guid, method: 'patch', data: params })
+}
+
+export function updateBatchApi(params) {
+  return fetch({ url: '/api/mkd/business/busShopGoodsOperate/patchBatch', method: 'patch', data: params })
 }
 
 export function updateComplate(params) {
@@ -24,6 +32,14 @@ export function getOneApi(query) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/getDto/' + query, method: 'get' })
 }
 
+export function queryListByGuids(guids) {
+  return fetch({ url: '/api/mkd/business/busShopGoodsOperate/queryListByGuids', method: 'post', data: guids })
+}
+
 export function deleteApi(guid) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/deleteByGuid/' + guid, method: 'delete' })
+}
+
+export function deleteBatchByGuids(guids) {
+  return fetch({ url: '/api/mkd/business/busShopGoodsOperate/deleteBatchByGuids', method: 'post', data: guids })
 }

@@ -9,7 +9,7 @@
         </el-radio-group>
       </div>
       <div style="float:right;">
-        <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleOperatePay">付款</el-button>
+        <el-button v-show="filterFormData.statusCode === '待付款'" icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleOperatePay">付款</el-button>
         <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
     </template>

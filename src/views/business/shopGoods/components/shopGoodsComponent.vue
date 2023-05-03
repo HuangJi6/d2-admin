@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       showIn: this.show,
-      shopGoodsInfoIn: {}
+      shopGoodsInfoIn: []
     }
   },
   methods: {
@@ -47,10 +47,10 @@ export default {
     // 确定
     onSure() {
       const rows = this.$refs.shopGoodsVue.$refs.vxeTableRef.selection
-      if (!rows || rows.length !== 1) {
-        this.$message.warning('请选择一条数据')
+      if (!rows) {
+        this.$message.warning('请选择一条以上数据')
       } else {
-        this.shopGoodsInfoIn = rows[0]
+        this.shopGoodsInfoIn = rows
         console.log(rows)
         this.$emit('onSureClick', this.shopGoodsInfoIn)
         this.handleClose()

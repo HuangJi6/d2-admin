@@ -1,4 +1,4 @@
-import { deleteApi, getOneApi, updateApi, addApi, pageMapApi, updateComplate } from '@/api/business/shopGoodsOperateApi.js'
+import { getOneApi, queryListByGuids, updateApi, addApi, pageMapApi, updateComplate, deleteBatchByGuids } from '@/api/business/shopGoodsOperateApi.js'
 // import { getAllApplication } from '@/api/business/applicationApi.js'
 import { postSupplierListApi } from '@/api/business/supplierApi.js'
 import $Big from '@/libs/big.js'
@@ -102,6 +102,28 @@ const dataMethods = {
     this.createFormData.goodsName = goodsInfo.goodsName
   },
   createFormItemChange() {
+  },
+  // 底部汇总行方法
+  footerMethod({ columns, data }) {
+    const footerData = [
+      columns.map((column, columnIndex) => {
+        if (columnIndex === 1) {
+          return '合计'
+        }
+        if (['purNumber', 'purVolume', 'purAmount', 'shipAmount', 'sumAmount'].includes(column.property)) {
+          return this.sumNum(data, column.field)
+        }
+        return null
+      })
+    ]
+    return footerData
+  },
+  sumNum(list, field) {
+    let count = 0
+    list.forEach(item => {
+      count += Number(item[field])
+    })
+    return Number(count)
   }
 }
 // 校验方法
@@ -133,31 +155,41 @@ const handleMethods = {
   // 点击编辑按钮事件
   handleUpdate() {
     const selectionDatas = this.$refs.vxeTableRef.selection
-    if (!selectionDatas || selectionDatas.length !== 1) {
-      this.$message.warning('请选择一条数据')
-    } else {
-      const row = selectionDatas[0]
-      this.getOne(row.guid).then(response => {
-        if (this.filterFormData.statusCode === '待下单') {
-          this.createOrderFormData = response.data
+    if (this.filterFormData.statusCode === '待下单') {
+      if (!selectionDatas || selectionDatas.length < 1) {
+        this.$message.warning('请选择一条以上数据')
+      } else {
+        const guids = []
+        selectionDatas.forEach(item => {
+          guids.push(item.guid)
+        })
+        this.handleHttpMethod(queryListByGuids(guids), true, '查询中...').then(response => {
+          this.createOrderListData = response.data
           this.showOrderComponent = true
           this.dialogStatus = 'update'
-        }
-        if (this.filterFormData.statusCode === '已下单') {
+        })
+      }
+    }
+    if (this.filterFormData.statusCode === '已下单') {
+      if (!selectionDatas || selectionDatas.length !== 1) {
+        this.$message.warning('请选择一条数据修改')
+      } else {
+        const row = selectionDatas[0]
+        this.getOne(row.guid).then(response => {
           this.getSupplierData(row.goodsGuid)
           this.createFormData = response.data
           this.createFormData.shopName = row.shopName
           this.dialogFormVisible = true
           this.dialogStatus = 'update'
-        }
-      })
+        })
+      }
     }
   },
-  // 工厂已完工
+  // 工厂已交货
   handleComplete() {
     const selectionDatas = this.$refs.vxeTableRef.selection
     if (!selectionDatas || selectionDatas.length < 1) {
-      this.$message.warning('请选择一条数据')
+      this.$message.warning('请选择一条或一条以上数据')
     } else {
       this.$confirm('确定货物已经完成生产？', '提示', {
         confirmButtonText: '确定',
@@ -191,16 +223,19 @@ const handleMethods = {
   // 删除信息
   handleRemove() {
     const selectionDatas = this.$refs.vxeTableRef.selection
-    if (!selectionDatas || selectionDatas.length !== 1) {
-      this.$message.warning('请选择一条数据')
+    const guids = []
+    if (!selectionDatas || selectionDatas.length < 1) {
+      this.$message.warning('请选择一条或一条以上数据')
     } else {
-      const row = selectionDatas[0]
+      selectionDatas.forEach(item => {
+        guids.push(item.guid)
+      })
       this.$confirm('此操作将删除数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.handleHttpMethod(deleteApi(row.guid), true, '正在删除中', true, '删除成功').then(res => {
+        this.handleHttpMethod(deleteBatchByGuids(guids), true, '正在删除中', true, '删除成功').then(res => {
           this.pageList()
         })
       })
@@ -224,6 +259,9 @@ const handleMethods = {
     if (params.statusCode === '全部') {
       params.statusCode = ''
     }
+    // 排序
+    params.orderSqlSegment = 'pur_no'
+    params.order = 'desc'
   },
   // 刷新方法
   handleRefresh() {
@@ -266,7 +304,7 @@ const handleMethods = {
   handleCreateOrder() {
     this.showOrderComponent = true
     this.dialogStatus = 'create'
-    this.createOrderFormData = {}
+    this.createOrderListData = []
   },
   supplierChange(param) {
     if (param) {
