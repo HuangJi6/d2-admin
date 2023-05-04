@@ -1,6 +1,6 @@
 import { getOneApi, queryListByGuids, updateApi, addApi, pageMapApi, updateComplate, deleteBatchByGuids } from '@/api/business/shopGoodsOperateApi.js'
-// import { getAllApplication } from '@/api/business/applicationApi.js'
 import { postSupplierListApi } from '@/api/business/supplierApi.js'
+import { checkSameSupplier } from '@/api/business/supplierGoodsApi'
 import $Big from '@/libs/big.js'
 import moment from 'moment'
 
@@ -204,6 +204,7 @@ const handleMethods = {
         this.handleHttpMethod(updateComplate(params), true, '正在更新中', true, '更新成功').then(res => {
           this.pageList()
         })
+      }).catch(() => {
       })
     }
   },
@@ -238,6 +239,7 @@ const handleMethods = {
         this.handleHttpMethod(deleteBatchByGuids(guids), true, '正在删除中', true, '删除成功').then(res => {
           this.pageList()
         })
+      }).catch(() => {
       })
     }
   },
@@ -314,6 +316,58 @@ const handleMethods = {
           this.createFormData.boxQuantity = item.boxQuantity
           this.createFormData.totalBox = new $Big(this.createFormData.purNumber || 0).div(item.boxQuantity).toFixed(1).toString()
           this.createFormData.purVolume = new $Big(item.boxVolume || 0).times(this.createFormData.totalBox || 0).toFixed(4).toString()
+        }
+      })
+    }
+  },
+  // 付款
+  handlePay() {
+  },
+  // 批量下单
+  handleBatchOrder() {
+    // 校验item_id是否是一致的,并且拥有同一个供应商
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length < 1) {
+      this.$message.warning('请选择一条或一条以上数据')
+    } else {
+      const itemId = selectionDatas[0].itemId
+      const goodsGuids = []
+      let flag = false
+      selectionDatas.forEach(item => {
+        if (itemId !== item.itemId) {
+          flag = true
+        }
+        goodsGuids.push(item.goodsGuid)
+      })
+      if (flag) {
+        this.$message.warning('请选择相同item_id的商品下单')
+        return
+      }
+      this.defaultBatchOrderFormData = {
+        shopName: '',
+        supplierGuid: '',
+        statusCode: '',
+        shipAmount: '',
+        shipType: '',
+        purTime: '',
+        isComplete: '',
+        completeTime: '',
+        remark: ''
+      }
+      this.defaultBatchOrderFormData.shopName = selectionDatas[0].shopName
+      this.defaultBatchOrderFormData.isComplete = '否'
+      this.defaultBatchOrderFormData.statusCode = '已下单'
+      this.defaultBatchOrderFormData.purTime = moment().format('YYYY-MM-DD h:mm:ss')
+      this.defaultBatchOrderTableDataList = selectionDatas
+      // 校验是否有相同的供应商
+      this.handleHttpMethod(checkSameSupplier(goodsGuids), true, '检验数据中').then(res => {
+        console.log(res)
+        if (res.data.success) {
+          this.showBatchOrderComponent = true
+          this.supplierSelectDataList = res.data.data.selectList
+          this.supplierGoodsDataList = res.data.data.supplierGoodsList
+        } else {
+          this.$message.warning(res.data.message)
         }
       })
     }
