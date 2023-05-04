@@ -43,7 +43,11 @@
         <vxe-column field="supAddress" title="供应商地址" width="200"></vxe-column>
         <vxe-column field="supCategory" title="供应类别" width="200"></vxe-column>
         <vxe-column field="grade" title="评级" width="100"></vxe-column>
-        <vxe-column field="supUrl" title="供应商链接" width="200"></vxe-column>
+        <vxe-column field="supUrl" title="供应商链接" type="html" width="200">
+          <template #default="{ row }">
+            <vxe-button type="text" @dblclick="handleUrlLink(row.supUrl)">{{ row.supUrl }}</vxe-button>
+          </template>
+        </vxe-column>
         <vxe-column field="account" title="付款账号" width="200"></vxe-column>
         <vxe-column field="qualification" title="资质信息" width="200"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>

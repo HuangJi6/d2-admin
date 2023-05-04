@@ -178,9 +178,6 @@ export default {
         ],
         singleAmount: [
           { required: true, message: '请输入单个价格', trigger: 'blur' }
-        ],
-        supLink: [
-          { required: true, message: '建议填写供应链接,方便后面查询供应信息,如无填写“无”', trigger: 'blur' }
         ]
       },
       createForm: [
