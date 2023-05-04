@@ -84,7 +84,6 @@ const dataMethods = {
   },
   categoryItemBlur(rowData) {
     console.log(rowData)
-    debugger
     if (rowData.goodsCategory) {
       this.categoryList.forEach(item => {
         if (rowData.goodsCategory === item.categoryName) {

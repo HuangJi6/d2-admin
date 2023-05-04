@@ -12,15 +12,17 @@
       </div>
       <div  style="float:right;" v-if="filterFormData.statusCode === '待下单'" >
         <el-button icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleCreateOrder">新增</el-button>
-        <el-button size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
-        <el-button size="medium" style="width:100px" @click="handleRemove">删除</el-button>
-        <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+        <el-button size="medium" style="width:100px" @click="handleBatchOrder">批量下单</el-button>
+        <el-button size="medium" @click="handleUpdate">修改</el-button>
+        <el-button size="medium" @click="handleRemove">删除</el-button>
+        <el-button size="medium" @click="pageList()">刷新</el-button>
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '已下单'">
         <el-button type="primary" size="medium"  @click="handleComplete">订单交货</el-button>
-        <el-button size="medium" style="width:100px" @click="handleUpdate">修改</el-button>
-        <el-button size="medium" style="width:100px" @click="handleRemove">删除</el-button>
-        <el-button size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+        <el-button size="medium"  @click="handlePay">付款</el-button>
+        <el-button size="medium"  @click="handleUpdate">修改</el-button>
+        <el-button size="medium"  @click="handleRemove">删除</el-button>
+        <el-button size="medium"  @click="pageList()">刷新</el-button>
       </div>
     </template>
 
@@ -63,10 +65,13 @@
         <vxe-column field="purVolume" title="采购体积" width="120"></vxe-column>
         <vxe-column field="purUnitPrice" title="采购单价" width="120"></vxe-column>
         <vxe-column field="purAmount" title="采购金额" width="120"></vxe-column>
-        <vxe-column field="shipType" title="运输方式" width="120"></vxe-column>
         <vxe-column field="shipAmount" title="其他费用" width="120"></vxe-column>
         <vxe-column field="sumAmount" title="采购总额" width="120"></vxe-column>
+        <vxe-column field="isPayOver" title="已付完款" width="120"></vxe-column>
+        <vxe-column field="payAmount" title="已付金额" width="120"></vxe-column>
+        <vxe-column field="noPayAmount" title="未付金额" width="120"></vxe-column>
         <vxe-column field="purTime" title="采购时间" width="120"></vxe-column>
+        <vxe-column field="shipType" title="运输方式" width="120"></vxe-column>
         <vxe-column field="boxLength" title="单箱长/CM" width="120"></vxe-column>
         <vxe-column field="boxWidth" title="单箱宽/CM" width="120"></vxe-column>
         <vxe-column field="boxHigh" title="单箱高/CM" width="120"></vxe-column>
@@ -130,6 +135,15 @@
         :dialogStatus="dialogStatus"
         @onSureClick="pageList"
       ></ShopGoodsOrderComponentVue>
+      <ShopGoodsBatchOrderComponentVue
+        v-if="showBatchOrderComponent"
+        :show.sync="showBatchOrderComponent"
+        :defaultFormData="defaultBatchOrderFormData"
+        :defaultTableDataList="defaultBatchOrderTableDataList"
+        :defaultsupplierSelectData="supplierSelectDataList"
+        :defaultsupplierGoodsData="supplierGoodsDataList"
+        @onSureClick="pageList"
+      ></ShopGoodsBatchOrderComponentVue>
     </template>
 
     <template slot="footer">
@@ -146,16 +160,32 @@ import ShopGoodsOrderComponentVue from '@/views/business/shopGoodsOperate/compon
 import { myMethods } from './js/shopGoodsOperateMethod.js'
 import $Big from '@/libs/big.js'
 import moment from 'moment'
+import ShopGoodsBatchOrderComponentVue from './components/shopGoodsBatchOrderComponent.vue'
 
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { GoodsShowComponent, ShopGoodsComponent, ShopGoodsOrderComponentVue },
+  components: { GoodsShowComponent, ShopGoodsComponent, ShopGoodsOrderComponentVue, ShopGoodsBatchOrderComponentVue },
   data() {
     return {
+      showBatchOrderComponent: false,
+      defaultBatchOrderFormData: {
+        shopName: '',
+        supplierGuid: '',
+        statusCode: '',
+        shipAmount: '',
+        shipType: '',
+        purTime: '',
+        isComplete: '',
+        completeTime: '',
+        remark: ''
+      },
+      defaultBatchOrderTableDataList: [],
       showOrderComponent: false,
       filterDialogVisible: false,
       goodsInfo: {},
+      supplierSelectDataList: [],
+      supplierGoodsDataList: [],
       supplierData: [],
       applicationData: [],
       showGoodsComponent: false,
