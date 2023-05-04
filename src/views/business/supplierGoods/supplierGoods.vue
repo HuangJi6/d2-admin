@@ -11,7 +11,8 @@
       </div>
       <div style="float:right;">
         <el-button icon="vxe-icon-square-plus" type="success" size="medium" style="width:100px" @click="handleCreate">新增</el-button>
-        <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
+        <el-button icon="vxe-icon-edit" size="medium" style="width:100px" @click="handleUpdateBatch">修改</el-button>
+        <el-button icon="vxe-icon-refresh" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
     </template>
 
@@ -57,9 +58,9 @@
         <vxe-column field="boxWeight" title="单箱重量/KG" width="120"></vxe-column>
         <vxe-column field="supLink" title="供应链接" width="120"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
-        <vxe-column title="操作" width="150" fixed="right" show-overflow>
+        <vxe-column title="操作" width="80" fixed="right" align="center" show-overflow>
           <template #default="{ row }">
-            <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)" content="修改"></vxe-button>
+            <!-- <vxe-button size="mini" type="text" status="success" icon="vxe-icon-edit" @click="handleUpdate(row)" content="修改"></vxe-button> -->
             <vxe-button size="mini" type="text" status="danger" icon="vxe-icon-delete" @click="handleRemove(row)" content="删除"></vxe-button>
           </template>
         </vxe-column>
@@ -76,9 +77,15 @@
             <template #buttonSlot>
               <vxe-button status="primary" content="新增供应商"  @click="handleAddSupplier()"></vxe-button>
             </template>
-            <template #goodsNameSlots="{ data }">
-              <span> {{ data.goodsName }}  </span>
-              <vxe-button status="primary" content="选择商品"  @click="handleChooseGoods(data)"></vxe-button>
+            <template  #goodsNameSlots="{ data }">
+              <div v-if="dialogStatus==='create'">
+                <el-tag :key="goods.guid" v-for="goods in selectedGoodsListData" closable :disable-transitions="false"
+                @close="handleCloseGoodsTag(goods)">{{goods.goodsName}}</el-tag>
+                <vxe-button status="primary" content="选择商品" style="margin-left:10px"  @click="handleChooseGoods(data)"></vxe-button>
+              </div>
+              <div v-if="dialogStatus==='update'">
+                <el-tag :key="goods.guid" v-for="goods in selectedGoodsListData">{{goods.goodsName}}</el-tag>
+              </div>
             </template>
           </vxe-form>
         </vxe-modal>
@@ -115,6 +122,7 @@ export default {
   components: { GoodsShowComponent, SupplierAddComponentVue },
   data() {
     return {
+      selectedGoodsListData: [],
       showAddSupplierComponent: false,
       goodsInfo: {},
       supplierListData: [],
@@ -150,9 +158,6 @@ export default {
         remark: ''
       },
       createFromRules: {
-        goodsName: [
-          { required: true, message: '请输入商名称', trigger: 'blur' }
-        ],
         supplierGuid: [
           { required: true, message: '请选择供应商', trigger: 'blur' }
         ],
@@ -183,7 +188,7 @@ export default {
           title: '',
           span: 23,
           children: [
-            { field: 'goodsName', title: '商品名称', span: 12, slots: { default: 'goodsNameSlots' } },
+            { field: 'goodsName', title: '商品名称', span: 24, slots: { default: 'goodsNameSlots' } },
             {
               field: 'supplierGuid',
               title: '供应商',
@@ -259,3 +264,20 @@ export default {
   }
 }
 </script>
+<style>
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
+</style>
