@@ -202,6 +202,7 @@ export default {
             duration: 2000
           })
         })
+      }).catch(() => {
       })
     },
     update () {

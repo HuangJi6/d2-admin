@@ -96,6 +96,7 @@ const dataMethods = {
       this.handleHttpMethod(deleteUserInfoApi(row.guid), true, '正在删除中', true, '删除成功').then(res => {
         this.pageList()
       })
+    }).catch(() => {
     })
   },
   handleFilter(params) {

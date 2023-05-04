@@ -187,6 +187,7 @@ export default {
           this.resetForm()
           this.onCancel()
         })
+      }).catch(() => {
       })
     },
     update () {
