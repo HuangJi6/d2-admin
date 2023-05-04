@@ -78,7 +78,6 @@ const handleMethods = {
   // 过滤方法
   handleFilter(params) {
     // 对象拷贝，防止数据污染
-
     const conditionParams = [
       { name: 'supName', type: '4', remove: true },
       { name: 'supCategory', type: '4', remove: true }]
@@ -91,6 +90,10 @@ const handleMethods = {
   // 刷新方法
   handleRefresh() {
     this.pageList()
+  },
+  // 访问链接
+  handleUrlLink(url) {
+    window.open(url, '_blank')
   }
 }
 

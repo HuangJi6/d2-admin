@@ -215,6 +215,9 @@ const handleMethods = {
       this.showGlobalSave = false
       this.editTableConfig = {}
     })
+  },
+  handleUrlLink(url) {
+    window.open(url, '_blank')
   }
 }
 

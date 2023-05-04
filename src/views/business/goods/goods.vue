@@ -51,6 +51,9 @@
           </template>
         </vxe-column>
         <vxe-column field="goodsLink" title="商品链接" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
+          <template #default="{ row }">
+            <vxe-button type="text" @dblclick="handleUrlLink(row.goodsLink)">{{ row.goodsLink }}</vxe-button>
+          </template>
           <template #edit="{ row }"><vxe-input v-model="row.goodsLink" type="text"></vxe-input></template>
         </vxe-column>
         <vxe-column field="imgLink" title="图片链接" width="150" :edit-render="{autofocus: '.vxe-input--inner'}">
