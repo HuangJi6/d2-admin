@@ -73,6 +73,7 @@ const handleMethods = {
       this.handleHttpMethod(deleteByGuidApi(row.guid), true, '正在删除中', true, '删除成功').then(res => {
         this.pageList()
       })
+    }).catch(() => {
     })
   },
   // 过滤方法
