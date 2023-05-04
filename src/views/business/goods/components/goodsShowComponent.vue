@@ -34,7 +34,7 @@
         height="95%"
         :row-config="{isHover: true}"
         :data="tableData">
-        <vxe-column type="radio" width="50"></vxe-column>
+        <vxe-column type="checkbox" width="50"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="goodsName" title="商品名称" width="250"></vxe-column>
         <vxe-column field="goodsCategory" title="商品类别" width="150"></vxe-column>
@@ -100,12 +100,23 @@ export default {
     },
     // 确定
     onSure() {
-      const rows = this.$refs.vxeTableRef.selectRow
-      if (!rows) {
-        this.$message.warning('请选择一条数据')
+      const rows = this.$refs.vxeTableRef.selection
+      if (!rows || rows.length < 1) {
+        this.$message.warning('请选择一条或一条以上数据')
       } else {
+        // 校验是否是同一个类目
+        let flag = false
+        const categoryGuid = rows[0].categoryGuid
+        rows.forEach(item => {
+          if (categoryGuid !== item.categoryGuid) {
+            flag = true
+          }
+        })
+        if (flag) {
+          this.$message.warning('请选择相同类目的商品数据')
+          return
+        }
         this.goodsInfoIn = rows
-        console.log(rows)
         this.$emit('onSureClick', this.goodsInfoIn)
         this.handleClose()
       }
