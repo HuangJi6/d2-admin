@@ -35,3 +35,7 @@ export function getOperatePayOneApi(query) {
 export function deleteApi(guid) {
   return fetch({ url: '/api/mkd/business/busOperatePay/deleteByGuid/' + guid, method: 'delete' })
 }
+
+export function deleteByOperateGuids(guids) {
+  return fetch({ url: '/api/mkd/business/busOperatePay/deleteByOperateGuids', method: 'post', data: guids })
+}

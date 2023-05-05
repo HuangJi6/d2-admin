@@ -1,4 +1,4 @@
-import { deleteApi, getOneApi, updateApi, addApi, pageOperateMapApi, getOperatePayOneApi, pageMapApi } from '@/api/business/operatePayApi.js'
+import { deleteByOperateGuids, getOneApi, updateApi, addApi, pageOperateMapApi, getOperatePayOneApi, pageMapApi } from '@/api/business/operatePayApi.js'
 // import { getAllApplication } from '@/api/business/applicationApi.js'
 import { postSupplierListApi } from '@/api/business/supplierApi.js'
 import $Big from '@/libs/big.js'
@@ -187,18 +187,21 @@ const handleMethods = {
     })
   },
   // 删除信息
-  handleRemove() {
+  handleRemoveOperatePay() {
     const selectionDatas = this.$refs.vxeTableRef.selection
     if (!selectionDatas || selectionDatas.length !== 1) {
       this.$message.warning('请选择一条数据')
     } else {
-      const row = selectionDatas[0]
-      this.$confirm('此操作将删除数据, 是否继续?', '提示', {
+      const operateGuids = []
+      selectionDatas.forEach(item => {
+        operateGuids.push(item.guid)
+      })
+      this.$confirm('此操作将移除该数据付款记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.handleHttpMethod(deleteApi(row.guid), true, '正在删除中', true, '删除成功').then(res => {
+        this.handleHttpMethod(deleteByOperateGuids(operateGuids), true, '正在删除中', true, '删除成功').then(res => {
           this.pageList()
         })
       }).catch(() => {

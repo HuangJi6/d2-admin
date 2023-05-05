@@ -19,7 +19,7 @@
       </div>
       <div style="float:right;" v-if="filterFormData.statusCode === '已下单'">
         <el-button type="primary" size="medium"  @click="handleComplete">订单交货</el-button>
-        <el-button size="medium"  @click="handlePay">付款</el-button>
+        <el-button size="medium"  @click="handleOperatePay">付款</el-button>
         <el-button size="medium"  @click="handleUpdate">修改</el-button>
         <el-button size="medium"  @click="handleRemove">删除</el-button>
         <el-button size="medium"  @click="pageList()">刷新</el-button>
@@ -67,8 +67,12 @@
         <vxe-column field="purAmount" title="采购金额" width="120"></vxe-column>
         <vxe-column field="shipAmount" title="其他费用" width="120"></vxe-column>
         <vxe-column field="sumAmount" title="采购总额" width="120"></vxe-column>
-        <vxe-column field="isPayOver" title="已付完款" width="120"></vxe-column>
-        <vxe-column field="payAmount" title="已付金额" width="120"></vxe-column>
+        <vxe-column field="isPayOver" title="已付完款" width="90" align="center">
+          <template #default="{ row }">
+            <el-tag type="success" v-if="row.isPayOver==='1'">是</el-tag>
+            <el-tag type="danger" v-if="row.isPayOver==='0'">否</el-tag>
+          </template>
+        </vxe-column>
         <vxe-column field="noPayAmount" title="未付金额" width="120"></vxe-column>
         <vxe-column field="purTime" title="采购时间" width="120"></vxe-column>
         <vxe-column field="shipType" title="运输方式" width="120"></vxe-column>
@@ -144,6 +148,19 @@
         :defaultsupplierGoodsData="supplierGoodsDataList"
         @onSureClick="pageList"
       ></ShopGoodsBatchOrderComponentVue>
+      <OperatePayBatchComponentVue
+        v-if="false"
+        :show.sync="dialogOperatePayVisible"
+        :operatePayDataList="operatePayDataList"
+        :operateTableDataList="operateTableDataList"
+        @onSureClick="pageList">
+      </OperatePayBatchComponentVue>
+      <OperatePayChooseComponent
+        v-if="dialogOperatePayVisible"
+        :show.sync="dialogOperatePayVisible"
+        :operatePayData="operatePayData"
+        @onSureClick="pageList">
+      </OperatePayChooseComponent>
     </template>
 
     <template slot="footer">
@@ -161,13 +178,25 @@ import { myMethods } from './js/shopGoodsOperateMethod.js'
 import $Big from '@/libs/big.js'
 import moment from 'moment'
 import ShopGoodsBatchOrderComponentVue from './components/shopGoodsBatchOrderComponent.vue'
-
+import OperatePayBatchComponentVue from '../operatePay/components/operatePayBatchComponent.vue'
+import OperatePayChooseComponent from '@/views/business/operatePay/components/operatePayChooseComponent'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { GoodsShowComponent, ShopGoodsComponent, ShopGoodsOrderComponentVue, ShopGoodsBatchOrderComponentVue },
+  components: {
+    GoodsShowComponent,
+    ShopGoodsComponent,
+    ShopGoodsOrderComponentVue,
+    ShopGoodsBatchOrderComponentVue,
+    OperatePayBatchComponentVue,
+    OperatePayChooseComponent
+  },
   data() {
     return {
+      operatePayData: {},
+      operatePayDataList: [],
+      operateTableDataList: [],
+      dialogOperatePayVisible: false,
       showBatchOrderComponent: false,
       defaultBatchOrderFormData: {
         shopName: '',

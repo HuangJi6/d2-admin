@@ -1,6 +1,8 @@
 import { getOneApi, queryListByGuids, updateApi, addApi, pageMapApi, updateComplate, deleteBatchByGuids } from '@/api/business/shopGoodsOperateApi.js'
 import { postSupplierListApi } from '@/api/business/supplierApi.js'
 import { checkSameSupplier } from '@/api/business/supplierGoodsApi'
+import { getOperatePayOneApi } from '@/api/business/operatePayApi.js'
+
 import $Big from '@/libs/big.js'
 import moment from 'moment'
 
@@ -322,6 +324,39 @@ const handleMethods = {
   },
   // 付款
   handlePay() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length < 1) {
+      this.$message.warning('请选择一条或一条以上数据')
+    } else {
+      // 校验是否是同一个item_id
+      const itemId = selectionDatas[0].itemId
+      let flag = false
+      selectionDatas.forEach(item => {
+        if (itemId !== item.itemId) {
+          flag = true
+        }
+      })
+      if (flag) {
+        this.$message.warning('相同item_id的数据才能同时付款')
+        return
+      }
+      this.dialogOperatePayVisible = true
+      this.operateTableDataList = selectionDatas
+    }
+  },
+  // 采购付款
+  handleOperatePay() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length !== 1) {
+      this.$message.warning('请选择一条数据')
+    } else {
+      const row = selectionDatas[0]
+      // 查询采购付款记录
+      this.handleHttpMethod(getOperatePayOneApi(row.guid), true, '查询数据中...').then(res => {
+        this.dialogOperatePayVisible = true
+        this.operatePayData = res.data
+      })
+    }
   },
   // 批量下单
   handleBatchOrder() {
