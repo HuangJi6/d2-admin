@@ -254,6 +254,9 @@ const handleMethods = {
         this.getSupplierData(this.createFormData.categoryGuid)
       })
     }
+  },
+  handleUrlLink(url) {
+    window.open(url, '_blank')
   }
 }
 

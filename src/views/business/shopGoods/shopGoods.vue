@@ -60,7 +60,7 @@
         <vxe-column field="sku" title="SKU" width="120"></vxe-column>
         <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
         <vxe-column field="mlCode" title="ML CODE" width="120"></vxe-column>
-        <vxe-column field="upcCode" title="UPC码" width="100"></vxe-column>
+        <vxe-column field="upcCode" title="UPC码" width="130"></vxe-column>
         <vxe-column field="goodsName" title="商品名称" width="250"></vxe-column>
         <vxe-column field="imgLink" title="产品图片" width="100" align="center">
           <template #default="{ row }">

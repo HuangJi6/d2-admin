@@ -56,7 +56,11 @@
         <vxe-column field="boxQuantity" title="单箱产品数" width="120"></vxe-column>
         <vxe-column field="singleAmount" title="单个价格" width="120"></vxe-column>
         <vxe-column field="boxWeight" title="单箱重量/KG" width="120"></vxe-column>
-        <vxe-column field="supLink" title="供应链接" width="120"></vxe-column>
+        <vxe-column field="supLink" title="供应链接" width="120">
+          <template #default="{ row }">
+            <vxe-button type="text" @dblclick="handleUrlLink(row.supLink)">{{ row.supLink }}</vxe-button>
+          </template>
+        </vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
         <vxe-column title="操作" width="80" fixed="right" align="center" show-overflow>
           <template #default="{ row }">
@@ -72,7 +76,7 @@
           :data="createFormData" :items="createForm" :rules="createFromRules"
           @submit="handleSubmitCreate('createFrom')" @reset="handleCancelCreate('createFrom')">
             <template #supplierGuidSlot="{ data }">
-              <vxe-select v-model="data.supplierGuid" placeholder="请先选择商品信息" :options="supplierListData" filterable clearable></vxe-select>
+              <vxe-select v-model="data.supplierGuid" placeholder="请先选择商品信息" :options="supplierListData" filterable></vxe-select>
             </template>
             <template #buttonSlot>
               <vxe-button status="primary" content="新增供应商"  @click="handleAddSupplier()"></vxe-button>
