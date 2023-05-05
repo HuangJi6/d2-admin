@@ -179,6 +179,9 @@ const handleMethods = {
   // 选择商品点击事件,显示商品选择弹框
   handleChooseGoods() {
     this.showGoodsComponent = true
+  },
+  handleUrlLink(url) {
+    window.open(url, '_blank')
   }
 }
 
