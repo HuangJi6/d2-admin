@@ -87,8 +87,8 @@ const dataMethods = {
     return this.handleHttpMethod(getOneApi(id), true)
   },
   selectedGoods(goodsInfo) {
-    this.createFormData.goodsGuid = goodsInfo.guid
-    this.createFormData.goodsName = goodsInfo.goodsName
+    this.createFormData.goodsGuid = goodsInfo[0].guid
+    this.createFormData.goodsName = goodsInfo[0].goodsName
   },
   createFormItemChange() {
   },
