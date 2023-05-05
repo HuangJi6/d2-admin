@@ -10,6 +10,7 @@
       </div>
       <div style="float:right;">
         <el-button v-show="filterFormData.statusCode === '待付款'" icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleOperatePay">付款</el-button>
+        <el-button v-show="filterFormData.statusCode === '待付款'" size="medium" @click="handleRemoveOperatePay">清空付款信息</el-button>
         <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
     </template>
@@ -110,7 +111,7 @@
 <script>
 import mixins from '@/mixin/commonMixin.js'
 import { myMethods } from './js/operatePayMethod.js'
-import OperatePayChooseComponent from './components/operatePayChooseComponent.vue'
+import OperatePayChooseComponent from '@/views/business/operatePay/components/operatePayChooseComponent'
 export default {
   name: 'application',
   mixins: [mixins],

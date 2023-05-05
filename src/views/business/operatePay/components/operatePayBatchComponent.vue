@@ -1,22 +1,29 @@
 <template>
 <div>
-<vxe-modal v-model="showIn" title=" "
-      @close="handleClose" width="60%" height="80%" show-footer show-zoom resize>
+<vxe-modal v-model="showIn" title=" " @close="handleClose" width="60%" height="80%" show-footer show-zoom resize>
   <template #footer>
     <vxe-button status="primary" @click="handleSubmitCreate">确定</vxe-button>
     <vxe-button @click="handleClose">取消</vxe-button>
   </template>
-  <el-descriptions style="height:200px;" title="采购信息" :column="3" extra="单位: 元  " border>
-    <el-descriptions-item label="采购单号" labelStyle="border" label-class-name="my-label11">{{operatePayData.purNo}}</el-descriptions-item>
-    <el-descriptions-item label="采购商品">{{operatePayData.goodsName}}</el-descriptions-item>
-    <!-- <el-descriptions-item label="采购人">{{operatePayData.purNo}}</el-descriptions-item> -->
-    <el-descriptions-item label="采购数量">{{operatePayData.purNumber}}</el-descriptions-item>
-    <el-descriptions-item label="采购金额">{{operatePayData.purAmount}}</el-descriptions-item>
-    <el-descriptions-item label="其他费用">{{operatePayData.shipAmount}}</el-descriptions-item>
-    <el-descriptions-item label="采购总额" label-class-name="my-content">{{operatePayData.sumAmount}}</el-descriptions-item>
-    <el-descriptions-item label="未付金额" label-class-name="my-content">{{this.noPayAmount}}</el-descriptions-item>
-    <!-- <el-descriptions-item label="金额单位"><el-tag size="small">元</el-tag></el-descriptions-item> -->
-  </el-descriptions>
+  <vxe-table
+    ref="vxeTableRef"
+    height="44%"
+    style="width:100%;min-height: 100px;"
+    align="center"
+    show-overflow
+    show-footer
+    :footer-method="footerMethod1"
+    :data="operateTableDataList">
+    <vxe-column type="seq" title="序号" width="60"></vxe-column>
+    <vxe-column field="purNo" title="采购单号" width="15%"></vxe-column>
+    <vxe-column field="shopName" title="店铺名称" width="10%"></vxe-column>
+    <vxe-column field="goodsName" title="商品名称" width="15%"></vxe-column>
+    <vxe-column field="purNumber" title="采购数量" width="10%"></vxe-column>
+    <vxe-column field="purUnitPrice" title="采购单价" width="10%"></vxe-column>
+    <vxe-column field="purAmount" title="采购金额" width="10%"></vxe-column>
+    <vxe-column field="shipAmount" title="其他费用" width="10%"></vxe-column>
+    <vxe-column field="sumAmount" title="采购总额" width="10%"></vxe-column>
+  </vxe-table>
   <vxe-toolbar>
     <template #buttons>
       <el-button icon="vxe-icon-chart-pie" size="mini" style="width:120px" @click="HandleChooseDialogClick">选择付款人</el-button>
@@ -59,7 +66,7 @@ import PayerChooseComponentVue from '../../payer/components/payerChooseComponent
 export default {
   mixins: [mixins],
   components: { PayerChooseComponentVue },
-  name: 'operatePayChooseComponent',
+  name: 'operatePayBatchComponentVue',
   props: {
     // 显示标识
     show: {
@@ -68,18 +75,25 @@ export default {
         return false
       }
     },
-    operatePayData: {
-      type: Object,
+    operatePayDataList: {
+      type: Array,
       default() {
-        return {}
+        return []
+      }
+    },
+    operateTableDataList: {
+      type: Array,
+      default() {
+        return []
       }
     }
   },
   data() {
     return {
       noPayAmount: 0,
+      needPayAmount: 0,
       showInContainerChoose: false,
-      selectionOperateDatasIn: this.operatePayData.payList || [],
+      selectionOperateDatasIn: [],
       defaultSelectedGuids: [],
       showIn: this.show
     }
@@ -168,12 +182,25 @@ export default {
         })
       ]
     },
+    footerMethod1({ columns, data }) {
+      return [
+        columns.map((column, columnIndex) => {
+          if (columnIndex === 1) {
+            return '总金额'
+          }
+          if (['sumAmount'].includes(column.field)) {
+            return this.sumNum(data, column.field)
+          }
+          return null
+        })
+      ]
+    },
     sumNum(list, field) {
       let count = 0
       list.forEach(item => {
         count += Number(item[field])
       })
-      this.noPayAmount = this.operatePayData.sumAmount - Number(count)
+      this.noPayAmount = this.needPayAmount - Number(count)
       return Number(count).toFixed(2)
     }
   },
