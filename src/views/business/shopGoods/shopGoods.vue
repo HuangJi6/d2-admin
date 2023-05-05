@@ -104,6 +104,7 @@
       <GoodsShowComponent
         v-if="showGoodsComponent"
         :show.sync="showGoodsComponent"
+        :singalChoose="true"
         @onSureClick="selectedGoods"
       ></GoodsShowComponent>
     </template>

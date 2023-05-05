@@ -74,6 +74,12 @@ export default {
       default() {
         return false
       }
+    },
+    singalChoose: {
+      type: Boolean,
+      default() {
+        return false
+      }
     }
   },
   data() {
@@ -101,6 +107,12 @@ export default {
     // 确定
     onSure() {
       const rows = this.$refs.vxeTableRef.selection
+      if (this.singalChoose) {
+        if (!rows || rows.length !== 1) {
+          this.$message.warning('请选择一条数据')
+          return
+        }
+      }
       if (!rows || rows.length < 1) {
         this.$message.warning('请选择一条或一条以上数据')
       } else {
