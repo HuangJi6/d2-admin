@@ -68,7 +68,11 @@
           </template>
         </vxe-column>
         <vxe-column field="hsCode" title="HS CODE" width="120"></vxe-column>
-        <vxe-column field="goodsLink" title="商品链接" width="150"></vxe-column>
+        <vxe-column field="goodsLink" title="商品链接" width="150">
+          <template #default="{ row }">
+            <vxe-button type="text" @dblclick="handleUrlLink(row.goodsLink)">{{ row.goodsLink }}</vxe-button>
+          </template>
+        </vxe-column>
         <vxe-column field="imgLink" title="图片链接" width="150"></vxe-column>
         <vxe-column field="material" title="材料" width="100"></vxe-column>
         <!-- <vxe-column field="grade" title="评级" width="100"></vxe-column> -->
