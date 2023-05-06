@@ -8,6 +8,14 @@ export function pageMapApi(params) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/pageMap', method: 'post', data: params })
 }
 
+export function pageOperatePurchaseGroup(params) {
+  return fetch({ url: '/api/mkd/business/busShopGoodsOperate/pageOperatePurchaseGroup', method: 'post', data: params })
+}
+
+export function queryListMap(params) {
+  return fetch({ url: 'api/mkd/business/busShopGoodsOperate/queryListMap', method: 'post', data: params })
+}
+
 export function addApi(params) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/post', method: 'post', data: params })
 }
@@ -42,4 +50,8 @@ export function deleteApi(guid) {
 
 export function deleteBatchByGuids(guids) {
   return fetch({ url: '/api/mkd/business/busShopGoodsOperate/deleteBatchByGuids', method: 'post', data: guids })
+}
+
+export function deleteBatchByBatchIds(batchIds) {
+  return fetch({ url: '/api/mkd/business/busShopGoodsOperate/deleteBatchByBatchIds', method: 'post', data: batchIds })
 }

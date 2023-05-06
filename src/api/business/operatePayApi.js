@@ -20,6 +20,10 @@ export function addBatchApi(params) {
   return fetch({ url: '/api/mkd/business/busOperatePay/postBatch', method: 'post', data: params })
 }
 
+export function payByOperateBatchId(params) {
+  return fetch({ url: '/api/mkd/business/busOperatePay/payByOperateBatchId', method: 'post', data: params })
+}
+
 export function updateApi(guid, params) {
   return fetch({ url: '/api/mkd/business/busOperatePay/patch/' + guid, method: 'patch', data: params })
 }
@@ -30,6 +34,10 @@ export function getOneApi(query) {
 
 export function getOperatePayOneApi(query) {
   return fetch({ url: '/api/mkd/business/busOperatePay/getOperatePayOneApi/' + query, method: 'get' })
+}
+
+export function getOperatePayByBatch(query) {
+  return fetch({ url: '/api/mkd/business/busOperatePay/getOperatePayByBatch/' + query, method: 'get' })
 }
 
 export function deleteApi(guid) {

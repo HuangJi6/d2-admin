@@ -35,22 +35,23 @@
         :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}">
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="goodsName" title="商品名称" width="250"></vxe-column>
-        <vxe-column field="purNumber" title="采购数量" width="120"></vxe-column>
+        <vxe-column field="purNumber" title="采购数量" width="100"></vxe-column>
         <vxe-column field="boxQuantity" title="单箱产品数" width="120"></vxe-column>
         <vxe-column field="totalBox" title="总箱数" width="80"></vxe-column>
         <vxe-column field="boxVolume" title="单箱体积/m³" width="120"></vxe-column>
         <vxe-column field="purVolume" title="采购体积/m³" width="120"></vxe-column>
-        <vxe-column field="purUnitPrice" title="采购单价/RMB" width="160" :edit-render="{autofocus: '.vxe-input--inner'}">
+        <vxe-column field="purUnitPrice" title="采购单价" width="130" :edit-render="{autofocus: '.vxe-input--inner'}" :formatter="formatterAmount">
           <template #edit="{ row }">
-            <vxe-input v-model="row.purUnitPrice" type="text" @change="purUnitPriceChange(row)"></vxe-input>
-          </template></vxe-column>
-        <vxe-column field="purAmount" title="采购金额/RMB" width="130"></vxe-column>
-        <vxe-column field="shipAmount" title="其他费用/RMB" width="160" :edit-render="{autofocus: '.vxe-input--inner'}">
-          <template #edit="{ row }">
-            <vxe-input v-model="row.shipAmount" type="text" @change="shipAmountChange(row)"></vxe-input>
+            <vxe-input v-model="row.purUnitPrice" type="float" @change="purUnitPriceChange(row)"></vxe-input>
           </template>
         </vxe-column>
-        <vxe-column field="sumAmount" title="采购总额/RMB" width="130"></vxe-column>
+        <vxe-column field="purAmount" title="采购金额" width="110" :formatter="formatterAmount"></vxe-column>
+        <vxe-column field="shipAmount" title="其他费用" width="130" :edit-render="{autofocus: '.vxe-input--inner'}" :formatter="formatterAmount">
+          <template #edit="{ row }">
+            <vxe-input v-model="row.shipAmount" type="float" @change="shipAmountChange(row)"></vxe-input>
+          </template>
+        </vxe-column>
+        <vxe-column field="sumAmount" title="采购总额" width="130" :formatter="formatterAmount"></vxe-column>
         <vxe-column field="shippingMark" title="箱唛" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
           <template #edit="{ row }">
             <vxe-input v-model="row.shippingMark" type="text"></vxe-input>
@@ -123,9 +124,6 @@ export default {
         ],
         statusCode: [
           { required: true, message: '请输入状态标识', trigger: 'blur' }
-        ],
-        shipAmount: [
-          { required: true, message: '请输入其他费用', trigger: 'blur' }
         ],
         purTime: [
           { required: true, message: '请输入采购时间', trigger: 'blur' }

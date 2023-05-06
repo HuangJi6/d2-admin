@@ -11,10 +11,10 @@
     <el-descriptions-item label="采购商品">{{operatePayData.goodsName}}</el-descriptions-item>
     <!-- <el-descriptions-item label="采购人">{{operatePayData.purNo}}</el-descriptions-item> -->
     <el-descriptions-item label="采购数量">{{operatePayData.purNumber}}</el-descriptions-item>
-    <el-descriptions-item label="采购金额">{{operatePayData.purAmount}}</el-descriptions-item>
-    <el-descriptions-item label="其他费用">{{operatePayData.shipAmount}}</el-descriptions-item>
-    <el-descriptions-item label="采购总额" label-class-name="my-content">{{operatePayData.sumAmount}}</el-descriptions-item>
-    <el-descriptions-item label="未付金额" label-class-name="my-content">{{this.noPayAmount}}</el-descriptions-item>
+    <el-descriptions-item label="采购金额">{{this.formatterAmount({cellValue:this.operatePayData.purAmount},2)}}</el-descriptions-item>
+    <el-descriptions-item label="其他费用">{{this.formatterAmount({cellValue:this.operatePayData.shipAmount},2)}}</el-descriptions-item>
+    <el-descriptions-item label="采购总额" label-class-name="my-content">{{this.formatterAmount({cellValue:this.operatePayData.sumAmount},2)}}</el-descriptions-item>
+    <el-descriptions-item label="未付金额" label-class-name="my-content">{{this.formatterAmount({cellValue:this.noPayAmount},2)}}</el-descriptions-item>
     <!-- <el-descriptions-item label="金额单位"><el-tag size="small">元</el-tag></el-descriptions-item> -->
   </el-descriptions>
   <vxe-toolbar>
@@ -35,7 +35,7 @@
     <vxe-column type="seq" title="序号" width="60"></vxe-column>
     <vxe-column field="payer" title="付款人" width="20%"></vxe-column>
     <vxe-column field="payAccount" title="付款账户" width="40%"></vxe-column>
-    <vxe-column field="payAmount" title="付款金额" width="20%" :edit-render="{autofocus: '.vxe-input--inner'}">
+    <vxe-column field="payAmount" title="付款金额" width="20%" :edit-render="{autofocus: '.vxe-input--inner'}" :formatter="formatterAmount">
       <template #edit="{ row }">
         <vxe-input v-model="row.payAmount" type="text"></vxe-input>
       </template>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { addBatchApi } from '@/api/business/operatePayApi.js'
+import { payByOperateBatchId } from '@/api/business/operatePayApi.js'
 import mixins from '@/mixin/commonMixin.js'
 import PayerChooseComponentVue from '../../payer/components/payerChooseComponent.vue'
 export default {
@@ -93,12 +93,22 @@ export default {
     },
     // 保存接口
     handleSubmitCreate() {
+      if (!this.selectionOperateDatasIn || this.selectionOperateDatasIn.length === 0) {
+        this.$confirm('未选择付款人将移除采购付款记录,确定此操作?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.submitpay()
+        }).catch(() => {
+        })
+      } else {
+        this.submitpay()
+      }
+    },
+    submitpay() {
       const insertList = []
       let flag = false
-      if (!this.selectionOperateDatasIn || this.selectionOperateDatasIn.length === 0) {
-        this.$message.error('请选择付款人')
-        return
-      }
       let sumPay = 0
       this.selectionOperateDatasIn.forEach(ele => {
         const eleCopy = Object.assign({}, ele)
@@ -111,7 +121,7 @@ export default {
         if (!eleCopy.operateGuid) {
           eleCopy.operateGuid = this.operatePayData.guid
         }
-
+        eleCopy.batchId = this.operatePayData.batchId
         eleCopy.guid = ''
         insertList.push(eleCopy)
         sumPay = sumPay + Number(eleCopy.payAmount)
@@ -125,7 +135,7 @@ export default {
         return
       }
       console.log(insertList)
-      this.handleHttpMethod(addBatchApi(insertList), true, '正在保存中', true, '信息保存成功').then(res => {
+      this.handleHttpMethod(payByOperateBatchId({ batchId: this.operatePayData.batchId, insertList: insertList }), true, '正在保存中', true, '保存成功').then(res => {
         if (res) {
           this.handleClose()
           this.$emit('onSureClick')
@@ -173,7 +183,7 @@ export default {
       list.forEach(item => {
         count += Number(item[field])
       })
-      this.noPayAmount = this.operatePayData.sumAmount - Number(count)
+      this.noPayAmount = Number(this.operatePayData.sumAmount) - Number(count)
       return Number(count).toFixed(2)
     }
   },

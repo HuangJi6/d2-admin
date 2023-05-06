@@ -165,20 +165,20 @@ export default {
     },
     'createFormData.packingLength': {
       handler(nval, oval) {
-        this.createFormData.packingBoxVolume = new $Big(nval || 0).times(this.createFormData.packingWidth || 0).times(this.createFormData.packingHigh || 0).div(1000000).toFixed(4).toString()
-        this.createFormData.packingTotalVolume = new $Big(nval || 0).times(this.createFormData.packingWidth || 0).times(this.createFormData.packingHigh || 0).times(this.createFormData.packingBox || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.packingBoxVolume = new $Big(nval || 0).times(this.createFormData.packingWidth || 0).times(this.createFormData.packingHigh || 0).div(1000000).toFixed(3).toString()
+        this.createFormData.packingTotalVolume = new $Big(nval || 0).times(this.createFormData.packingWidth || 0).times(this.createFormData.packingHigh || 0).times(this.createFormData.packingBox || 0).div(1000000).toFixed(3).toString()
       }
     },
     'createFormData.packingWidth': {
       handler(nval, oval) {
-        this.createFormData.packingBoxVolume = new $Big(nval || 0).times(this.createFormData.packingLength || 0).times(this.createFormData.packingHigh || 0).div(1000000).toFixed(4).toString()
-        this.createFormData.packingTotalVolume = new $Big(nval || 0).times(this.createFormData.packingLength || 0).times(this.createFormData.packingHigh || 0).times(this.createFormData.packingBox || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.packingBoxVolume = new $Big(nval || 0).times(this.createFormData.packingLength || 0).times(this.createFormData.packingHigh || 0).div(1000000).toFixed(3).toString()
+        this.createFormData.packingTotalVolume = new $Big(nval || 0).times(this.createFormData.packingLength || 0).times(this.createFormData.packingHigh || 0).times(this.createFormData.packingBox || 0).div(1000000).toFixed(3).toString()
       }
     },
     'createFormData.packingHigh': {
       handler(nval, oval) {
-        this.createFormData.packingBoxVolume = new $Big(nval || 0).times(this.createFormData.packingLength || 0).times(this.createFormData.packingWidth || 0).div(1000000).toFixed(4).toString()
-        this.createFormData.packingTotalVolume = new $Big(nval || 0).times(this.createFormData.packingLength || 0).times(this.createFormData.packingWidth || 0).times(this.createFormData.packingBox || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.packingBoxVolume = new $Big(nval || 0).times(this.createFormData.packingLength || 0).times(this.createFormData.packingWidth || 0).div(1000000).toFixed(3).toString()
+        this.createFormData.packingTotalVolume = new $Big(nval || 0).times(this.createFormData.packingLength || 0).times(this.createFormData.packingWidth || 0).times(this.createFormData.packingBox || 0).div(1000000).toFixed(3).toString()
       }
     },
     'createFormData.packingBoxWeight': {
