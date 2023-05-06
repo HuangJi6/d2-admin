@@ -35,7 +35,7 @@
         v-loading.body="listLoading"
         ref="vxeTableRef"
         height="92%"
-        :row-config="{isHover: true}"
+        :row-config="{isHover: true,isCurrent: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
@@ -48,14 +48,14 @@
             <el-image style="width: auto; height: 50px" :src="row.imgLink" :preview-src-list="[row.imgLink]"> </el-image>
           </template>
         </vxe-column>
+        <vxe-column field="boxLength" title="单箱长/CM" width="100" :formatter="formatterTwoPoint"></vxe-column>
+        <vxe-column field="boxWidth" title="单箱宽/CM" width="100" :formatter="formatterTwoPoint"></vxe-column>
+        <vxe-column field="boxHigh" title="单箱高/CM" width="100" :formatter="formatterTwoPoint"></vxe-column>
+        <vxe-column field="boxVolume" title="单箱体积/m³" width="120" :formatter="formatterVolume"></vxe-column>
+        <vxe-column field="boxQuantity" title="每箱产品数" width="120"></vxe-column>
+        <vxe-column field="singleAmount" title="单个价格" width="100" :formatter="formatterAmount"></vxe-column>
+        <vxe-column field="boxWeight" title="单箱重量/KG" width="120" :formatter="formatterTwoPoint"></vxe-column>
         <vxe-column field="grade" title="评级" width="100" align="center"></vxe-column>
-        <vxe-column field="boxLength" title="单箱长/CM" width="120"></vxe-column>
-        <vxe-column field="boxWidth" title="单箱宽/CM" width="120"></vxe-column>
-        <vxe-column field="boxHigh" title="单箱高/CM" width="120"></vxe-column>
-        <vxe-column field="boxVolume" title="单箱体积/M" width="100"></vxe-column>
-        <vxe-column field="boxQuantity" title="单箱产品数" width="120"></vxe-column>
-        <vxe-column field="singleAmount" title="单个价格" width="120"></vxe-column>
-        <vxe-column field="boxWeight" title="单箱重量/KG" width="120"></vxe-column>
         <vxe-column field="supLink" title="供应链接" width="120">
           <template #default="{ row }">
             <vxe-button type="text" @dblclick="handleUrlLink(row.supLink)">{{ row.supLink }}</vxe-button>
@@ -202,13 +202,13 @@ export default {
               span: 3,
               slots: { default: 'buttonSlot' }
             },
-            { field: 'boxLength', title: '单箱长/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱长' } } },
-            { field: 'boxWidth', title: '单箱宽/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱宽' } } },
-            { field: 'boxHigh', title: '单箱高/CM', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱高' } } },
-            { field: 'boxVolume', title: '单箱体积/m³', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱体积' } } },
-            { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱产品数量' } } },
-            { field: 'singleAmount', title: '单个价格', span: 12, itemRender: { name: '$input', props: { placeholder: '具体看运营采购价格,此处只做估计' } } },
-            { field: 'boxWeight', title: '单箱重量/KG', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入单箱重量' } } },
+            { field: 'boxLength', title: '单箱长/CM', span: 12, itemRender: { name: '$input', props: { type: 'float', placeholder: '请输入单箱长' } } },
+            { field: 'boxWidth', title: '单箱宽/CM', span: 12, itemRender: { name: '$input', props: { type: 'float', placeholder: '请输入单箱宽' } } },
+            { field: 'boxHigh', title: '单箱高/CM', span: 12, itemRender: { name: '$input', props: { type: 'float', placeholder: '请输入单箱高' } } },
+            { field: 'boxVolume', title: '单箱体积/m³', span: 12, itemRender: { name: '$input', props: { type: 'float', placeholder: '请输入单箱体积' } } },
+            { field: 'boxQuantity', title: '单箱产品数', span: 12, itemRender: { name: '$input', props: { type: 'integer', placeholder: '请输入单箱产品数量' } } },
+            { field: 'singleAmount', title: '单个价格', span: 12, itemRender: { name: '$input', props: { type: 'float', placeholder: '具体看运营采购价格,此处只做估计' } } },
+            { field: 'boxWeight', title: '单箱重量/KG', span: 12, itemRender: { name: '$input', props: { type: 'float', placeholder: '请输入单箱重量' } } },
             { field: 'supLink', title: '供应链接', span: 12, itemRender: { name: '$input', props: { placeholder: '建议填写具体商品供应链接,如无填写“无”' } } },
             { field: 'grade', title: '评级', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入评级' } } },
             { field: 'remark', title: '备注', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入备注' } } }]
