@@ -22,7 +22,7 @@
         v-loading.body="listLoading"
         ref="vxeTableRef"
         height="75%"
-        :row-config="{isHover: true}"
+        :row-config="{isHover: true,isCurrent: true}"
         :data="tableData">
         <vxe-column type="seq" title="序号" width="60"></vxe-column>
         <vxe-column field="payer" title="付款人名称" width="150"></vxe-column>

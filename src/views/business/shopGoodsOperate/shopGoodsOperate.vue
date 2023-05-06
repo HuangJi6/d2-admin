@@ -45,7 +45,7 @@
         v-loading.body="listLoading"
         ref="vxeTableRef"
         height="92%"
-        :row-config="{isHover: true}"
+        :row-config="{isHover: true,isCurrent: true}"
         @cell-click="handleCellClickEvent"
         show-footer
         :footer-method="footerMethod"

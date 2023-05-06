@@ -32,7 +32,7 @@
         v-loading.body="listLoading"
         ref="vxeTableRef"
         height="92%"
-        :row-config="{isHover: true}"
+        :row-config="{isHover: true,isCurrent: true}"
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
         <vxe-column type="seq" title="序号" width="60"></vxe-column>

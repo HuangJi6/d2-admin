@@ -39,7 +39,7 @@
         height="92%"
         :edit-rules="createFromRules"
         :edit-config="editTableConfig"
-        :row-config="{isHover: true}"
+        :row-config="{isHover: true,isCurrent: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
