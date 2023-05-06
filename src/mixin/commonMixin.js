@@ -1,7 +1,57 @@
 import { Message } from 'element-ui'
+import XEUtils from 'xe-utils'
 
 export default {
   methods: {
+
+    /**
+     * 格式化数据保留两位金额方式
+     * @param {*} param0 列
+     * @param {*} digits 保留小数点后几位
+     * @returns 格式化后数据
+     */
+    formatterAmount(object, digits = 2) {
+      if (object.cellValue !== null && object.cellValue !== '' && object.cellValue !== undefined) {
+        return XEUtils.commafy(XEUtils.toNumber(object.cellValue), { digits: digits })
+      } else {
+        return object.cellValue
+      }
+    },
+    /**
+     * 格式化数据保留3位方式
+     * @param {*} param0 列
+     * @param {*} digits 保留小数点后几位
+     * @returns 格式化后数据
+    */
+    formatterVolume(object, digits = 3) {
+      if (object.cellValue !== null && object.cellValue !== '' && object.cellValue !== undefined) {
+        return XEUtils.toFixed(XEUtils.round(object.cellValue, digits), digits)
+      } else {
+        return object.cellValue
+      }
+    },
+    /**
+     * 格式化数据保留3位方式
+     * @param {*} param0 列
+     * @param {*} digits 保留小数点后几位
+     * @returns 格式化后数据
+    */
+    formatterTwoPoint(object, digits = 2) {
+      if (object.cellValue !== null && object.cellValue !== '' && object.cellValue !== undefined) {
+        return XEUtils.toFixed(XEUtils.floor(object.cellValue, digits), digits)
+      } else {
+        return object.cellValue
+      }
+    },
+    /**
+     * 格式化数据保留3位方式
+     * @param {*} param0 列
+     * @param {*} digits 保留小数点后几位
+     * @returns 格式化后数据
+     */
+    formatterOnePoint(object, digits = 1) {
+      return XEUtils.toFixed(XEUtils.floor(object.cellValue, digits), digits)
+    },
     /**
      * 统一调用接口处理方法
      * @param {*} promise 接口函数

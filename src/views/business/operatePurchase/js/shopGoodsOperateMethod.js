@@ -1,7 +1,7 @@
-import { getOneApi, queryListByGuids, updateApi, addApi, pageMapApi, updateComplate, deleteBatchByGuids } from '@/api/business/shopGoodsOperateApi.js'
+import { getOneApi, updateApi, addApi, deleteBatchByBatchIds, queryListMap, pageOperatePurchaseGroup, updateComplate, deleteBatchByGuids } from '@/api/business/shopGoodsOperateApi.js'
 import { postSupplierListApi } from '@/api/business/supplierApi.js'
 import { checkSameSupplier } from '@/api/business/supplierGoodsApi'
-import { getOperatePayOneApi } from '@/api/business/operatePayApi.js'
+import { getOperatePayByBatch } from '@/api/business/operatePayApi.js'
 
 import $Big from '@/libs/big.js'
 import moment from 'moment'
@@ -62,10 +62,11 @@ const dataMethods = {
     this.listLoading = true
     const paramsCopy = Object.assign({}, this.filterFormData)
     this.handleFilter(paramsCopy)
-    this.handleHttpMethod(pageMapApi(paramsCopy || {}), true).then(res => {
+    this.handleHttpMethod(pageOperatePurchaseGroup(paramsCopy || {}), true).then(res => {
       this.tableData = res.data.dataList
       this.total = res.data.total
       this.listLoading = false
+      this.$refs.vxeTableRef.refreshColumn()
     }).catch(err => {
       console.log(err)
       this.listLoading = false
@@ -126,6 +127,13 @@ const dataMethods = {
       count += Number(item[field])
     })
     return Number(count)
+  },
+  loadChildrenMethod({ row }) {
+    console.log('加载子节点')
+    // 异步加载子节点
+    return this.handleHttpMethod(queryListMap({ statusCode: this.filterFormData.statusCode, batchId: row.batchId }), true, '查询中...').then(res => {
+      return res.data
+    })
   }
 }
 // 校验方法
@@ -158,19 +166,7 @@ const handleMethods = {
   handleUpdate() {
     const selectionDatas = this.$refs.vxeTableRef.selection
     if (this.filterFormData.statusCode === '待下单') {
-      if (!selectionDatas || selectionDatas.length < 1) {
-        this.$message.warning('请选择一条以上数据')
-      } else {
-        const guids = []
-        selectionDatas.forEach(item => {
-          guids.push(item.guid)
-        })
-        this.handleHttpMethod(queryListByGuids(guids), true, '查询中...').then(response => {
-          this.createOrderListData = response.data
-          this.showOrderComponent = true
-          this.dialogStatus = 'update'
-        })
-      }
+      this.newOrderUpdate()
     }
     if (this.filterFormData.statusCode === '已下单') {
       if (!selectionDatas || selectionDatas.length !== 1) {
@@ -187,28 +183,69 @@ const handleMethods = {
       }
     }
   },
+  newOrderUpdate() {
+    const selectionDatas = this.$refs.vxeTableRef.selection
+    if (!selectionDatas || selectionDatas.length < 1) {
+      this.$message.warning('请选择一条以上数据')
+    } else {
+      const batchId = this.checkSameBatchId(selectionDatas)
+      if (!batchId) {
+        this.$message.warning('请所选数据不是同一个采购单号')
+        return
+      }
+      this.defaultPurGoodsName = selectionDatas[0].purGoodsName
+      this.handleHttpMethod(queryListMap({ statusCode: this.filterFormData.statusCode, batchId: batchId }), true, '查询中...').then(response => {
+        this.createOrderListData = response.data
+        this.showOrderComponent = true
+        this.dialogStatus = 'update'
+      })
+    }
+  },
   // 工厂已交货
   handleComplete() {
+    this.purCompleteData = {
+      batchIds: [],
+      purNos: [],
+      isComplete: false,
+      completeTime: ''
+    }
     const selectionDatas = this.$refs.vxeTableRef.selection
     if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条或一条以上数据')
     } else {
-      this.$confirm('确定货物已经完成生产？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        const guids = []
-        selectionDatas.forEach(item => {
-          guids.push(item.guid)
-        })
-        const params = { guids: guids, isComplete: '是' }
-        this.handleHttpMethod(updateComplate(params), true, '正在更新中', true, '更新成功').then(res => {
-          this.pageList()
-        })
-      }).catch(() => {
+      let batchIds = []
+      let purNos = []
+      selectionDatas.forEach(item => {
+        batchIds.push(item.batchId)
+        purNos.push(item.purNo)
       })
+      batchIds = [...new Set(batchIds)]
+      purNos = [...new Set(purNos)]
+      this.purCompleteData.batchIds = batchIds
+      this.purCompleteData.purNos = purNos
+      this.showPurchaseComplete = true
     }
+  },
+  // 完工提交
+  completeSubmit() {
+    if (this.purCompleteData.isComplete) {
+      if (this.purCompleteData.completeTime === '') {
+        this.$message.warning('请选择完成日期')
+        return
+      }
+    }
+    this.$confirm('确定订单交货状态？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      const params = { batchIds: this.purCompleteData.batchIds, isComplete: this.purCompleteData.isComplete ? '是' : '否', completeTime: this.purCompleteData.completeTime }
+      this.handleHttpMethod(updateComplate(params), true, '正在更新中', true, '更新成功').then(res => {
+        this.pageList()
+        this.showPurchaseComplete = false
+      })
+    }).catch(() => {
+    })
   },
   // 下单操作
   handleOrder(row) {
@@ -230,17 +267,31 @@ const handleMethods = {
     if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条或一条以上数据')
     } else {
-      selectionDatas.forEach(item => {
-        guids.push(item.guid)
-      })
       this.$confirm('此操作将删除数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.handleHttpMethod(deleteBatchByGuids(guids), true, '正在删除中', true, '删除成功').then(res => {
-          this.pageList()
-        })
+        const parent = selectionDatas.filter(item => { return item.hasChild === 1 })
+        if (parent && parent.length > 0) {
+          const batchIds = []
+          parent.forEach(item => {
+            batchIds.push(item.batchId)
+          })
+          this.handleHttpMethod(deleteBatchByBatchIds(batchIds), true, '正在删除中', true, '删除成功').then(res => {
+            this.pageList()
+          }).catch(() => {
+          })
+        }
+        const child = selectionDatas.filter(item => { return item.hasChild !== 1 })
+        if (child && child.length > 0) {
+          child.forEach(item => {
+            guids.push(item.guid)
+          })
+          this.handleHttpMethod(deleteBatchByGuids(guids), true, '正在删除中', true, '删除成功').then(res => {
+            this.pageList()
+          })
+        }
       }).catch(() => {
       })
     }
@@ -306,9 +357,10 @@ const handleMethods = {
   },
   // 新增采购订单
   handleCreateOrder() {
+    this.defaultPurGoodsName = ''
+    this.createOrderListData = []
     this.showOrderComponent = true
     this.dialogStatus = 'create'
-    this.createOrderListData = []
   },
   supplierChange(param) {
     if (param) {
@@ -347,56 +399,70 @@ const handleMethods = {
   // 采购付款
   handleOperatePay() {
     const selectionDatas = this.$refs.vxeTableRef.selection
-    if (!selectionDatas || selectionDatas.length !== 1) {
+    if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条数据')
     } else {
-      const row = selectionDatas[0]
+      const parent = selectionDatas.filter(item => { return item.hasChild === 1 })
+      if (!parent || parent.length !== 1) {
+        this.$message.warning('请选择一条汇总数据')
+        return
+      }
+      const row = parent[0]
       // 查询采购付款记录
-      this.handleHttpMethod(getOperatePayOneApi(row.guid), true, '查询数据中...').then(res => {
+      this.handleHttpMethod(getOperatePayByBatch(row.batchId), true, '查询数据中...').then(res => {
         this.dialogOperatePayVisible = true
         this.operatePayData = res.data
+        // this.operatePayData.purAmount = this.formatterAmount({ cellValue: this.operatePayData.purAmount }, 2)
+        // this.operatePayData.shipAmount = this.formatterAmount({ cellValue: this.operatePayData.shipAmount }, 2)
+        // this.operatePayData.sumAmount = this.formatterAmount({ cellValue: this.operatePayData.sumAmount }, 2)
+        // this.operatePayData.noPayAmount = this.formatterAmount({ cellValue: this.operatePayData.noPayAmount }, 2)
       })
     }
   },
   // 批量下单
-  handleBatchOrder() {
+  async handleBatchOrder() {
     // 校验item_id是否是一致的,并且拥有同一个供应商
-    const selectionDatas = this.$refs.vxeTableRef.selection
+    const selectionDatas = this.$refs.vxeTableRef.getCheckboxRecords()
     if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条或一条以上数据')
     } else {
-      const itemId = selectionDatas[0].itemId
-      const goodsGuids = []
-      let flag = false
-      selectionDatas.forEach(item => {
-        if (itemId !== item.itemId) {
-          flag = true
-        }
-        goodsGuids.push(item.goodsGuid)
-      })
-      if (flag) {
-        this.$message.warning('请选择相同item_id的商品下单')
+      // selectionDatas = selectionDatas.filter(item => { return item.hasChild !== 1 })
+      const batchId = this.checkSameBatchId(selectionDatas)
+      if (!batchId) {
+        this.$message.warning('请选择相同采购批次的商品下单')
         return
       }
-      this.defaultBatchOrderFormData = {
-        shopName: '',
-        supplierGuid: '',
-        statusCode: '',
-        shipAmount: '',
-        shipType: '',
-        purTime: '',
-        isComplete: '',
-        completeTime: '',
-        remark: ''
+      await this.setDefaultBatchOrderData(selectionDatas[0].shopName, batchId)
+    }
+  },
+  setDefaultBatchOrderData(shopName, batchId) {
+    this.defaultBatchOrderFormData = {
+      shopName: '',
+      supplierGuid: '',
+      statusCode: '',
+      shipAmount: '',
+      shipType: '',
+      purTime: '',
+      isComplete: '',
+      completeTime: '',
+      remark: ''
+    }
+    this.defaultBatchOrderFormData.shopName = shopName
+    this.defaultBatchOrderFormData.isComplete = '否'
+    this.defaultBatchOrderFormData.statusCode = '已下单'
+    this.defaultBatchOrderFormData.purTime = moment().format('YYYY-MM-DD h:mm:ss')
+    const goodsGuids = []
+    this.handleHttpMethod(queryListMap({ statusCode: this.filterFormData.statusCode, batchId: batchId }), true, '查询中...').then(response => {
+      this.defaultBatchOrderTableDataList = response.data
+      if (this.defaultBatchOrderTableDataList[0].supplierGuid) {
+        this.defaultBatchOrderFormData.supplierGuid = this.defaultBatchOrderTableDataList[0].supplierGuid
       }
-      this.defaultBatchOrderFormData.shopName = selectionDatas[0].shopName
-      this.defaultBatchOrderFormData.isComplete = '否'
-      this.defaultBatchOrderFormData.statusCode = '已下单'
-      this.defaultBatchOrderFormData.purTime = moment().format('YYYY-MM-DD h:mm:ss')
-      this.defaultBatchOrderTableDataList = selectionDatas
+      this.defaultBatchOrderTableDataList.forEach(item => {
+        goodsGuids.push(item.goodsGuid)
+      })
+
       // 校验是否有相同的供应商
       this.handleHttpMethod(checkSameSupplier(goodsGuids), true, '检验数据中').then(res => {
-        console.log(res)
         if (res.data.success) {
           this.showBatchOrderComponent = true
           this.supplierSelectDataList = res.data.data.selectList
@@ -405,6 +471,20 @@ const handleMethods = {
           this.$message.warning(res.data.message)
         }
       })
+    })
+  },
+  checkSameBatchId(selectionDatas) {
+    const batchId = selectionDatas[0].batchId
+    let flag = false
+    selectionDatas.forEach(item => {
+      if (batchId !== item.batchId) {
+        flag = true
+      }
+    })
+    if (flag) {
+      return ''
+    } else {
+      return batchId
     }
   }
 }

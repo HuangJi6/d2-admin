@@ -281,7 +281,7 @@ const handleMethods = {
           this.createFormData.boxVolume = item.boxVolume
           this.createFormData.boxQuantity = item.boxQuantity
           this.createFormData.totalBox = new $Big(this.createFormData.purNumber || 0).div(item.boxQuantity).toFixed(1).toString()
-          this.createFormData.purVolume = new $Big(item.boxVolume || 0).times(this.createFormData.totalBox || 0).toFixed(4).toString()
+          this.createFormData.purVolume = new $Big(item.boxVolume || 0).times(this.createFormData.totalBox || 0).toFixed(3).toString()
         }
       })
     }

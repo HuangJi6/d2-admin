@@ -204,6 +204,9 @@ const handleMethods = {
     if (params.statusCode === '全部') {
       params.statusCode = ''
     }
+    if (params.statusCode === '已下单') {
+      params.statusCode = '已交货'
+    }
   },
   // 取消保存
   handleCancelInContainer() {

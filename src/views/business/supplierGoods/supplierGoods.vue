@@ -248,18 +248,18 @@ export default {
     },
     'createFormData.boxLength': {
       handler(nval, oval) {
-        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxWidth || 0).times(this.createFormData.boxHigh || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxWidth || 0).times(this.createFormData.boxHigh || 0).div(1000000).toFixed(3).toString()
         console.log(this.createFormData.boxVolume)
       }
     },
     'createFormData.boxWidth': {
       handler(nval, oval) {
-        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxHigh || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxHigh || 0).div(1000000).toFixed(3).toString()
       }
     },
     'createFormData.boxHigh': {
       handler(nval, oval) {
-        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxWidth || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.boxVolume = new $Big(nval || 0).times(this.createFormData.boxLength || 0).times(this.createFormData.boxWidth || 0).div(1000000).toFixed(3).toString()
       }
     }
   }

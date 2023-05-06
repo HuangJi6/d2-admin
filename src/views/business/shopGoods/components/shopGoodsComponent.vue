@@ -1,7 +1,7 @@
 <template>
   <vxe-modal v-model="showIn" title="商品列表"
     width="80%"
-    height="80%"
+    height="95%"
     show-zoom
     resize
     remember

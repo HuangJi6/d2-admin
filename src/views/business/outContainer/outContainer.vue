@@ -442,20 +442,20 @@ export default {
   watch: {
     'createFormData.remeasureLength': {
       handler(nval, oval) {
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(4).toString()
-        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(3).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(3).toString()
       }
     },
     'createFormData.remeasureWidth': {
       handler(nval, oval) {
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(4).toString()
-        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).div(1000000).toFixed(3).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureHigh || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(3).toString()
       }
     },
     'createFormData.remeasureHigh': {
       handler(nval, oval) {
-        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).div(1000000).toFixed(4).toString()
-        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(4).toString()
+        this.createFormData.remeasureVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).div(1000000).toFixed(3).toString()
+        this.createFormData.remeasureTotalVolume = new $Big(nval || 0).times(this.createFormData.remeasureLength || 0).times(this.createFormData.remeasureWidth || 0).times(this.createFormData.totalBox || 0).div(1000000).toFixed(3).toString()
       }
     },
     'createFormData.remeasureWeight': {
