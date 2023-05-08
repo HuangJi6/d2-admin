@@ -206,8 +206,8 @@ const handleMethods = {
     this.purCompleteData = {
       batchIds: [],
       purNos: [],
-      isComplete: false,
-      completeTime: ''
+      isComplete: true,
+      completeTime: moment().format('YYYY-MM-DD h:mm:ss')
     }
     const selectionDatas = this.$refs.vxeTableRef.selection
     if (!selectionDatas || selectionDatas.length < 1) {
@@ -486,6 +486,12 @@ const handleMethods = {
     } else {
       return batchId
     }
+  },
+  isPayOverClick(row) {
+    this.handleHttpMethod(getOperatePayByBatch(row.batchId), true, '查询数据中...').then(res => {
+      this.dialogOperatePayVisible = true
+      this.operatePayData = res.data
+    })
   }
 }
 

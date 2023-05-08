@@ -60,7 +60,7 @@
         <vxe-column type="seq" title="序号" width="60" tree-node></vxe-column>
         <vxe-column field="purNo" title="采购单号" width="150" align="center">
           <template #default="{ row }">
-            <el-tag type="success">{{row.purNo}}</el-tag>
+            <el-tag v-if="row.hasChild" type="success">{{row.purNo}}</el-tag>
           </template>
         </vxe-column>
         <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
@@ -75,11 +75,16 @@
         <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
         <vxe-column field="isPayOver" title="已付完款" width="90" align="center">
           <template #default="{ row }">
-            <el-tag type="success" v-if="row.isPayOver==='1'">是</el-tag>
-            <el-tag type="danger" v-if="row.isPayOver==='0'">否</el-tag>
+            <el-tag type="success" @click="isPayOverClick(row)" v-if="row.isPayOver==='1'">是</el-tag>
+            <el-tag type="danger" @click="isPayOverClick(row)" v-if="row.isPayOver==='0'">否</el-tag>
           </template>
         </vxe-column>
-        <vxe-column field="noPayAmount" title="未付金额" width="120" :formatter="formatterAmount"></vxe-column>
+        <vxe-column field="noPayAmount" title="未付金额" width="120" :formatter="formatterAmount">
+          <template #default="{ row }">
+            <span v-if="row.hasChild&&row.noPayAmount!==0" style="color:red">{{formatterAmount({cellValue:row.noPayAmount})}}</span>
+            <span v-if="row.hasChild&&row.noPayAmount===0" style="color:#37a700">{{formatterAmount({cellValue:row.noPayAmount})}}</span>
+          </template>
+        </vxe-column>
         <vxe-column field="purUnitPrice" title="采购单价" width="120" :formatter="formatterAmount"></vxe-column>
         <vxe-column field="shippingMark" title="箱唛" width="120"></vxe-column>
         <vxe-column field="boxQuantity" title="单箱数量" width="120"></vxe-column>
@@ -219,8 +224,8 @@ export default {
       purCompleteData: {
         batchIds: [],
         purNos: [],
-        isComplete: false,
-        completeTime: ''
+        isComplete: true,
+        completeTime: moment().format('YYYY-MM-DD h:mm:ss')
       },
       showPurchaseComplete: false,
       defaultPurGoodsName: '',

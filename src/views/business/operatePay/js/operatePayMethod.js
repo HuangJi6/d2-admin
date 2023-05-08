@@ -1,6 +1,7 @@
-import { deleteByOperateGuids, getOneApi, updateApi, addApi, pageOperateMapApi, getOperatePayOneApi, pageMapApi } from '@/api/business/operatePayApi.js'
+import { deleteByOperateGuids, getOneApi, updateApi, addApi, getOperatePayByBatch, payByOperateBatchId, pageMapApi } from '@/api/business/operatePayApi.js'
 // import { getAllApplication } from '@/api/business/applicationApi.js'
 import { postSupplierListApi } from '@/api/business/supplierApi.js'
+import { pageOperatePurchaseGroup, queryListMap } from '@/api/business/shopGoodsOperateApi.js'
 import $Big from '@/libs/big.js'
 import moment from 'moment'
 
@@ -69,7 +70,7 @@ const dataMethods = {
     this.listLoading = true
     const paramsCopy = Object.assign({}, this.filterFormData)
     this.handleFilter(paramsCopy)
-    this.handleHttpMethod(pageOperateMapApi(paramsCopy || {}), true).then(res => {
+    this.handleHttpMethod(pageOperatePurchaseGroup(paramsCopy || {}), true).then(res => {
       this.tableData = res.data.dataList
       this.total = res.data.total
       this.listLoading = false
@@ -208,6 +209,18 @@ const handleMethods = {
       })
     }
   },
+  handleRemoveOperatePay1(row) {
+    this.$confirm('此操作将移除该数据付款记录, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      this.handleHttpMethod(payByOperateBatchId({ batchId: row.batchId }), true, '正在删除中', true, '删除成功').then(res => {
+        this.pageList()
+      })
+    }).catch(() => {
+    })
+  },
   // 过滤方法
   handleFilter(params) {
     // 对象拷贝，防止数据污染
@@ -289,16 +302,35 @@ const handleMethods = {
   // 采购付款
   handleOperatePay() {
     const selectionDatas = this.$refs.vxeTableRef.selection
-    if (!selectionDatas || selectionDatas.length !== 1) {
+    if (!selectionDatas || selectionDatas.length < 1) {
       this.$message.warning('请选择一条数据')
     } else {
-      const row = selectionDatas[0]
+      const parent = selectionDatas.filter(item => { return item.hasChild === 1 })
+      if (!parent || parent.length !== 1) {
+        this.$message.warning('请选择一条汇总数据')
+        return
+      }
+      const row = parent[0]
       // 查询采购付款记录
-      this.handleHttpMethod(getOperatePayOneApi(row.guid), true, '查询数据中...').then(res => {
+      this.handleHttpMethod(getOperatePayByBatch(row.batchId), true, '查询数据中...').then(res => {
         this.dialogFormVisible = true
         this.operatePayData = res.data
       })
     }
+  },
+  loadChildrenMethod({ row }) {
+    console.log('加载子节点')
+    // 异步加载子节点
+    return this.handleHttpMethod(queryListMap({ batchId: row.batchId }), true, '查询中...').then(res => {
+      return res.data
+    })
+  },
+  // 查询付款详情
+  findPurPayDetail(row) {
+    this.handleHttpMethod(getOperatePayByBatch(row.batchId), true, '查询数据中...').then(res => {
+      this.dialogFormVisible = true
+      this.operatePayData = res.data
+    })
   }
 }
 
