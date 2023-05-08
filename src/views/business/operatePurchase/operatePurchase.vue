@@ -94,11 +94,6 @@
         <vxe-column field="isComplete" title="是否已交货" width="120"></vxe-column>
         <vxe-column field="completeTime" title="交货日期" width="120"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
-        <!-- <vxe-column v-if="filterFormData.statusCode==='待下单'" title="操作" align="center" width="100" fixed="right" show-overflow>
-          <template #default="{ row }">
-            <vxe-button v-if="filterFormData.statusCode==='待下单'" size="mini" type="text" status="success"  @click="handleOrder(row)" content="下单"></vxe-button>
-          </template>
-        </vxe-column> -->
       </vxe-table>
       <div v-show="dialogFormVisible" width="60%">
         <vxe-modal v-if="dialogFormVisible" title="填写下单信息" v-model="dialogFormVisible" :visible.sync="dialogFormVisible"
@@ -132,14 +127,18 @@
         是否交货：<el-switch v-model="purCompleteData.isComplete" active-text="是" inactive-text="否"></el-switch><br><br>
         交货时间：<el-date-picker v-model="purCompleteData.completeTime" type="date" size="small" placeholder="请选择日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
       </vxe-modal>
-      <div v-show="filterDialogVisible" width="30%">
+      <div v-show="filterDialogVisible" width="32%">
         <vxe-modal :visible.sync="filterDialogVisible" id="filterForm" :position="{top: 245, left: 210}" :mask="false" :mask-closable="true"
         title="填写过滤条件" v-model="filterDialogVisible" width="600" min-width="460" resize remember storage transfer>
-          <vxe-form :data="filterFormData" :items="searchForm" titleColon></vxe-form>
-            <div style="margin-top:10px;float:right;margin-right:20px">
-            <el-button type="danger" @click="filterDialogVisible = false">取 消</el-button>
+          <vxe-form :data="filterFormData" title-width="100" title-align="right" size="small" :items="searchForm" titleColon>
+            <template #clientIdSlot>
+              <ShopFilterSelectComponentVue :bindShop.sync="filterFormData.clientId"></ShopFilterSelectComponentVue>
+            </template>
+          </vxe-form>
+          <div style="margin-top:10px;float:right;margin-right:20px">
             <el-button type="primary" @click="pageList">确 定</el-button>
-            </div>
+            <el-button type="danger" @click="filterDialogVisible = false">取 消</el-button>
+          </div>
         </vxe-modal>
       </div>
       <GoodsShowComponent
@@ -201,6 +200,8 @@ import moment from 'moment'
 import ShopGoodsBatchOrderComponentVue from './components/shopGoodsBatchOrderComponent.vue'
 import OperatePayBatchComponentVue from '../operatePay/components/operatePayBatchComponent.vue'
 import OperatePayChooseComponent from '@/views/business/operatePay/components/operatePayChooseComponent'
+import ShopFilterSelectComponentVue from '@/views/common/shopSelectComponents/shopFilterSelectComponent.vue'
+
 export default {
   name: 'shopGoods',
   mixins: [mixins],
@@ -210,7 +211,8 @@ export default {
     ShopGoodsOrderComponentVue,
     ShopGoodsBatchOrderComponentVue,
     OperatePayBatchComponentVue,
-    OperatePayChooseComponent
+    OperatePayChooseComponent,
+    ShopFilterSelectComponentVue
   },
   data() {
     return {
@@ -269,7 +271,7 @@ export default {
           span: 24,
           children: [
             { field: 'purNo', title: '采购单号', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入采购单号' } } },
-            { field: 'shopName', title: '店铺名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入店铺名称' } } },
+            { field: 'clientId', title: '店铺名称', span: 12, slots: { default: 'clientIdSlot' } },
             { field: 'goodsName', title: '商品名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品名称' } } },
             { field: 'suk', title: 'SKU', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入SKU' } } },
             { field: 'itemId', title: 'ITEM ID', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入ITEM ID' } } }]

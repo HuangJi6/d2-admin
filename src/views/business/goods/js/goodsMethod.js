@@ -32,6 +32,7 @@ const dataMethods = {
       goodsPrice: '',
       goodsUse: '',
       brand: '',
+      isAuthBrand: false,
       remark: ''
     }
   },

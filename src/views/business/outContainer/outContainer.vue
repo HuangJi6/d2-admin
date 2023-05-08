@@ -222,12 +222,16 @@
         </vxe-modal>
       </div>
       <div v-show="filterDialogVisible" width="30%">
-        <vxe-modal :visible.sync="filterDialogVisible" id="filterForm" :position="{top: 245, left: 210}" :mask="false" :mask-closable="true"
+        <vxe-modal :visible.sync="filterDialogVisible" id="filterForm" :position="{top: 245, left: 210}" height="300px" :mask="false" :mask-closable="true"
         title="填写过滤条件" v-model="filterDialogVisible" width="600" min-width="460" resize remember storage transfer>
-          <vxe-form :data="filterFormData" :items="searchForm" titleColon></vxe-form>
+          <vxe-form :data="filterFormData" title-width="100" title-align="right" size="small" :items="searchForm" titleColon>
+            <template #clientIdSlot>
+              <ShopFilterSelectComponentVue :bindShop.sync="filterFormData.clientId"></ShopFilterSelectComponentVue>
+            </template>
+          </vxe-form>
             <div style="margin-top:10px;float:right;margin-right:20px">
-            <el-button type="danger" @click="filterDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="handleRefreshPageList">确 定</el-button>
+              <el-button type="primary" @click="handleRefreshPageList">确 定</el-button>
+              <el-button type="danger" @click="filterDialogVisible = false">取 消</el-button>
             </div>
         </vxe-modal>
       </div>
@@ -289,6 +293,8 @@ import EncasementShippingMarkComponentVue from './components/encasementShippingM
 import ExportButtonVue from '@/views/common/exportButton/exportButton.vue'
 import { myMethods } from './js/inContainerMethod.js'
 import moment from 'moment'
+import ShopFilterSelectComponentVue from '@/views/common/shopSelectComponents/shopFilterSelectComponent.vue'
+
 export default {
   name: 'inContainer',
   mixins: [mixins],
@@ -300,7 +306,8 @@ export default {
     ChangePackingComponentVue,
     PackingListTopGatherComponentVue,
     EncasementShippingMarkComponentVue,
-    ExportButtonVue
+    ExportButtonVue,
+    ShopFilterSelectComponentVue
   },
   data() {
     return {
@@ -333,14 +340,16 @@ export default {
         itemId: '',
         statusCode: '已下单',
         shippingMark: '',
-        packingGuid: ''
+        packingGuid: '',
+        clientId: ''
       },
       searchForm: [
         {
           title: '左侧',
           span: 24,
           children: [
-            { field: 'shopName', title: '店铺名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入店铺名称' } } },
+            { field: 'clientId', title: '店铺名称', span: 12, slots: { default: 'clientIdSlot' } },
+            // { field: 'shopName', title: '店铺名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入店铺名称' } } },
             { field: 'goodsName', title: '商品名称', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品名称' } } },
             { field: 'suk', title: 'SKU', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入SKU' } } },
             { field: 'itemId', title: 'ITEM ID', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入ITEM ID' } } },

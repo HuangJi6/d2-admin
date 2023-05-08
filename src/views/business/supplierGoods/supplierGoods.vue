@@ -35,6 +35,7 @@
         v-loading.body="listLoading"
         ref="vxeTableRef"
         height="92%"
+        :checkbox-config="{highlight: true}"
         :row-config="{isHover: true,isCurrent: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
