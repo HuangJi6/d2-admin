@@ -6,7 +6,7 @@
         <template #buttons>
           <el-button icon="vxe-icon-star-fill" type="primary" size="mini" style="width:120px" @click="handleChooseGoods">选择下单商品</el-button>
           <span style="margin-left:10px;color:red;">采购商品统称:</span>
-          <vxe-input v-model="purGoodsName" style="width:300px" placeholder="将用来识别采购记录,具体商品看采购明细"></vxe-input>
+          <vxe-input v-model="purGoodsName" style="width:400px" placeholder="将用来识别采购记录,具体商品看采购明细"></vxe-input>
         </template>
       </vxe-toolbar>
       <vxe-table
@@ -146,6 +146,11 @@ export default {
     // 回调函数，选择店铺商品后的回调函数
     selectedShopGoods(shopGoodsInfo) {
       this.selectionGoodsDatasIn = shopGoodsInfo
+      const goodsNameArray = []
+      this.selectionGoodsDatasIn.forEach(item => {
+        goodsNameArray.push(item.goodsName)
+      })
+      this.purGoodsName = goodsNameArray.join('，')
       this.selectionGoodsDatasIn.forEach(item => {
         this.$set(item, 'purNumber', '')
         this.$set(item, 'shopGoodsGuid', item.guid)
