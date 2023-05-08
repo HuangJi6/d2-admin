@@ -79,18 +79,24 @@
         <vxe-column field="outEnglishGoodsName" title="英文名称" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
           <template #edit="{ row }"><vxe-input v-model="row.outEnglishGoodsName" type="text"></vxe-input></template>
         </vxe-column>
-        <vxe-column field="grade" title="评级" width="100"></vxe-column>
-        <vxe-column field="goodsLength" title="商品-长/CM" width="100"></vxe-column>
-        <vxe-column field="goodsWidth" title="商品-宽/CM" width="100"></vxe-column>
-        <vxe-column field="goodsHigh" title="商品-高/CM" width="100"></vxe-column>
-        <vxe-column field="goodsWeight" title="商品-重量" width="100"></vxe-column>
-        <vxe-column field="goodsPrice" title="商品-单价" width="100"></vxe-column>
         <vxe-column field="goodsUse" title="用途" width="120" :edit-render="{autofocus: '.vxe-input--inner'}">
           <template #edit="{ row }"><vxe-input v-model="row.goodsUse" type="text"></vxe-input></template>
         </vxe-column>
         <vxe-column field="brand" title="品牌" width="100" :edit-render="{autofocus: '.vxe-input--inner'}">
           <template #edit="{ row }"><vxe-input v-model="row.brand" type="text"></vxe-input></template>
         </vxe-column>
+        <vxe-column field="isAuthBrand" title="品牌授权" width="100" align="center">
+          <template #default="{ row }">
+            <el-tag type="success" v-if="row.isAuthBrand">是</el-tag>
+            <el-tag type="danger" v-if="!row.isAuthBrand">否</el-tag>
+          </template>
+        </vxe-column>
+        <vxe-column field="grade" title="评级" width="100"></vxe-column>
+        <vxe-column field="goodsLength" title="商品-长/CM" width="100"></vxe-column>
+        <vxe-column field="goodsWidth" title="商品-宽/CM" width="100"></vxe-column>
+        <vxe-column field="goodsHigh" title="商品-高/CM" width="100"></vxe-column>
+        <vxe-column field="goodsWeight" title="商品-重量" width="100"></vxe-column>
+        <vxe-column field="goodsPrice" title="商品-单价" width="100"></vxe-column>
         <vxe-column field="remark" title="备注" width="200"></vxe-column>
         <vxe-column title="操作" align="center" width="145" fixed="right" show-overflow>
           <template #default="{ row }">
@@ -167,6 +173,7 @@ export default {
         goodsPrice: '',
         goodsUse: '',
         brand: '',
+        isAuthBrand: false,
         remark: ''
       },
       createFromRules: {
@@ -230,6 +237,7 @@ export default {
             { field: 'goodsPrice', title: '商品-单价', span: 12, itemRender: { name: '$input', props: { placeholder: '输入商品-单价,用于建议采购价格' } } },
             { field: 'goodsUse', title: '商品-用途', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入用途将用于箱单表中,格式:中文 (英文)' } } },
             { field: 'brand', title: '商品-品牌', span: 12, itemRender: { name: '$input', props: { placeholder: '请输入商品-品牌,如无请填写: 无' } } },
+            { field: 'isAuthBrand', title: '品牌是否授权', span: 12, itemRender: { name: '$switch', props: { openLabel: '是', closeLabel: '否' } } },
             {
               field: 'grade',
               title: '评级',

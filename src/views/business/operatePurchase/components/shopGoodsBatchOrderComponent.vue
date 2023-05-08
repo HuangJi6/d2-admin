@@ -29,6 +29,8 @@
         resizable
         height="65%"
         show-overflow
+        show-footer
+        :footer-method="footerMethod"
         keep-source
         :data="selectionGoodsDatasIn"
         :edit-rules="editTableRules"
@@ -282,6 +284,34 @@ export default {
     },
     shipAmountChange(row) {
       row.sumAmount = new $Big(row.purUnitPrice || 0).times(row.purNumber || 0).plus(new $Big(row.shipAmount || 0)).toFixed(2).toString()
+    },
+    // 底部汇总行方法
+    footerMethod({ columns, data }) {
+      const footerData = [
+        columns.map((column, columnIndex) => {
+          if (columnIndex === 1) {
+            return '合计'
+          }
+          if (['purNumber', 'purVolume', 'purAmount', 'shipAmount', 'sumAmount'].includes(column.property)) {
+            return this.sumNum(data, column.field)
+          }
+          return null
+        })
+      ]
+      return footerData
+    },
+    sumNum(list, field) {
+      let count = 0
+      list.forEach(item => {
+        count = new $Big(count || 0).plus(item[field] || 0)
+      })
+      if (['purVolume'].includes(field)) {
+        return count.toFixed(3).toString()
+      }
+      if (['purAmount', 'shipAmount', 'sumAmount'].includes(field)) {
+        return count.toFixed(2).toString()
+      }
+      return count
     }
   },
   created() {

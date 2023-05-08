@@ -4,11 +4,12 @@
     <template slot="header">
       <div style="height:40px">
         <div style="float:left;padding-top:3px;width:80%">
-          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="店铺搜索" v-model="filterFormData.shopName" size="small"> </el-input>
-          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="SKU搜索" v-model="filterFormData.sku" size="small"> </el-input>
-          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="ITEM ID搜索" v-model="filterFormData.itemId" size="small"> </el-input>
-          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="商名称搜索" v-model="filterFormData.goodsName" size="small"> </el-input>
-          <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="商品类别搜索" v-model="filterFormData.goodsCategory" size="small"> </el-input>
+          <ShopFilterSelectComponentVue :bindShop.sync="filterFormData.clientId"></ShopFilterSelectComponentVue>
+          <!-- <el-input @keyup.enter.native="handleFilter" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="店铺搜索" v-model="filterFormData.shopName" size="small"> </el-input> -->
+          <el-input @keyup.enter.native="handleRefresh" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="SKU搜索" v-model="filterFormData.sku" size="small"> </el-input>
+          <el-input @keyup.enter.native="handleRefresh" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="ITEM ID搜索" v-model="filterFormData.itemId" size="small"> </el-input>
+          <el-input @keyup.enter.native="handleRefresh" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="商名称搜索" v-model="filterFormData.goodsName" size="small"> </el-input>
+          <el-input @keyup.enter.native="handleRefresh" clearable style="width: 10%;margin-right: 20px;" class="filter-item" placeholder="商品类别搜索" v-model="filterFormData.goodsCategory" size="small"> </el-input>
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleRefresh" size="small">搜索</el-button>
           <el-button class="filter-item" type="primary" icon="el-icon-refresh" @click="handleRefresh" size="small">刷新</el-button>
         </div>
@@ -40,6 +41,7 @@
         ref="vxeTableRef"
         height="92%"
         style="min-height: 600px;"
+        :checkbox-config="{highlight: true}"
         :row-config="{isHover: true,isCurrent: true}"
         @cell-click="handleCellClickEvent"
         :data="tableData">
@@ -120,13 +122,14 @@
 </template>
 
 <script>
+import ShopFilterSelectComponentVue from '@/views/common/shopSelectComponents/shopFilterSelectComponent.vue'
 import mixins from '@/mixin/commonMixin.js'
 import GoodsShowComponent from '@/views/business/goods/components/goodsShowComponent.vue'
 import { myMethods } from './js/shopGoodsMethod.js'
 export default {
   name: 'shopGoods',
   mixins: [mixins],
-  components: { GoodsShowComponent },
+  components: { GoodsShowComponent, ShopFilterSelectComponentVue },
   data() {
     return {
       goodsInfo: {},
@@ -142,6 +145,7 @@ export default {
         pageSize: 20,
         goodsName: '',
         goodsCategory: '',
+        clientId: '',
         shopName: '',
         sku: '',
         itemId: ''

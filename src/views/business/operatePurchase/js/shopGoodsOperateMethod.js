@@ -124,9 +124,9 @@ const dataMethods = {
   sumNum(list, field) {
     let count = 0
     list.forEach(item => {
-      count += Number(item[field])
+      count = new $Big(count || 0).plus(item[field] || 0).toString()
     })
-    return Number(count)
+    return count
   },
   loadChildrenMethod({ row }) {
     console.log('加载子节点')
