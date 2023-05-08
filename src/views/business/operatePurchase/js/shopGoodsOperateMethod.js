@@ -131,7 +131,11 @@ const dataMethods = {
   loadChildrenMethod({ row }) {
     console.log('加载子节点')
     // 异步加载子节点
-    return this.handleHttpMethod(queryListMap({ statusCode: this.filterFormData.statusCode, batchId: row.batchId }), true, '查询中...').then(res => {
+    let statusCode = this.filterFormData.statusCode
+    if (this.filterFormData.statusCode === '全部') {
+      statusCode = ''
+    }
+    return this.handleHttpMethod(queryListMap({ statusCode: statusCode, batchId: row.batchId }), true, '查询中...').then(res => {
       return res.data
     })
   }
@@ -300,6 +304,7 @@ const handleMethods = {
   handleFilter(params) {
     // 对象拷贝，防止数据污染
     const conditionParams = [
+      { name: 'purNo', type: '4', remove: true },
       { name: 'goodsName', type: '4', remove: true },
       { name: 'goodsCategory', type: '4', remove: true },
       { name: 'shopName', type: '4', remove: true },
