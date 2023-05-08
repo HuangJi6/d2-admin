@@ -51,17 +51,17 @@ export default {
       if (!rows) {
         this.$message.warning('请选择一条以上数据')
       } else {
-        const itemId = rows[0].itemId
-        let itemIdFlag = false
-        rows.forEach(item => {
-          if (itemId !== item.itemId) {
-            itemIdFlag = true
-          }
-        })
-        if (itemIdFlag) {
-          this.$message.warning('请选择相同itemId的商品同时下单!')
-          return
-        }
+        // const itemId = rows[0].itemId
+        // let itemIdFlag = false
+        // rows.forEach(item => {
+        //   if (itemId !== item.itemId) {
+        //     itemIdFlag = true
+        //   }
+        // })
+        // if (itemIdFlag) {
+        //   this.$message.warning('请选择相同itemId的商品同时下单!')
+        //   return
+        // }
         this.shopGoodsInfoIn = rows
         console.log(rows)
         this.$emit('onSureClick', this.shopGoodsInfoIn)
