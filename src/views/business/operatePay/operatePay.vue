@@ -5,12 +5,12 @@
       <div style="float:left;padding-top:3px">
         <el-radio-group @input="pageList()" v-model="filterFormData.statusCode" size="medium">
           <el-radio-button label="待付款" @click="pageList()">待付款</el-radio-button>
-          <el-radio-button label="付款记录" @click="pageList()">付款记录</el-radio-button>
+          <!-- <el-radio-button label="付款记录" @click="pageList()">付款记录</el-radio-button> -->
         </el-radio-group>
       </div>
       <div style="float:right;">
         <el-button v-show="filterFormData.statusCode === '待付款'" icon="vxe-icon-square-plus" size="medium" style="width:100px" @click="handleOperatePay">付款</el-button>
-        <el-button v-show="filterFormData.statusCode === '待付款'" size="medium" @click="handleRemoveOperatePay">清空付款信息</el-button>
+        <!-- <el-button v-show="filterFormData.statusCode === '待付款'" size="medium" @click="handleRemoveOperatePay">清空付款信息</el-button> -->
         <el-button type="primary" size="medium" style="width:100px" @click="pageList()">刷新</el-button>
       </div>
     </template>
@@ -36,26 +36,44 @@
         v-loading.body="listLoading"
         ref="vxeTableRef"
         height="92%"
+        :checkbox-config="{highlight: true}"
+        :tree-config="{transform: true, rowField: 'guid', parentField: 'batchId',lazy:true,hasChild: 'hasChild',loadMethod: loadChildrenMethod}"
         :row-config="{isHover: true,isCurrent: true}"
         :data="tableData">
         <vxe-column type="checkbox" width="45"></vxe-column>
-        <vxe-column type="seq" title="序号" width="60"></vxe-column>
-        <vxe-column field="purNo" title="采购单号" width="150" align="center"></vxe-column>
+        <vxe-column type="seq" title="序号" width="60" tree-node></vxe-column>
+        <vxe-column field="purNo" title="采购单号" width="150" align="center">
+          <template #default="{ row }">
+            <el-tag v-if="row.hasChild">{{row.purNo}}</el-tag>
+          </template>
+        </vxe-column>
         <vxe-column field="shopName" title="店铺名称" width="100"></vxe-column>
         <vxe-column field="goodsName" title="商品名称" width="250"></vxe-column>
         <vxe-column field="sku" title="SKU" width="120"></vxe-column>
         <vxe-column field="itemId" title="ITEM ID" width="120"></vxe-column>
         <vxe-column field="purNumber" title="采购数量" width="120"></vxe-column>
-        <vxe-column field="purUnitPrice" title="采购单价" width="120"></vxe-column>
-        <vxe-column field="purAmount" title="采购金额" width="120"></vxe-column>
-        <vxe-column field="shipAmount" title="运输价格" width="120"></vxe-column>
-        <vxe-column field="sumAmount" title="采购总额" width="120"></vxe-column>
-        <vxe-column field="payAmount" title="已支付金额" width="120"></vxe-column>
-        <vxe-column field="noPayAmount" title="未支付金额" width="120"></vxe-column>
-        <vxe-column field="purTime" title="采购时间" width="120"></vxe-column>
+        <vxe-column field="purAmount" title="采购金额" width="120" :formatter="formatterAmount"></vxe-column>
+        <vxe-column field="shipAmount" title="运输价格" width="120" :formatter="formatterAmount"></vxe-column>
+        <vxe-column field="sumAmount" title="采购总额" width="120" :formatter="formatterAmount"></vxe-column>
+        <vxe-column field="hasPayAmount" title="已支付金额" width="120" :formatter="formatterAmount">
+          <template #default="{ row }">
+            <vxe-button v-if="row.hasChild" type="text" @click="findPurPayDetail(row)" style="color:#37a700">{{formatterAmount({cellValue:row.sumAmount-row.noPayAmount})}}</vxe-button>
+          </template>
+        </vxe-column>
+        <vxe-column field="noPayAmount" title="未支付金额" width="120" :formatter="formatterAmount">
+          <template #default="{ row }">
+            <span v-if="row.hasChild" style="color:red">{{formatterAmount({cellValue:row.noPayAmount})}}</span>
+          </template>
+        </vxe-column>
+        <vxe-column field="payer" title="付款人" width="120"></vxe-column>
+        <vxe-column v-if="filterFormData.statusCode==='待付款'" title="操作" width="100" fixed="right" align="center" show-overflow>
+          <template #default="{ row }">
+            <vxe-button v-if="row.hasChild" size="mini" status="danger"  @click="handleRemoveOperatePay1(row)" content="移除付款"></vxe-button>
+          </template>
+        </vxe-column>
       </vxe-table>
       <vxe-table
-        v-if="filterFormData.statusCode === '付款记录'"
+        v-if="false"
         class="mytable-scrollbar"
         size="medium"
         header-cell-class-name="headerClassName"
